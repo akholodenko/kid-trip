@@ -1,0 +1,17 @@
+html { height: 100% }
+body { height: 100%; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif; }
+#map-canvas { width: 90%; height: 100% }
+#panel { width: 300px; height: 100%; background-color: #eeeeee; border-left: 3px solid #999999; float: right; }
+#panel #title { height: 60px; text-align: center; font-size: 35px; font-weight: 500; background-color: #dedede; padding: 10px 0 0 0; border-bottom: 2px solid #cdcdcd; }
+#panel #schedule { width: 300px; height: 50%; overflow-y: scroll; }
+#panel #schedule .timeslot { padding: 10px; border-bottom: 1px solid #ddd; }      
+#panel #schedule .timeslot .time { float: left; }
+#panel #schedule .timeslot .event { margin-left: 75px; }
+#panel #schedule .timeslot .event .header { font-size: 15px; font-weight: 600; color: #555; }
+#panel #schedule .timeslot .event .description { font-size: 12px; color: #888; }
+
+#panel #schedule .timeslot.active { background-color: #336699; color: #eee; }
+#panel #schedule .timeslot.active .event .header { font-size: 15px; font-weight: 600; color: #fff; }
+#panel #schedule .timeslot.active .event .description { font-size: 12px; color: #ddd; }
+
+.ui-resizable-helper { border: 2px dotted #00F; }
