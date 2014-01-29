@@ -14,4 +14,8 @@ body { height: 100%; margin: 0; padding: 0; font-family: 'Open Sans', sans-serif
 #panel #schedule .timeslot.active .event .header { font-size: 15px; font-weight: 600; color: #fff; }
 #panel #schedule .timeslot.active .event .description { font-size: 12px; color: #ddd; }
 
+.gm-style .gm-style-iw div.location-info-title { font-size: 16px; font-weight: bold; }
+.location-info-body {}
+.location-info-body span.main { font-weight: bold; }
+
 .ui-resizable-helper { border: 2px dotted #00F; }

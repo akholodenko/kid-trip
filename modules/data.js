@@ -12,5 +12,11 @@ define(function () {
 		title: 'Central Park',
   		lat: 37.5607982,
   		lng: -122.3234643
+	},
+	{
+		id: 3,
+		title: 'Dolores Park Playground',
+		lat: 37.7581932,
+		lng: -122.4271466
 	}]
 });

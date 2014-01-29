@@ -38,7 +38,7 @@ define(function () {
 	      // demo code for ACTIVE timeslot via random
 	      var active = Math.floor((Math.random()*2)+1) == 1 ? 'active' : '';
 	      var that = this;
-	      $('#schedule').append("<div class='timeslot " + active + "' data-startHour='" + x + "'><div class='time'>" + hour + ":00" + ampm + "</div><div class='event'><div class='header'>Drag & drop</div><div class='description'>Location from the map</div></div></div>");
+	      $('#schedule').append("<div class='timeslot " + active + "' data-startHour='" + x + "'><div class='time'>" + hour + ":00" + ampm + "</div><div class='event'><div class='header'>Stretch timeslot</div><div class='description'>to extend event</div></div></div>");
 	      $('#schedule .timeslot').resizable({ handles: "s", minHeight: this.timeslotMinHeight, grid: [ 0, this.timeslotAddHeight ], resize: function( event, uiObject ) {
 	          var timeslots = that.timeslotHeight(uiObject);
 	          var currentStartHour = uiObject.element.data('starthour');
