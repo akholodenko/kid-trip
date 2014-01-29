@@ -24,7 +24,7 @@ define(["./data", "./mapUtils"], function(locationData, mapUtils) {
 		      	map = new google.maps.Map(document.getElementById("map-canvas"), mapOptions);
 
 		      	// zoom map to be within radius of circle (zoom based on distance, not present number)
-		      	var circle = new google.maps.Circle({radius: 32000, center: results[0].geometry.location}); 
+		      	var circle = new google.maps.Circle({radius: 16000, center: results[0].geometry.location}); 
 		      	map.fitBounds(circle.getBounds()); 
 
 		      	// draw marker in center of map
