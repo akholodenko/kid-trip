@@ -30,7 +30,7 @@ define(function () {
 		      	$('#schedule').append("<div class='timeslot " + active + "' data-startHour='" + x + "'><div class='time'>" + this.getPrettyTime(x) + "</div><div class='event'><div class='header'>Stretch timeslot</div><div class='description'>to extend event</div></div></div>");
 
 				// define SORTABLE functionality
-		      	$('#schedule').sortable({ placeholder: "ui-state-highlight", update: this.timeslotSortCallback(this)});
+		      	$('#schedule').sortable({ axis: "y", placeholder: "ui-state-highlight", update: this.timeslotSortCallback(this)});
 
 		      	// define RESIZABLE functionality
 		      	$('#schedule .timeslot').resizable({ handles: "s", minHeight: this.timeslotMinHeight, grid: [ 0, this.timeslotAddHeight ], resize: this.timeslotResizeCallback(this)});
