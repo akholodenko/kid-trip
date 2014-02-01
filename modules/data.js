@@ -1,8 +1,8 @@
 /** DATA module */
 define(function () {
     return [
-    	{
-    		id: 1,
+    {
+    	id: 1,
 		title: 'Washington Park',
   		lat: 37.5817245,
   		lng: -122.3426732

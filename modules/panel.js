@@ -9,14 +9,15 @@ define(function () {
   		hours: { startHour: 8, endHour: 20},
   		// display / size schedule panel
 	  	render: function () {
-	    		this.renderDay(this.hours.startHour, this.hours.endHour);
-	    		this.resize();
+    		this.renderDay(this.hours.startHour, this.hours.endHour);
+    		this.resize();
+
+    		// event listener for location being added to schedule
+    		$( "body").on( "eventAddButtonClicked", this.setTimeslot(this));
 	  	},
-	        // resize panel schedule height
+	    // resize panel schedule height
 	  	resize: function () {
 	    	var scheduleHeight = Math.floor((($(window).height() - 72) / $(window).height()) * 100);
-	    	//console.log($('#panel #title').height());
-	    	//console.log(scheduleHeight);
 	    	$('#panel #schedule').height(scheduleHeight + '%');
 	  	},  	  	
 		// display all time slots for day
@@ -26,7 +27,7 @@ define(function () {
 
 		    for(var x = startHour; x <= endHour; x++) {
 		      	// demo code for ACTIVE timeslot via random
-		      	var active = Math.floor((Math.random()*2)+1) == 1 ? 'active' : '';
+		      	var active = 'inactive';//Math.floor((Math.random()*2)+1) == 1 ? 'active' : '';
 		      	$('#schedule').append("<div class='timeslot " + active + "' data-startHour='" + x + "'><div class='time'>" + this.getPrettyTime(x) + "</div><div class='event'><div class='header'>Stretch timeslot</div><div class='description'>to extend event</div></div></div>");
 
 				// define SORTABLE functionality
@@ -36,11 +37,22 @@ define(function () {
 		      	$('#schedule .timeslot').resizable({ handles: "s", minHeight: this.timeslotMinHeight, grid: [ 0, this.timeslotAddHeight ], resize: this.timeslotResizeCallback(this)});
 		    }
 		},
+		// callback for Panel event listener when ADD button is clicked
+		setTimeslot: function (that) {
+			return function (e, locationData) {
+				console.log(locationData);
+				var timeslot = $('#schedule .timeslot.inactive').first();
+				timeslot.addClass('active').removeClass('inactive')	// set visually as active
+						.data('locationid', locationData.id);	// set location ID for timeslot
+
+				timeslot.find('.header').text(locationData.title);	// set title for timeslot
+				timeslot.find('.description').text(locationData.duration.text + ' from you');	// set travel time
+			}
+		},
+		// callback when sorting timeslots
 		timeslotSortCallback: function (that) {
 			return function( event, uiObject ) {
-				//console.log('updated timeslot position');
-				//console.log('item: ' + uiObject.item.attr('data-starthour'));
-				console.log('between: ' + uiObject.item.prev().attr('data-starthour') + ' and ' + uiObject.item.next().attr('data-starthour'));
+				//console.log('between: ' + uiObject.item.prev().attr('data-starthour') + ' and ' + uiObject.item.next().attr('data-starthour'));
 
 				var currentHour = parseInt(uiObject.item.attr('data-starthour'));
 				var previousHour = parseInt(uiObject.item.prev().attr('data-starthour'));
