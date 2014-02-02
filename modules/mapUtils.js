@@ -1,22 +1,11 @@
 /** MAP UTILS module */
 define(function() {
 	return {
+		// set travel time in marker's info window from user's position
 		setMarkerTravelTime: function (origin, destination, infoWindow, marker) {
-			this.travelTime(origin, destination, this.travelTimeCallback(infoWindow, marker));
+			this.travelTime(origin, destination, this.setMarkerTravelTimeCallback(infoWindow, marker));
 		},
-		// calculate travel time between 2 points and update marker's inforWindow with result		
-		travelTime: function (origin, destination, callback) {
-			var service = new google.maps.DistanceMatrixService();
-  			service.getDistanceMatrix({
-      				origins: [origin],
-      				destinations: [destination],
-			      	travelMode: google.maps.TravelMode.DRIVING,
-			      	unitSystem: google.maps.UnitSystem.IMPERIAL,
-			      	avoidHighways: false,
-			      	avoidTolls: false
-    			}, callback);
-		},
-		travelTimeCallback: function (infoWindow, marker) {
+		setMarkerTravelTimeCallback: function (infoWindow, marker) {
 			return function (response, status) {
 	    		if (status != google.maps.DistanceMatrixStatus.OK) {
 	    			alert('Error was: ' + status);
@@ -39,6 +28,38 @@ define(function() {
 			    	}
 	  			}
 	    	}
-		}
+		},
+		// set travel time for timeslot's location from provided origin (previous timeslot or user's position)
+		setTimeslotTravelTime: function (origin, destination, timeslot) {
+			this.travelTime(origin, destination, this.setTimeslotTravelTimeCallback(timeslot));
+		},
+		setTimeslotTravelTimeCallback: function (timeslot) {
+			return function (response, status) {
+	    		if (status != google.maps.DistanceMatrixStatus.OK) {
+	    			alert('Error was: ' + status);
+	  			} 
+	  			else {
+    				for (var i = 0; i < response.originAddresses.length; i++) {
+				      	var results = response.rows[i].elements;
+
+				      	for (var j = 0; j < results.length; j++) {
+				      		timeslot.find('.description').text(results[j].duration.text + ' from previous location');	// set travel time	
+				      	}
+			    	}			    	
+	  			}
+	    	}
+		},
+		// calculate travel time between 2 points and trigger callback
+		travelTime: function (origin, destination, callback) {
+			var service = new google.maps.DistanceMatrixService();
+  			service.getDistanceMatrix({
+      				origins: [origin],
+      				destinations: [destination],
+			      	travelMode: google.maps.TravelMode.DRIVING,
+			      	unitSystem: google.maps.UnitSystem.IMPERIAL,
+			      	avoidHighways: false,
+			      	avoidTolls: false
+    			}, callback);
+		},
 	}
 });

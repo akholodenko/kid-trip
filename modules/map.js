@@ -83,7 +83,8 @@ define(["./data", "./mapUtils"], function(locationData, mapUtils) {
 			   		id: locationMarker.get('id'), 
 			   		title: locationMarker.get('title'),
 			   		duration: locationMarker.get('duration'),
-			   		distance: locationMarker.get('distance')
+			   		distance: locationMarker.get('distance'),
+			   		position: locationMarker.getPosition()	// geolocation of location
 			   	}]);
 			};
 		}

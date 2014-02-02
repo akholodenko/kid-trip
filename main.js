@@ -15,13 +15,13 @@ requirejs.config({
 
 // Start the main app logic.
 requirejs(['modules/map', 'modules/panel', 'jquery-ui'], function (map, panel) {
-  map.geocode('1081 Beach Park Blvd., Foster City, CA 94404');  // find geolocation based on address
-  map.resize(panel.panelWidth); // make map as wide as possible, leaving room for static panel
-  panel.render(); 
+    map.geocode('1081 Beach Park Blvd., Foster City, CA 94404');  // find geolocation based on address
+    map.resize(panel.panelWidth); // make map as wide as possible, leaving room for static panel
+    panel.render(); 
 
-  // listener for RESIZE event to scale map and panel
-  $(window).resize(function() {
-    map.resize(panel.panelWidth);
-    panel.resize();
-  });
+    // listener for RESIZE event to scale map and panel
+    $(window).resize(function() {
+        map.resize(panel.panelWidth);
+        panel.resize();
+    });
 });

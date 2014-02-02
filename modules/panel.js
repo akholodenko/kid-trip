@@ -1,5 +1,5 @@
 /** PANEL module */
-define(function () {
+define(["./mapUtils"], function (mapUtils) {
     return {
         color: "black",
         size: "unisize",
@@ -43,10 +43,21 @@ define(function () {
 				console.log(locationData);
 				var timeslot = $('#schedule .timeslot.inactive').first();
 				timeslot.addClass('active').removeClass('inactive')	// set visually as active
-						.data('locationid', locationData.id);	// set location ID for timeslot
+						.data('locationid', locationData.id)	// set location ID for timeslot
+						.data('position', locationData.position);	// store timeslot's location position (geolocation) object
 
 				timeslot.find('.header').text(locationData.title);	// set title for timeslot
-				timeslot.find('.description').text(locationData.duration.text + ' from you');	// set travel time
+
+				// this is the first timeslot, so travel time is from user's location
+				if(!timeslot.prev().length) {					
+					timeslot.find('.description').text(locationData.duration.text + ' from you');	// set travel time	
+				}
+				// not first timeslot, so calculate travel from previous timeslot's location
+				else {
+					mapUtils.setTimeslotTravelTime(timeslot.prev().data('position'), locationData.position, timeslot);
+				}
+
+				
 			}
 		},
 		// callback when sorting timeslots
