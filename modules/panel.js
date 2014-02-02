@@ -1,8 +1,7 @@
 /** PANEL module */
 define(["./mapUtils"], function (mapUtils) {
     return {
-        color: "black",
-        size: "unisize",
+    	userLocation: null,
         panelWidth: 303,
   		timeslotMinHeight: 37, 
   		timeslotAddHeight: 58,
@@ -13,7 +12,13 @@ define(["./mapUtils"], function (mapUtils) {
     		this.resize();
 
     		// event listener for location being added to schedule
-    		$( "body").on( "eventAddButtonClicked", this.setTimeslot(this));
+    		$("body").on("eventAddButtonClicked", this.setTimeslot(this));
+
+    		// event listener for timeslots res-orted, to recalcuate travel time
+    		$("body").on("eventRefreshScheduleTravelTime", this.refreshScheduleTravelTime(this));
+
+    		// event listener for user location having been identified
+    		$("body").on("eventUserLocationIdentified", this.setUserLocation(this));
 	  	},
 	    // resize panel schedule height
 	  	resize: function () {
@@ -37,6 +42,11 @@ define(["./mapUtils"], function (mapUtils) {
 		      	$('#schedule .timeslot').resizable({ handles: "s", minHeight: this.timeslotMinHeight, grid: [ 0, this.timeslotAddHeight ], resize: this.timeslotResizeCallback(this)});
 		    }
 		},
+		setUserLocation: function (that) {
+			return function (e, locationData) {			
+				that.userLocation = locationData.position;
+			}
+		},
 		// callback for Panel event listener when ADD button is clicked
 		setTimeslot: function (that) {
 			return function (e, locationData) {
@@ -54,10 +64,28 @@ define(["./mapUtils"], function (mapUtils) {
 				}
 				// not first timeslot, so calculate travel from previous timeslot's location
 				else {
-					mapUtils.setTimeslotTravelTime(timeslot.prev().data('position'), locationData.position, timeslot);
+					mapUtils.setTimeslotTravelTime(timeslot.prev().data('position'), locationData.position, timeslot, ' from previous location');
 				}
-
-				
+			}
+		},
+		// refresh travel time for all timeslots in the schedule
+		refreshScheduleTravelTime: function (that) {
+			return function (e, locationData) {
+				// get all active timeslots
+				$('#schedule .timeslot.active').each(function () {
+					// check if there are earlier active timeslots; no? then this is the first, so position from user's location
+					if(!$(this).prevAll('.active:first').length) {
+						if(that.userLocation != null && $(this).data('position') != undefined) {
+							mapUtils.setTimeslotTravelTime(that.userLocation, $(this).data('position'), $(this), ' from you');
+						}							
+					}
+					// there are earlier active timeslots, so position travel time from one active timeslot right before
+					else {
+						if($(this).prevAll('.active:first').data('position') != undefined && $(this).data('position') != undefined) {
+							mapUtils.setTimeslotTravelTime($(this).prevAll('.active:first').data('position'), $(this).data('position'), $(this), ' from previous location');
+						}							
+					}
+				});				
 			}
 		},
 		// callback when sorting timeslots
@@ -110,6 +138,9 @@ define(["./mapUtils"], function (mapUtils) {
 					uiObject.item.find('.time').text(that.getPrettyTime(nextHour));
 					uiObject.item.attr('data-starthour', nextHour);		
 				}
+
+				// trigger refresh of all travel times due to changed order of locations
+				$( "body").trigger( "eventRefreshScheduleTravelTime", [{}]);
 		    }
 		},
 		// callback for resized timeslot (via closures)

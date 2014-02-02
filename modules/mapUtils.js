@@ -30,20 +30,20 @@ define(function() {
 	    	}
 		},
 		// set travel time for timeslot's location from provided origin (previous timeslot or user's position)
-		setTimeslotTravelTime: function (origin, destination, timeslot) {
-			this.travelTime(origin, destination, this.setTimeslotTravelTimeCallback(timeslot));
+		setTimeslotTravelTime: function (origin, destination, timeslot, sufficText) {
+			this.travelTime(origin, destination, this.setTimeslotTravelTimeCallback(timeslot, sufficText));
 		},
-		setTimeslotTravelTimeCallback: function (timeslot) {
+		setTimeslotTravelTimeCallback: function (timeslot, sufficText) {
 			return function (response, status) {
 	    		if (status != google.maps.DistanceMatrixStatus.OK) {
 	    			alert('Error was: ' + status);
 	  			} 
-	  			else {
+	  			else {	  				
     				for (var i = 0; i < response.originAddresses.length; i++) {
 				      	var results = response.rows[i].elements;
 
 				      	for (var j = 0; j < results.length; j++) {
-				      		timeslot.find('.description').text(results[j].duration.text + ' from previous location');	// set travel time	
+				      		timeslot.find('.description').text(results[j].duration.text + sufficText);	// set travel time	
 				      	}
 			    	}			    	
 	  			}

@@ -16,7 +16,10 @@ define(["./data", "./mapUtils"], function(locationData, mapUtils) {
 		    	var map;
 
 		    	// upon successful address to lat/long resolution
-		    	if (status == google.maps.GeocoderStatus.OK) {      
+		    	if (status == google.maps.GeocoderStatus.OK) {  
+		    		// trigger event with user's location
+		    		$( "body").trigger( "eventUserLocationIdentified", [{ position: results[0].geometry.location }]);    
+
 			      	// basic map options
 			      	var mapOptions = {
 			        	center: results[0].geometry.location, // center map on resolved geolocation

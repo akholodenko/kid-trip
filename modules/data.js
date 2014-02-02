@@ -18,5 +18,11 @@ define(function () {
 		title: 'Dolores Park Playground',
 		lat: 37.7581932,
 		lng: -122.4271466
+	},
+	{
+		id: 4,
+		title: 'Peter Loftus Playground',
+		lat: 37.6000499,
+		lng: -122.4010465
 	}]
 });
