@@ -49,7 +49,7 @@ define(["./data", "./mapUtils"], function(locationData, mapUtils) {
 				          	title: locationObject.title,
 				          	position: new google.maps.LatLng(locationObject.lat, locationObject.lng),
 				          	animation: google.maps.Animation.DROP,
-				          	icon: 'images/icon_playground_32.png',
+				          	icon: mapUtils.markerIconByType(locationObject.type),
 				          	id: locationObject.id // unique identifier for location
 				      	});   
 

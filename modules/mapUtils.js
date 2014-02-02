@@ -61,5 +61,13 @@ define(function() {
 			      	avoidTolls: false
     			}, callback);
 		},
+		markerIconByType: function (type) {
+			switch (type) {
+				case 'playground':
+					return 'images/icon_playground_32.png';
+				case 'museum':
+					return 'images/icon_museum_32.png';
+			}
+		}
 	}
 });
