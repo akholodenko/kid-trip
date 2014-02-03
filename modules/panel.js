@@ -33,13 +33,17 @@ define(["./mapUtils"], function (mapUtils) {
 		    for(var x = startHour; x <= endHour; x++) {
 		      	// demo code for ACTIVE timeslot via random
 		      	var active = 'inactive';//Math.floor((Math.random()*2)+1) == 1 ? 'active' : '';
-		      	$('#schedule').append("<div class='timeslot " + active + "' data-startHour='" + x + "'><div class='time'>" + this.getPrettyTime(x) + "</div><div class='event'><div class='header'>Stretch timeslot</div><div class='description'>to extend event</div></div></div>");
+		      	$('#schedule').append("<div class='timeslot " + active + "' data-startHour='" + x + "'><div class='drag-handle'></div><div class='time'>" + this.getPrettyTime(x) + "</div><div class='event'><div class='header'>Stretch timeslot</div><div class='description'>to extend event</div></div></div>");
 
 				// define SORTABLE functionality
 		      	$('#schedule').sortable({ axis: "y", placeholder: "ui-state-highlight", update: this.timeslotSortCallback(this)});
 
+		      	// open/close hand icon for dragging timeslots
+		      	$('#schedule .timeslot .drag-handle').on('mousedown', function (e) { $(this).addClass('dragging'); });
+		      	$('#schedule .timeslot .drag-handle').on('mouseup', function (e) { $(this).removeClass('dragging'); });
+
 		      	// define RESIZABLE functionality
-		      	$('#schedule .timeslot').resizable({ handles: "s", minHeight: this.timeslotMinHeight, grid: [ 0, this.timeslotAddHeight ], resize: this.timeslotResizeCallback(this)});
+		      	//$('#schedule .timeslot').resizable({ handles: "s", minHeight: this.timeslotMinHeight, grid: [ 0, this.timeslotAddHeight ], resize: this.timeslotResizeCallback(this)});
 		    }
 		},
 		setUserLocation: function (that) {
