@@ -1,5 +1,8 @@
 /** MAP module */
-define(["./data", "./mapUtils"], function(locationData, mapUtils) {	
+define(["./data", "./mapUtils"], function(data, mapUtils) {	
+	var locationData = data.locationData;
+	var activityTimeByType = data.activityTimeByType;
+
 	return {    		
 		locationMarkers: [],
     	geocode: function (address) {
@@ -50,6 +53,7 @@ define(["./data", "./mapUtils"], function(locationData, mapUtils) {
 				          	position: new google.maps.LatLng(locationObject.lat, locationObject.lng),
 				          	animation: google.maps.Animation.DROP,
 				          	icon: mapUtils.markerIconByType(locationObject.type),
+				          	activityTime: activityTimeByType[locationObject.type].time,
 				          	id: locationObject.id // unique identifier for location
 				      	});   
 
@@ -87,7 +91,8 @@ define(["./data", "./mapUtils"], function(locationData, mapUtils) {
 			   		title: locationMarker.get('title'),
 			   		duration: locationMarker.get('duration'),
 			   		distance: locationMarker.get('distance'),
-			   		position: locationMarker.getPosition()	// geolocation of location
+			   		position: locationMarker.getPosition(),	// geolocation of location
+			   		activityTime: locationMarker.get('activityTime')
 			   	}]);
 			};
 		}
