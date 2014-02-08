@@ -30,10 +30,10 @@ define(function() {
 	    	}
 		},
 		// set travel time for timeslot's location from provided origin (previous timeslot or user's position)
-		setTimeslotTravelTime: function (origin, destination, timeslot, sufficText) {
-			this.travelTime(origin, destination, this.setTimeslotTravelTimeCallback(timeslot, sufficText));
+		setTimeslotTravelTime: function (origin, destination, timeslot, prefixText, sufficText) {
+			this.travelTime(origin, destination, this.setTimeslotTravelTimeCallback(timeslot, prefixText, sufficText));
 		},
-		setTimeslotTravelTimeCallback: function (timeslot, sufficText) {
+		setTimeslotTravelTimeCallback: function (timeslot, prefixText, sufficText) {
 			return function (response, status) {
 	    		if (status != google.maps.DistanceMatrixStatus.OK) {
 	    			alert('Error was: ' + status);
@@ -43,7 +43,7 @@ define(function() {
 				      	var results = response.rows[i].elements;
 
 				      	for (var j = 0; j < results.length; j++) {
-				      		timeslot.find('.description').text(results[j].duration.text + sufficText);	// set travel time	
+				      		timeslot.find('.description').html(prefixText + results[j].duration.text + sufficText);	// set travel time	
 				      	}
 			    	}			    	
 	  			}
@@ -67,6 +67,16 @@ define(function() {
 					return 'images/icon_playground_32.png';
 				case 'museum':
 					return 'images/icon_museum_32.png';
+			}
+		},
+		minutesToPrettyTime: function (minutes) {
+			if(minutes < 60)
+				return minutes + 'mins';
+			else {
+				var hours = Math.floor(minutes / 60);
+				var mins = (minutes % 60);
+
+				return hours + ' hour ' + (mins == 0 ? '' : mins + ' mins');
 			}
 		}
 	}

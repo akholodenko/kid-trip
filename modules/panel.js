@@ -58,17 +58,18 @@ define(["./mapUtils"], function (mapUtils) {
 				var timeslot = $('#schedule .timeslot.inactive').first();
 				timeslot.addClass('active').removeClass('inactive')	// set visually as active
 						.data('locationid', locationData.id)	// set location ID for timeslot
-						.data('position', locationData.position);	// store timeslot's location position (geolocation) object
+						.data('position', locationData.position)	// store timeslot's location position (geolocation) object
+						.data('activityTime', locationData.activityTime);	// story location activity time (in minutes)
 
 				timeslot.find('.header').text(locationData.title);	// set title for timeslot
 
 				// this is the first timeslot, so travel time is from user's location
 				if(!timeslot.prev().length) {					
-					timeslot.find('.description').text(locationData.duration.text + ' from you');	// set travel time	
+					timeslot.find('.description').html(mapUtils.minutesToPrettyTime(locationData.activityTime) + ' activity<br/>' + locationData.duration.text + ' from you');	// set travel time	
 				}
 				// not first timeslot, so calculate travel from previous timeslot's location
 				else {
-					mapUtils.setTimeslotTravelTime(timeslot.prev().data('position'), locationData.position, timeslot, ' from previous location');
+					mapUtils.setTimeslotTravelTime(timeslot.prev().data('position'), locationData.position, timeslot, mapUtils.minutesToPrettyTime(locationData.activityTime) + ' activity<br/>', ' from previous location');
 				}
 			}
 		},
@@ -80,13 +81,13 @@ define(["./mapUtils"], function (mapUtils) {
 					// check if there are earlier active timeslots; no? then this is the first, so position from user's location
 					if(!$(this).prevAll('.active:first').length) {
 						if(that.userLocation != null && $(this).data('position') != undefined) {
-							mapUtils.setTimeslotTravelTime(that.userLocation, $(this).data('position'), $(this), ' from you');
+							mapUtils.setTimeslotTravelTime(that.userLocation, $(this).data('position'), $(this), mapUtils.minutesToPrettyTime($(this).data('activityTime')) + ' activity<br/>', ' from you');
 						}							
 					}
 					// there are earlier active timeslots, so position travel time from one active timeslot right before
 					else {
 						if($(this).prevAll('.active:first').data('position') != undefined && $(this).data('position') != undefined) {
-							mapUtils.setTimeslotTravelTime($(this).prevAll('.active:first').data('position'), $(this).data('position'), $(this), ' from previous location');
+							mapUtils.setTimeslotTravelTime($(this).prevAll('.active:first').data('position'), $(this).data('position'), $(this), mapUtils.minutesToPrettyTime($(this).data('activityTime')) + ' activity<br/>', ' from previous location');
 						}							
 					}
 				});				
