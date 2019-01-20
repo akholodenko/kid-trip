@@ -5,14 +5,12 @@ export const getVenueTypes = () => {
 		attributes: ['id', 'name'],
 		order: [['name', 'ASC']]
 	}).then((venueTypes) => {
-		let cleanVenues = venueTypes.map((venueType) => {
+		return venueTypes.map((venueType) => {
 			return {
 				id: venueType.id,
 				name: venueType.name
 			}
 		})
-
-		return cleanVenues
 	})
 }
 
