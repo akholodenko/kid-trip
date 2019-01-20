@@ -1,14 +1,19 @@
-import { buildSchema } from 'graphql'
+import { gql } from 'apollo-server'
 
-const schema = buildSchema(`
-  type Query {
-    venueTypes: [VenueType]!
-  }
-  
-  type VenueType {
-  	id: Int!
-  	name: String!
-  }
-`);
+export default gql`
+    type Query {
+        hello: String
+        venueTypes: [VenueType]!
+		venueType(id: ID!): VenueType
+    }
 
-export default schema
+    type VenueType {
+        id: Int!
+        name: String!
+    }
+	
+	type Venue {
+		id: Int!
+        name: String!
+	}
+`;
