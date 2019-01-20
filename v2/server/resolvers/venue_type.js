@@ -15,7 +15,7 @@ export const getVenueTypes = () => {
 }
 
 export const getVenueType = (venueTypeId) => {
-	return VenueType.findById(venueTypeId, {
+	return VenueType.findByPk(venueTypeId, {
 		attributes: ['id', 'name'],
 		order: [['name', 'ASC']]
 	}).then((venueType) => {

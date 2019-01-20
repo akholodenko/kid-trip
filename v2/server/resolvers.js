@@ -9,8 +9,8 @@ export default {
 		venueType(obj, args, context, info) {
 			return getVenueType(args.id)
 		},
-		cities() {
-			return getCities()
+		cities(obj, args) {
+			return getCities({ limit: args.first })
 		}
 	}
 };

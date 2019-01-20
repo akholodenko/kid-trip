@@ -1,8 +1,8 @@
 import City from '../models/city'
-import VenueType from "../models/venue_type";
 
-export const getCities = () => {
+export const getCities = (options) => {
 	return City.findAll({
-		order: [['name', 'ASC']]
+		order: [['name', 'ASC']],
+		limit: options.limit || null
 	})
 }
