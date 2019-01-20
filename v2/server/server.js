@@ -1,40 +1,44 @@
 import express from 'express'
 import graphqlHTTP from 'express-graphql'
-import { buildSchema } from 'graphql'
-import { pool } from './database'
+import Sequelize from 'sequelize'
 
-pool.query("select * from venue_types", (ex, rows) => {
-	if (ex) {
-		console.log(ex);
-	} else {
-		console.log(rows);
-	}
+import schema from './schema'
+
+const sequelize = new Sequelize('kidtrip', 'root', null, {
+	host: 'localhost',
+	dialect: 'mysql'
 });
 
-// Construct a schema, using GraphQL schema language
-const schema = buildSchema(`
-  type Query {
-    venueTypes: [VenueType]!
-  }
-  
-  type VenueType {
-  	id: Int!
-  	name: String!
-  }
-`);
+const VenueType = sequelize.define('venue_types', {
+	id: {
+		type: Sequelize.INTEGER,
+		primaryKey: true
+	},
+	name: Sequelize.STRING
+}, {
+	timestamps: false
+});
+
+const getVenueTypes = () => {
+	return VenueType.findAll({
+		attributes: ['id', 'name'],
+		order: [['name', 'ASC']]
+	}).then((venueTypes) => {
+		let cleanVenues = venueTypes.map((venueType) => {
+			return {
+				id: venueType.id,
+				name: venueType.name
+			}
+		})
+
+		return cleanVenues
+	})
+}
 
 // The root provides a resolver function for each API endpoint
 const root = {
 	venueTypes: () => {
-		return [{ id: 1, name: 'outdoor playground' },
-			{ id: 2, name: 'amusement park' },
-			{ id: 3, name: 'museum' },
-			{ id: 4, name: 'sport' },
-			{ id: 5, name: 'food' },
-			{ id: 6, name: 'zoo' },
-			{ id: 7, name: 'outdoor playground' },
-			{ id: 8, name: 'indoor playground' },
-			{ id: 9, name: 'hiking trail' }]
+		return getVenueTypes()
 	}
 };
 
