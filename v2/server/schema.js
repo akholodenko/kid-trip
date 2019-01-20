@@ -5,6 +5,7 @@ export default gql`
         hello: String
         venueTypes: [VenueType]!
 		venueType(id: ID!): VenueType
+		cities: [City]!
     }
 
     type VenueType {
@@ -16,4 +17,16 @@ export default gql`
 		id: Int!
         name: String!
 	}
+	
+	type City {
+		id: Int!
+		name: String!
+		state: String!
+	}
+	
+#	type State {
+#		id: Int!
+#		name: String!
+#		shortName: String!
+#	}
 `;

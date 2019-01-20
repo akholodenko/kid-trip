@@ -1,4 +1,5 @@
 import { getVenueType, getVenueTypes } from "./resolvers/venue_type";
+import { getCities } from './resolvers/city'
 
 export default {
 	Query: {
@@ -7,6 +8,9 @@ export default {
 		},
 		venueType(obj, args, context, info) {
 			return getVenueType(args.id)
+		},
+		cities() {
+			return getCities()
 		}
 	}
 };
