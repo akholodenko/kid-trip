@@ -1,13 +1,23 @@
-'use strict';
-module.exports = (sequelize, DataTypes) => {
-  const Venue = sequelize.define('venue', {
-    name: DataTypes.STRING,
-    street_address: DataTypes.STRING,
-    lat: DataTypes.DECIMAL,
-    lng: DataTypes.DECIMAL
-  }, {});
-  Venue.associate = function(models) {
-    // associations can be defined here
-  };
-  return Venue;
-};
+import Sequelize from "sequelize";
+import sequelize from '../config/sequelize'
+import VenueType from './venue_type'
+import VenueClassification from './venue_classification'
+
+const Venue = sequelize.define('venues', {
+  id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true
+  },
+  name: Sequelize.STRING,
+  street_address: Sequelize.STRING,
+  lat: Sequelize.DECIMAL,
+  lng: Sequelize.DECIMAL
+}, {});
+
+Venue.belongsToMany(VenueType, {
+  through: VenueClassification,
+  foreignKey: 'venue_id',
+  otherKey: 'venue_type_id'
+});
+
+export default Venue

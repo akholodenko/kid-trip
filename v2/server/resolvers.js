@@ -1,8 +1,12 @@
+import { getVenue } from './resolvers/venue'
 import { getVenueType, getVenueTypes } from "./resolvers/venue_type";
 import { getCities } from './resolvers/city'
 
 export default {
 	Query: {
+		venue(obj, args) {
+			return getVenue(args.id)
+		},
 		venueTypes() {
 			return getVenueTypes()
 		},

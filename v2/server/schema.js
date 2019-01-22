@@ -2,6 +2,7 @@ import { gql } from 'apollo-server'
 
 export default gql`
     type Query {
+		venue(id: ID!): Venue!
         venueTypes: [VenueType]!
 		venueType(id: ID!): VenueType
 		cities(first: Int): [City]!
@@ -15,6 +16,8 @@ export default gql`
 	type Venue {
 		id: Int!
         name: String!
+		streetAddress: String!
+		venueTypes: [VenueType]
 	}
 	
 	type City {
