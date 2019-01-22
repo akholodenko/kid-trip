@@ -1,6 +1,9 @@
+import { initModelAssociations } from './models/associations'
 import { getVenue } from './resolvers/venue'
 import { getVenueType, getVenueTypes } from "./resolvers/venue_type";
 import { getCities } from './resolvers/city'
+
+initModelAssociations()
 
 export default {
 	Query: {

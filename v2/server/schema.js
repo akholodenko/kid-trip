@@ -11,12 +11,15 @@ export default gql`
     type VenueType {
         id: Int!
         name: String!
+		venues: [Venue]
     }
 	
 	type Venue {
 		id: Int!
         name: String!
 		streetAddress: String!
+		lat: Float
+		lng: Float
 		venueTypes: [VenueType]
 	}
 	
