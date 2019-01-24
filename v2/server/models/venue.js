@@ -4,7 +4,8 @@ import sequelize from '../config/sequelize'
 const Venue = sequelize.define('venues', {
   id: {
     type: Sequelize.INTEGER,
-    primaryKey: true
+    primaryKey: true,
+    autoIncrement: true,
   },
   name: Sequelize.STRING,
   street_address: Sequelize.STRING,

@@ -1,7 +1,8 @@
 import { initModelAssociations } from './models/associations'
 import { getVenue } from './resolvers/venue'
-import { getVenueType, getVenueTypes } from "./resolvers/venue_type";
+import { getVenueType, getVenueTypes } from "./resolvers/venue_type"
 import { getCities } from './resolvers/city'
+import { signup, login } from './resolvers/user'
 
 initModelAssociations()
 
@@ -18,6 +19,10 @@ export default {
 		},
 		cities(obj, args) {
 			return getCities({ limit: args.first })
-		}
+		},
+	},
+	Mutation: {
+		signup,
+		login
 	}
-};
+}

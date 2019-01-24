@@ -4,7 +4,8 @@ import sequelize from '../config/sequelize'
 export default sequelize.define('cities', {
 	id: {
 		type: Sequelize.INTEGER,
-		primaryKey: true
+		primaryKey: true,
+		autoIncrement: true,
 	},
 	name: Sequelize.STRING,
 	state: Sequelize.STRING,
