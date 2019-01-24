@@ -3,6 +3,15 @@ import jwt from 'jsonwebtoken'
 import { APP_SECRET } from '../utils'
 import User from '../models/user'
 
+export const fromDbUserTransform = (user) => {
+	return {
+		id: user.id,
+		firstName: user.first_name,
+		lastName: user.last_name,
+		email: user.email,
+	}
+}
+
 async function signup(parent, args) {
 	const password = await bcrypt.hash(args.password, 10)
 
@@ -12,12 +21,7 @@ async function signup(parent, args) {
 		email: args.email,
 		password
 	}).then(newUser => {
-		return {
-			id: newUser.id,
-			firstName: newUser.first_name,
-			lastName: newUser.last_name,
-			email: newUser.email,
-		}
+		return fromDbUserTransform(newUser)
 	})
 
 	const token = jwt.sign({ userId: user.id }, APP_SECRET)
@@ -28,10 +32,9 @@ async function signup(parent, args) {
 	}
 }
 
-async function login(parent, args, context) {
-	// 1
-	// const user = await context.prisma.user({ email: args.email })
-	const user = {}
+async function login(parent, args) {
+	const user = await User.find({where: {email: args.email }})
+
 	if (!user) {
 		throw new Error('No such user found')
 	}
@@ -45,7 +48,7 @@ async function login(parent, args, context) {
 
 	return {
 		token,
-		user,
+		user: fromDbUserTransform(user),
 	}
 }
 
