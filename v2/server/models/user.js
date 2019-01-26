@@ -1,7 +1,7 @@
-import Sequelize from "sequelize";
+import Sequelize from "sequelize"
 import sequelize from '../config/sequelize'
 
-const User = sequelize.define('users', {
+const User = sequelize.define('user', {
 	id: {
 		type: Sequelize.INTEGER,
 		primaryKey: true,
@@ -9,10 +9,27 @@ const User = sequelize.define('users', {
 	},
 	first_name: Sequelize.STRING,
 	last_name: Sequelize.STRING,
-	email: Sequelize.STRING,
-	password: Sequelize.STRING
+	email: {
+		type: Sequelize.STRING,
+		allowNull: false,
+		unique: {
+			msg: 'Email address already in use!',
+		},
+		validate: {
+			max: 2,
+			isEmail: {
+				msg: 'The email you entered is invalid.',
+			},
+		},
+	},
+	password: Sequelize.STRING,
 }, {
-	underscored: true
-});
+	tableName: 'users',
+	underscored: true,
+	indexes: [{
+		unique: true,
+		fields: ['email'],
+	}],
+})
 
 export default User

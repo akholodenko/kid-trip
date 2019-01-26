@@ -1,7 +1,7 @@
 import Sequelize from "sequelize"
 import sequelize from '../config/sequelize'
 
-const UserVenue = sequelize.define('users_venues', {
+const UserVenue = sequelize.define('userVenue', {
 	id: {
 		type: Sequelize.INTEGER,
 		primaryKey: true,
@@ -10,6 +10,7 @@ const UserVenue = sequelize.define('users_venues', {
 	user_id: Sequelize.INTEGER,
 	venue_id: Sequelize.INTEGER,
 }, {
+	tableName: 'users_venues',
 	timestamps: false,
 })
 

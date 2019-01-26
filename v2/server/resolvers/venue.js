@@ -11,7 +11,7 @@ export const fromDbVenueTransform = (venue) => {
 		streetAddress: venue.street_address,
 		lat: venue.lat,
 		lng: venue.lng,
-		venueTypes: venue.venue_types,
+		venueTypes: venue.venueTypes,
 		users: venue.users ? venue.users.map(user => fromDbUserTransform(user)) : null,
 	}
 }

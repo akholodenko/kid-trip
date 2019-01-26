@@ -1,7 +1,7 @@
 import Sequelize from "sequelize";
 import sequelize from '../config/sequelize'
 
-const Venue = sequelize.define('venues', {
+const Venue = sequelize.define('venue', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
@@ -12,7 +12,8 @@ const Venue = sequelize.define('venues', {
   lat: Sequelize.DECIMAL,
   lng: Sequelize.DECIMAL
 }, {
-  underscored: true
+  tableName: 'venues',
+  underscored: true,
 });
 
 export default Venue

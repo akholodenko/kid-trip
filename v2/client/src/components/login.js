@@ -26,13 +26,17 @@ class Login extends Component {
 		password: '',
 		firstName: '',
 		lastName: '',
+		errorMessage: null,
 	}
 
 	render() {
-		const { login, email, password, firstName, lastName } = this.state
+		const { login, email, password, firstName, lastName, errorMessage } = this.state
 		return (
 			<div>
 				<h4 className="mv3">{login ? 'Login' : 'Sign Up'}</h4>
+				{errorMessage && (
+					<h2>{errorMessage}</h2>
+				)}
 				<div className="flex flex-column">
 					{!login && (
 						<span>
@@ -68,6 +72,7 @@ class Login extends Component {
 						mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
 						variables={{ email, password, firstName, lastName }}
 						onCompleted={data => this._confirm(data)}
+						onError={error => this._error(error)}
 					>
 						{mutation => (
 							<div className="pointer mr2 button" onClick={mutation}>
@@ -89,6 +94,8 @@ class Login extends Component {
 	}
 
 	_confirm = async data => {
+		this.state.error = null
+
 		const { token } = this.state.login ? data.login : data.signup
 		this._saveUserData(token)
 		this.props.history.push(`/`)
@@ -96,6 +103,12 @@ class Login extends Component {
 
 	_saveUserData = token => {
 		localStorage.setItem(AUTH_TOKEN, token)
+	}
+
+	_error = async ({ graphQLErrors }) => {
+		if (graphQLErrors[0].extensions.exception.errors[0].message) {
+			this.setState({ errorMessage: graphQLErrors[0].extensions.exception.errors[0].message })
+		}
 	}
 }
 
