@@ -2,13 +2,17 @@ import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
 import { APP_SECRET } from '../utils'
 import User from '../models/user'
+import Venue from "../models/venue"
 
-export const fromDbUserTransform = (user) => {
+import { fromDbVenueTransform } from './venue'
+
+const fromDbUserTransform = (user) => {
 	return {
 		id: user.id,
 		firstName: user.first_name,
 		lastName: user.last_name,
 		email: user.email,
+		venues: user.venues ? user.venues.map(venue => fromDbVenueTransform(venue)) : null,
 	}
 }
 
@@ -19,7 +23,7 @@ async function signup(parent, args) {
 		first_name: args.firstName,
 		last_name: args.lastName,
 		email: args.email,
-		password
+		password,
 	}).then(newUser => {
 		return fromDbUserTransform(newUser)
 	})
@@ -33,7 +37,7 @@ async function signup(parent, args) {
 }
 
 async function login(parent, args) {
-	const user = await User.find({where: {email: args.email }})
+	const user = await User.find({ where: { email: args.email } })
 
 	if (!user) {
 		throw new Error('No such user found')
@@ -52,7 +56,22 @@ async function login(parent, args) {
 	}
 }
 
+const getUser = (userId, { fields }) => {
+	let associations = []
+
+	if (!!fields.venues) {
+		associations.push({ model: Venue })
+	}
+
+	return User.findByPk(userId, {
+		attributes: ['id', 'first_name', 'last_name', 'email'],
+		include: associations,
+	}).then(user => fromDbUserTransform(user))
+}
+
 module.exports = {
 	signup,
 	login,
+	getUser,
+	fromDbUserTransform,
 }

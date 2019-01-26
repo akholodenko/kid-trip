@@ -11,6 +11,8 @@ const Venue = sequelize.define('venues', {
   street_address: Sequelize.STRING,
   lat: Sequelize.DECIMAL,
   lng: Sequelize.DECIMAL
-}, {});
+}, {
+  underscored: true
+});
 
 export default Venue

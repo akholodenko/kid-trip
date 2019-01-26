@@ -2,6 +2,7 @@ import { gql } from 'apollo-server'
 
 export default gql`
     type Query {
+        user(id: ID!): User!
         venue(id: ID!): Venue!
         venueTypes: [VenueType]!
         venueType(id: ID!): VenueType
@@ -21,6 +22,7 @@ export default gql`
         lat: Float
         lng: Float
         venueTypes: [VenueType]
+        users: [User]
     }
 
     type City {
@@ -31,12 +33,6 @@ export default gql`
         lng: Float
     }
 
-    #	type State {
-    #		id: Int!
-    #		name: String!
-    #		shortName: String!
-    #	}
-    
     type Mutation {
 #        post(url: String!, description: String!): Link!
         signup(email: String!, password: String!, firstName: String!, lastName: String!): AuthPayload
@@ -53,5 +49,6 @@ export default gql`
         firstName: String!
         lastName: String!
         email: String!
+        venues: [Venue]
     }
 `
