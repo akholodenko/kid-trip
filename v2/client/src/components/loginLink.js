@@ -1,9 +1,8 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link as RouterLink } from 'react-router-dom'
+import Link from '@material-ui/core/Link';
 import { withRouter } from 'react-router'
 import { AUTH_TOKEN } from '../constants'
-
-import Button from '@material-ui/core/Button';
 
 class LoginLink extends Component {
 	render() {
@@ -20,10 +19,8 @@ class LoginLink extends Component {
 				logout
 			</div>
 		) : (
-			<Link to="/login" className="ml1 no-underline black">
-				<Button variant="contained" color="primary">
-					login
-				</Button>
+			<Link component={RouterLink} to="/login" color="primary">
+				login
 			</Link>
 		))
 	}

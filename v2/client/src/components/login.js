@@ -4,6 +4,7 @@ import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
 const SIGNUP_MUTATION = gql`
     mutation SignupMutation($email: String!, $password: String!, $firstName: String!, $lastName: String!) {
@@ -82,9 +83,9 @@ class Login extends Component {
 						onError={error => this._error(error)}
 					>
 						{mutation => (
-							<div className="pointer mr2 button" onClick={mutation}>
+							<Button color='primary' variant='contained' onClick={mutation}>
 								{login ? 'login' : 'create account'}
-							</div>
+							</Button>
 						)}
 					</Mutation>
 					<div
