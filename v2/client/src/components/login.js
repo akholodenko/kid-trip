@@ -3,6 +3,8 @@ import { AUTH_TOKEN } from '../constants'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
+import TextField from '@material-ui/core/TextField'
+
 const SIGNUP_MUTATION = gql`
     mutation SignupMutation($email: String!, $password: String!, $firstName: String!, $lastName: String!) {
         signup(email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
@@ -54,17 +56,22 @@ class Login extends Component {
 						/>
 						</span>
 					)}
-					<input
+					<TextField
+						id="email"
+						label="Email"
+						// className={classes.textField}
 						value={email}
 						onChange={e => this.setState({ email: e.target.value })}
-						type="text"
-						placeholder="Your email address"
+						margin="normal"
 					/>
-					<input
-						value={password}
-						onChange={e => this.setState({ password: e.target.value })}
+					<TextField
+						id="password"
+						label="Password"
+						// className={classes.textField}
 						type="password"
-						placeholder="Choose a safe password"
+						autoComplete="current-password"
+						onChange={e => this.setState({ password: e.target.value })}
+						margin="normal"
 					/>
 				</div>
 				<div className="flex mt3">
@@ -106,7 +113,9 @@ class Login extends Component {
 	}
 
 	_error = async ({ graphQLErrors }) => {
-		if (graphQLErrors[0].extensions.exception.errors[0].message) {
+		if (this.state.login && graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message) {
+			this.setState({ errorMessage: graphQLErrors[0].message})
+		} else if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].extensions.exception.errors[0].message) {
 			this.setState({ errorMessage: graphQLErrors[0].extensions.exception.errors[0].message })
 		}
 	}

@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import { AUTH_TOKEN } from '../constants'
 
+import Button from '@material-ui/core/Button';
+
 class LoginLink extends Component {
 	render() {
 		const authToken = localStorage.getItem(AUTH_TOKEN)
@@ -19,7 +21,9 @@ class LoginLink extends Component {
 			</div>
 		) : (
 			<Link to="/login" className="ml1 no-underline black">
-				login
+				<Button variant="contained" color="primary">
+					login
+				</Button>
 			</Link>
 		))
 	}
