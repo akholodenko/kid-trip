@@ -11,11 +11,17 @@ import LoginButton from './loginButton'
 const ButtonAppBar = (props) => {
 	const { classes } = props
 
+	const toggleMenu = () => {
+		console.log('toggle menu')
+	}
+
 	return (
 		<div className={classes.root}>
 			<AppBar position="fixed" style={{ background: 'transparent', boxShadow: 'none' }}>
-				<Toolbar variant="dense">
-					<IconButton className={classes.menuButton} color="inherit" aria-label="Menu">
+				<Toolbar variant="dense" className={classes.container}>
+					<IconButton
+						onClick={toggleMenu}
+						className={classes.menuButton} color="inherit" aria-label="Menu">
 						<MenuIcon/>
 					</IconButton>
 					<Typography variant="h6" color="inherit" className={classes.grow}>

@@ -22,6 +22,10 @@ const styles = {
 
 const homepageStyles = {
 	...styles,
+	container: {
+		borderBottom: '1px solid',
+		borderBottomColor: blueGrey[100]
+	},
 	grow: {
 		...styles.grow,
 		color: blueGrey[500],
