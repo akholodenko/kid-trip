@@ -1,9 +1,10 @@
 import React from 'react'
-
+import Header from './homepage/header'
 export default () => {
 	return (
 		<div>
-			<div>welcome</div>
+			<Header/>
+			<div>homepage here</div>
 		</div>
 	)
 }
