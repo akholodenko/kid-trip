@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { Switch, Route } from 'react-router-dom'
 import { withRouter } from 'react-router'
 import Routes from './routes'
+import { isHomepage } from './utils/routeUtils'
 
 import Login from "./components/login"
 import Home from './components/home'
@@ -13,21 +14,20 @@ import AppBar from './layout/appBarContainer'
 
 const styles = {
 	appBarSpacer: {
-		height: '49px'
-	}
+		height: '49px',
+	},
 }
 
 class App extends Component {
 	render() {
 		const { classes, location } = this.props
-		const isHomepage = (location.pathname === Routes.home)
 
 		return (
 			<MuiThemeProvider theme={theme}>
 				<div>
 					<CssBaseline/>
 					<AppBar/>
-					{!isHomepage && (
+					{!isHomepage(location) && (
 						<div className={classes.appBarSpacer}></div>
 					)}
 					<Switch>

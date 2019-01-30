@@ -1,6 +1,5 @@
 import React from 'react'
-import Routes from '../routes'
-
+import { isHomepage } from '../utils/routeUtils'
 import { withStyles } from '@material-ui/core/styles'
 import { withRouter } from 'react-router'
 import blueGrey from '@material-ui/core/colors/blueGrey'
@@ -24,7 +23,7 @@ const homepageStyles = {
 	...styles,
 	container: {
 		borderBottom: '1px solid',
-		borderBottomColor: blueGrey[100]
+		borderBottomColor: blueGrey[100],
 	},
 	grow: {
 		...styles.grow,
@@ -36,15 +35,13 @@ const homepageStyles = {
 	},
 	loginButton: {
 		color: blueGrey[500],
-	}
+	},
 }
 
-const ButtonAppBarContainer = (props) => {
-	const { location } = props
-	const currentStyles = (location.pathname === Routes.home) ? styles : homepageStyles
-
+const AppBarContainer = (props) => {
+	const currentStyles = isHomepage(props.location) ? styles : homepageStyles
 	const AppBarWithStyles = withStyles(currentStyles)(AppBar)
 	return (<AppBarWithStyles/>)
 }
 
-export default withRouter(ButtonAppBarContainer)
+export default withRouter(AppBarContainer)
