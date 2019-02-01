@@ -1,4 +1,6 @@
 import React, { Component } from 'react'
+import { withRouter } from 'react-router'
+
 import { AUTH_TOKEN } from '../constants'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
@@ -115,11 +117,11 @@ class Login extends Component {
 
 	_error = async ({ graphQLErrors }) => {
 		if (this.state.login && graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message) {
-			this.setState({ errorMessage: graphQLErrors[0].message})
+			this.setState({ errorMessage: graphQLErrors[0].message })
 		} else if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].extensions.exception.errors[0].message) {
 			this.setState({ errorMessage: graphQLErrors[0].extensions.exception.errors[0].message })
 		}
 	}
 }
 
-export default Login
+export default withRouter(Login)
