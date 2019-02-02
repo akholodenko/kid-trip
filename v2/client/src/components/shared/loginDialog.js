@@ -8,6 +8,7 @@ import gql from 'graphql-tag'
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
 
+import { withStyles } from '@material-ui/core/styles'
 import Dialog from '@material-ui/core/Dialog'
 import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -30,6 +31,17 @@ const LOGIN_MUTATION = gql`
     }
 `
 
+const styles = {
+	dialogMainContent: {
+		display: 'flex',
+		justifyContent: 'center',
+		flexDirection: 'column',
+	},
+	dialogMainError: {
+		textAlign: 'center',
+	},
+}
+
 class LoginDialog extends Component {
 	state = {
 		login: true, // switch between Login and SignUp
@@ -40,33 +52,46 @@ class LoginDialog extends Component {
 		errorMessage: null,
 	}
 
+	componentDidUpdate(prevProps) {
+		if (prevProps.open !== this.props.open) {
+			this.setState({ errorMessage: null })
+		}
+	}
+
 	render() {
 		const { login, email, password, firstName, lastName, errorMessage } = this.state
+		const { classes } = this.props
 		return (
 			<Dialog
 				open={this.props.open}
 				onClose={this.props.toggleDialog}
-				maxWidth='md' fullWidth={true}
+				maxWidth='sm' fullWidth={true}
 				aria-labelledby="form-dialog-title">
 				<DialogTitle id="login-dialog-title">{login ? 'Login' : 'Sign Up'}</DialogTitle>
 				<DialogContent>
 					{errorMessage && (
-						<DialogContentText>{errorMessage}</DialogContentText>
+						<DialogContentText className={classes.dialogMainError}>{errorMessage}</DialogContentText>
 					)}
-					<div className="flex flex-column">
+					<div className={classes.dialogMainContent}>
 						{!login && (
 							<span>
-						<input
+						<TextField
+							id="firstName"
+							label="First name"
+							error={!!errorMessage}
 							value={firstName}
 							onChange={e => this.setState({ firstName: e.target.value })}
-							type="text"
-							placeholder="Your first name"
+							margin="normal"
+							fullWidth
 						/>
-						<input
+						<TextField
+							id="lastName"
+							label="Last name"
+							error={!!errorMessage}
 							value={lastName}
 							onChange={e => this.setState({ lastName: e.target.value })}
-							type="text"
-							placeholder="Your last name"
+							margin="normal"
+							fullWidth
 						/>
 						</span>
 						)}
@@ -77,6 +102,7 @@ class LoginDialog extends Component {
 							value={email}
 							onChange={e => this.setState({ email: e.target.value })}
 							margin="normal"
+							fullWidth
 						/>
 						<TextField
 							id="password"
@@ -86,11 +112,14 @@ class LoginDialog extends Component {
 							autoComplete="current-password"
 							onChange={e => this.setState({ password: e.target.value })}
 							margin="normal"
+							fullWidth
 						/>
 					</div>
 				</DialogContent>
 				<DialogActions>
-					<Button onClick={() => this.setState({ login: !login })} color="primary" style={{marginRight: 'auto'}}>
+					<Button
+						onClick={() => this.setState({ login: !login, errorMessage: null })}
+						color="primary" style={{ marginRight: 'auto' }}>
 						{login
 							? 'need to create an account?'
 							: 'already have an account?'}
@@ -137,4 +166,4 @@ class LoginDialog extends Component {
 	}
 }
 
-export default withRouter(LoginDialog)
+export default withRouter(withStyles(styles)(LoginDialog))
