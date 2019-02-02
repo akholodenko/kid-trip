@@ -8,7 +8,7 @@ import MenuIcon from '@material-ui/icons/Menu'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
-import LoginButton from './loginButton'
+import LoginButton from '../components/shared/loginButton'
 
 class ButtonAppBar extends Component {
 	state = {

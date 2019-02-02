@@ -4,8 +4,7 @@ import { withRouter } from 'react-router'
 import Routes from './routes'
 import { isHomepage } from './utils/routeUtils'
 
-import Login from "./components/login"
-import Home from './components/home'
+import HomePage from './components/homePage'
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles'
@@ -31,8 +30,8 @@ class App extends Component {
 						<div className={classes.appBarSpacer}></div>
 					)}
 					<Switch>
-						<Route exact path={Routes.home} component={Home}/>
-						<Route exact path={Routes.login} component={Login}/>
+						<Route exact path={Routes.home} component={HomePage}/>
+						{/*<Route exact path={Routes.login} component={Login}/>*/}
 					</Switch>
 				</div>
 			</MuiThemeProvider>

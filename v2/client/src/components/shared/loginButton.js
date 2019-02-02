@@ -1,11 +1,9 @@
 import React, { Component } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import { withRouter } from 'react-router'
-import { AUTH_TOKEN } from '../constants'
+import { AUTH_TOKEN } from '../../constants'
 
-import BasicDialog from '../components/shared/basicDialog'
-import Login from '../components/login'
+import LoginDialog from './loginDialog'
 
 class LoginButton extends Component {
 	state = {
@@ -30,15 +28,14 @@ class LoginButton extends Component {
 		) : (
 			<span>
 			<Button
-				// component={RouterLink} to="/login"
 				onClick={this.toggleDialog}
-				className={this.props.className} color="inherit">
+				className={this.props.className}
+				color="inherit">
 				Login
 			</Button>
-			<BasicDialog
+			<LoginDialog
 				open={this.state.dialogOpen}
-				toggleDialog={this.toggleDialog}
-				content={<Login/>}/>
+				toggleDialog={this.toggleDialog}/>
 			</span>
 		))
 	}

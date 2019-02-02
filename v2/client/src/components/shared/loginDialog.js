@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 
-import { AUTH_TOKEN } from '../constants'
+import { AUTH_TOKEN } from '../../constants'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
+
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 const SIGNUP_MUTATION = gql`
     mutation SignupMutation($email: String!, $password: String!, $firstName: String!, $lastName: String!) {
@@ -24,7 +30,7 @@ const LOGIN_MUTATION = gql`
     }
 `
 
-class Login extends Component {
+class LoginDialog extends Component {
 	state = {
 		login: true, // switch between Login and SignUp
 		email: '',
@@ -37,14 +43,19 @@ class Login extends Component {
 	render() {
 		const { login, email, password, firstName, lastName, errorMessage } = this.state
 		return (
-			<div>
-				<h4 className="mv3">{login ? 'Login' : 'Sign Up'}</h4>
-				{errorMessage && (
-					<h2>{errorMessage}</h2>
-				)}
-				<div className="flex flex-column">
-					{!login && (
-						<span>
+			<Dialog
+				open={this.props.open}
+				onClose={this.props.toggleDialog}
+				maxWidth='md' fullWidth={true}
+				aria-labelledby="form-dialog-title">
+				<DialogTitle id="login-dialog-title">{login ? 'Login' : 'Sign Up'}</DialogTitle>
+				<DialogContent>
+					{errorMessage && (
+						<DialogContentText>{errorMessage}</DialogContentText>
+					)}
+					<div className="flex flex-column">
+						{!login && (
+							<span>
 						<input
 							value={firstName}
 							onChange={e => this.setState({ firstName: e.target.value })}
@@ -58,26 +69,36 @@ class Login extends Component {
 							placeholder="Your last name"
 						/>
 						</span>
-					)}
-					<TextField
-						id="email"
-						label="Email"
-						// className={classes.textField}
-						value={email}
-						onChange={e => this.setState({ email: e.target.value })}
-						margin="normal"
-					/>
-					<TextField
-						id="password"
-						label="Password"
-						// className={classes.textField}
-						type="password"
-						autoComplete="current-password"
-						onChange={e => this.setState({ password: e.target.value })}
-						margin="normal"
-					/>
-				</div>
-				<div className="flex mt3">
+						)}
+						<TextField
+							id="email"
+							label="Email"
+							error={!!errorMessage}
+							value={email}
+							onChange={e => this.setState({ email: e.target.value })}
+							margin="normal"
+						/>
+						<TextField
+							id="password"
+							label="Password"
+							error={!!errorMessage}
+							type="password"
+							autoComplete="current-password"
+							onChange={e => this.setState({ password: e.target.value })}
+							margin="normal"
+						/>
+					</div>
+				</DialogContent>
+				<DialogActions>
+					<Button onClick={() => this.setState({ login: !login })} color="primary" style={{marginRight: 'auto'}}>
+						{login
+							? 'need to create an account?'
+							: 'already have an account?'}
+					</Button>
+
+					<Button onClick={this.props.toggleDialog} color="primary">
+						Cancel
+					</Button>
 					<Mutation
 						mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
 						variables={{ email, password, firstName, lastName }}
@@ -85,21 +106,13 @@ class Login extends Component {
 						onError={error => this._error(error)}
 					>
 						{mutation => (
-							<Button color='primary' variant='contained' onClick={mutation}>
+							<Button color='primary' onClick={mutation}>
 								{login ? 'login' : 'create account'}
 							</Button>
 						)}
 					</Mutation>
-					<div
-						className="pointer button"
-						onClick={() => this.setState({ login: !login })}
-					>
-						{login
-							? 'need to create an account?'
-							: 'already have an account?'}
-					</div>
-				</div>
-			</div>
+				</DialogActions>
+			</Dialog>
 		)
 	}
 
@@ -124,4 +137,4 @@ class Login extends Component {
 	}
 }
 
-export default withRouter(Login)
+export default withRouter(LoginDialog)
