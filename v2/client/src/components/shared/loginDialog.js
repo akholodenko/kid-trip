@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 
-import { AUTH_TOKEN } from '../../constants'
+import { setUserInfo } from '../../utils/userUtils'
 import { Mutation } from 'react-apollo'
 import gql from 'graphql-tag'
 
@@ -166,14 +166,14 @@ class LoginDialog extends Component {
 	_confirm = async data => {
 		this.state.error = null
 
-		const { token } = this.state.login ? data.login : data.signup
-		this._saveUserData(token)
+		const { token, user } = this.state.login ? data.login : data.signup
+		this._saveUserData(token, user)
 
 		this.props.history.push(`/`)
 	}
 
-	_saveUserData = token => {
-		localStorage.setItem(AUTH_TOKEN, token)
+	_saveUserData = (token, user) => {
+		setUserInfo(token, user)
 	}
 
 	_error = async ({ graphQLErrors }) => {

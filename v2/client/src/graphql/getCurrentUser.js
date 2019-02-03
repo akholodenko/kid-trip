@@ -6,7 +6,6 @@ export default gql`
 					id
 					firstName
 					lastName
-					token
 			}
 	}
 `

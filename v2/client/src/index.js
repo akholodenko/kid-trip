@@ -8,23 +8,16 @@ import { ApolloLink } from 'apollo-link'
 import { ApolloProvider } from 'react-apollo'
 import { withClientState } from "apollo-link-state"
 
-import './index.css'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter } from 'react-router-dom'
 import 'typeface-roboto'
+import { getUserInfo } from "./utils/userUtils"
 
 const cache = new InMemoryCache()
 
 const defaultState = {
-	currentUser: {
-		__typename: 'User',
-		id: null,
-		firstName: 'ArtemCache',
-		lastName: null,
-		email: null,
-		token: null,
-	},
+	currentUser: { ...getUserInfo() },
 }
 
 const stateLink = withClientState({
@@ -32,7 +25,7 @@ const stateLink = withClientState({
 	defaults: defaultState,
 	resolvers: {
 		Mutation: {
-			updateUserInfo: (_, { id, firstName, lastName, email, token }, { cache }) => {
+			updateUserInfo: (_, { id, firstName, lastName, email }, { cache }) => {
 				const data = {
 					user: {
 						__typename: 'User',
@@ -40,7 +33,6 @@ const stateLink = withClientState({
 						firstName,
 						lastName,
 						email,
-						token,
 					},
 				}
 				cache.writeData({ data })

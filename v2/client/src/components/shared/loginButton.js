@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import Button from '@material-ui/core/Button'
 import { withRouter } from 'react-router'
-import { AUTH_TOKEN } from '../../constants'
+import { isUserLoggedIn, logoutUser } from "../../utils/userUtils"
 
 import { graphql, compose } from 'react-apollo'
 import LoginDialog from './loginDialog'
@@ -18,7 +18,7 @@ class LoginButton extends Component {
 	}
 
 	renderUserInfo = (currentUser) => {
-		if (currentUser) {
+		if (currentUser && currentUser.id) {
 			return `Welcome, ${currentUser.firstName} | `
 		} else {
 			return ''
@@ -26,16 +26,14 @@ class LoginButton extends Component {
 	}
 
 	render() {
-		const authToken = localStorage.getItem(AUTH_TOKEN)
 		const { currentUser } = this.props
-		console.log(currentUser)
 
-		return (authToken ? (
+		return (isUserLoggedIn() ? (
 			<Button
 				color="inherit"
 				className={this.props.className}
 				onClick={() => {
-					localStorage.removeItem(AUTH_TOKEN)
+					logoutUser()
 					this.props.history.push(`/`)
 				}}>{this.renderUserInfo(currentUser)} Logout</Button>
 		) : (

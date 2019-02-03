@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
@@ -37,6 +38,10 @@ class ButtonAppBar extends Component {
 							anchorEl={this.state.anchorEl}
 							open={Boolean(this.state.anchorEl)}
 							onClose={this.toggleMenu}>
+							<MenuItem
+								component={RouterLink} to="/" onClick={this.toggleMenu}>
+								Home
+							</MenuItem>
 							<MenuItem onClick={this.toggleMenu}>Profile</MenuItem>
 							<MenuItem onClick={this.toggleMenu}>My account</MenuItem>
 							<MenuItem onClick={this.toggleMenu}>Logout</MenuItem>
