@@ -3,7 +3,10 @@ import Button from '@material-ui/core/Button'
 import { withRouter } from 'react-router'
 import { AUTH_TOKEN } from '../../constants'
 
+import { graphql, compose } from 'react-apollo'
 import LoginDialog from './loginDialog'
+
+import getCurrentUser from '../../graphql/getCurrentUser'
 
 class LoginButton extends Component {
 	state = {
@@ -14,8 +17,18 @@ class LoginButton extends Component {
 		this.setState({ dialogOpen: !this.state.dialogOpen })
 	}
 
+	renderUserInfo = (currentUser) => {
+		if (currentUser) {
+			return `Welcome, ${currentUser.firstName} | `
+		} else {
+			return ''
+		}
+	}
+
 	render() {
 		const authToken = localStorage.getItem(AUTH_TOKEN)
+		const { currentUser } = this.props
+		console.log(currentUser)
 
 		return (authToken ? (
 			<Button
@@ -24,7 +37,7 @@ class LoginButton extends Component {
 				onClick={() => {
 					localStorage.removeItem(AUTH_TOKEN)
 					this.props.history.push(`/`)
-				}}>Logout</Button>
+				}}>{this.renderUserInfo(currentUser)} Logout</Button>
 		) : (
 			<span>
 			<Button
@@ -42,4 +55,10 @@ class LoginButton extends Component {
 }
 
 
-export default withRouter(LoginButton)
+export default compose(
+	graphql(getCurrentUser, {
+		props: ({ data: { currentUser } }) => ({
+			currentUser,
+		}),
+	}),
+)(withRouter(LoginButton))

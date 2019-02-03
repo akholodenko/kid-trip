@@ -26,7 +26,13 @@ const SIGNUP_MUTATION = gql`
 const LOGIN_MUTATION = gql`
     mutation LoginMutation($email: String!, $password: String!) {
         login(email: $email, password: $password) {
-            token
+            token,
+            user {
+                id,
+                firstName,
+                lastName,
+                email
+            }
         }
     }
 `
@@ -131,6 +137,7 @@ class LoginDialog extends Component {
 					<Mutation
 						mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
 						variables={{ email, password, firstName, lastName }}
+						update={(cache, { data: { login } }) => this._update(cache, login)}
 						onCompleted={data => this._confirm(data)}
 						onError={error => this._error(error)}
 					>
@@ -145,11 +152,23 @@ class LoginDialog extends Component {
 		)
 	}
 
+	_update = async (cache, info) => {
+		cache.writeData({
+			data: {
+				currentUser: {
+					...info.user,
+					token: info.token,
+				},
+			},
+		})
+	}
+
 	_confirm = async data => {
 		this.state.error = null
 
 		const { token } = this.state.login ? data.login : data.signup
 		this._saveUserData(token)
+
 		this.props.history.push(`/`)
 	}
 
