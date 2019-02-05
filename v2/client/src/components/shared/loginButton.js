@@ -1,12 +1,8 @@
 import React, { Component } from 'react'
 import Button from '@material-ui/core/Button'
 import { withRouter } from 'react-router'
-import { isUserLoggedIn, logoutUser } from "../../utils/userUtils"
-
-import { graphql, compose } from 'react-apollo'
+import { isUserLoggedIn, logoutUser, withCurrentUser } from "../../utils/userUtils"
 import LoginDialog from './loginDialog'
-
-import getCurrentUser from '../../graphql/getCurrentUser'
 
 class LoginButton extends Component {
 	state = {
@@ -53,10 +49,4 @@ class LoginButton extends Component {
 }
 
 
-export default compose(
-	graphql(getCurrentUser, {
-		props: ({ data: { currentUser } }) => ({
-			currentUser,
-		}),
-	}),
-)(withRouter(LoginButton))
+export default withCurrentUser(withRouter(LoginButton))

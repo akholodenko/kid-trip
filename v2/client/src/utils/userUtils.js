@@ -1,4 +1,6 @@
 import { AUTH_TOKEN, USER_INFO } from "../constants"
+import { compose, graphql } from "react-apollo"
+import { CURRENT_USER_QUERY } from "../graphql/userQueries"
 
 export const isUserLoggedIn = () => !!localStorage.getItem(AUTH_TOKEN)
 
@@ -12,7 +14,7 @@ export const setUserInfo = (token, user) => {
 	localStorage.setItem(USER_INFO, JSON.stringify(user))
 }
 
-export const getUserInfo = () => {
+export const getUserInfoFromStorage = () => {
 	const userInfo = localStorage.getItem(USER_INFO)
 
 	if (userInfo) {
@@ -26,4 +28,14 @@ export const getUserInfo = () => {
 			email: null,
 		}
 	}
+}
+
+export const withCurrentUser = (WrappedComponent) => {
+	return compose(
+		graphql(CURRENT_USER_QUERY, {
+			props: ({ data: { currentUser } }) => ({
+				currentUser,
+			}),
+		}),
+	)(WrappedComponent)
 }

@@ -12,12 +12,12 @@ import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { BrowserRouter } from 'react-router-dom'
 import 'typeface-roboto'
-import { getUserInfo } from "./utils/userUtils"
+import { getUserInfoFromStorage } from "./utils/userUtils"
 
 const cache = new InMemoryCache()
 
 const defaultState = {
-	currentUser: { ...getUserInfo() },
+	currentUser: { ...getUserInfoFromStorage() },
 }
 
 const stateLink = withClientState({

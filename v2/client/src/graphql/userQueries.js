@@ -1,6 +1,6 @@
 import gql from "graphql-tag"
 
-export default gql`
+export const CURRENT_USER_QUERY = gql`
 	query {
 			currentUser @client {
 					id

@@ -3,7 +3,7 @@ import { withRouter } from 'react-router'
 
 import { setUserInfo } from '../../utils/userUtils'
 import { Mutation } from 'react-apollo'
-import gql from 'graphql-tag'
+import { SIGNUP_MUTATION, LOGIN_MUTATION } from "../../graphql/userMutations"
 
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -14,28 +14,6 @@ import DialogActions from '@material-ui/core/DialogActions'
 import DialogContent from '@material-ui/core/DialogContent'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import DialogTitle from '@material-ui/core/DialogTitle'
-
-const SIGNUP_MUTATION = gql`
-    mutation SignupMutation($email: String!, $password: String!, $firstName: String!, $lastName: String!) {
-        signup(email: $email, password: $password, firstName: $firstName, lastName: $lastName) {
-            token
-        }
-    }
-`
-
-const LOGIN_MUTATION = gql`
-    mutation LoginMutation($email: String!, $password: String!) {
-        login(email: $email, password: $password) {
-            token,
-            user {
-                id,
-                firstName,
-                lastName,
-                email
-            }
-        }
-    }
-`
 
 const styles = {
 	dialogMainContent: {
