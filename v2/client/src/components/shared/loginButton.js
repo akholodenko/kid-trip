@@ -1,8 +1,9 @@
 import React, { Component } from 'react'
 import Button from '@material-ui/core/Button'
 import { withRouter } from 'react-router'
-import { isUserLoggedIn, logoutUser, withCurrentUser } from "../../utils/userUtils"
+import { isUserLoggedIn, withCurrentUser } from "../../utils/userUtils"
 import LoginDialog from './loginDialog'
+import Typography from '@material-ui/core/Typography'
 
 class LoginButton extends Component {
 	state = {
@@ -15,7 +16,7 @@ class LoginButton extends Component {
 
 	renderUserInfo = (currentUser) => {
 		if (currentUser && currentUser.id) {
-			return `Welcome, ${currentUser.firstName} | `
+			return `Welcome, ${currentUser.firstName}`
 		} else {
 			return ''
 		}
@@ -25,13 +26,9 @@ class LoginButton extends Component {
 		const { currentUser } = this.props
 
 		return (isUserLoggedIn() ? (
-			<Button
-				color="inherit"
-				className={this.props.className}
-				onClick={() => {
-					logoutUser()
-					this.props.history.push(`/`)
-				}}>{this.renderUserInfo(currentUser)} Logout</Button>
+			<Typography
+				variant="button"
+				color="inherit" className={this.props.className}>{this.renderUserInfo(currentUser)}</Typography>
 		) : (
 			<span>
 			<Button
@@ -47,6 +44,5 @@ class LoginButton extends Component {
 		))
 	}
 }
-
 
 export default withCurrentUser(withRouter(LoginButton))

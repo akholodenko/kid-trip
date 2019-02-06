@@ -17,6 +17,9 @@ const styles = {
 		marginLeft: -12,
 		marginRight: 20,
 	},
+	menuWrapper: {
+		marginLeft: 15
+	}
 }
 
 const homepageStyles = {

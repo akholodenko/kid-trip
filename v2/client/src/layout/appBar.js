@@ -10,6 +10,8 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import LoginButton from '../components/shared/loginButton'
+import { logoutUser, isUserLoggedIn } from "../utils/userUtils"
+import { withRouter } from "react-router"
 
 class ButtonAppBar extends Component {
 	state = {
@@ -27,30 +29,37 @@ class ButtonAppBar extends Component {
 			<div className={classes.root}>
 				<AppBar position="fixed" style={{ background: 'transparent', boxShadow: 'none' }}>
 					<Toolbar variant="dense" className={classes.container}>
-						<IconButton
-							onClick={this.toggleMenu}
-							className={classes.menuButton} color="inherit" aria-label="Menu">
-							<MenuIcon/>
-						</IconButton>
-
-						<Menu
-							id="simple-menu"
-							anchorEl={this.state.anchorEl}
-							open={Boolean(this.state.anchorEl)}
-							onClose={this.toggleMenu}>
-							<MenuItem
-								component={RouterLink} to="/" onClick={this.toggleMenu}>
-								Home
-							</MenuItem>
-							<MenuItem onClick={this.toggleMenu}>Profile</MenuItem>
-							<MenuItem onClick={this.toggleMenu}>My account</MenuItem>
-							<MenuItem onClick={this.toggleMenu}>Logout</MenuItem>
-						</Menu>
-
-						<Typography variant="h6" color="inherit" className={classes.grow}>
-
-						</Typography>
+						<Typography variant="button" color="inherit">KidTrip</Typography>
+						<Typography variant="h6" color="inherit" className={classes.grow}></Typography>
 						<LoginButton className={classes.loginButton}/>
+
+						{isUserLoggedIn() && (
+							<span className={classes.menuWrapper}>
+							<IconButton
+								onClick={this.toggleMenu}
+								className={classes.menuButton} color="inherit" aria-label="Menu">
+								<MenuIcon/>
+							</IconButton>
+							<Menu
+								id="simple-menu"
+								anchorEl={this.state.anchorEl}
+								open={Boolean(this.state.anchorEl)}
+								onClose={this.toggleMenu}>
+								<MenuItem
+									component={RouterLink} to="/" onClick={this.toggleMenu}>
+									Home
+								</MenuItem>
+								<MenuItem onClick={this.toggleMenu}>Profile</MenuItem>
+								<MenuItem onClick={this.toggleMenu}>My account</MenuItem>
+								<MenuItem onClick={() => {
+									logoutUser()
+									this.props.history.push(`/`)
+								}}>
+									Logout
+								</MenuItem>
+							</Menu>
+							</span>
+						)}
 					</Toolbar>
 				</AppBar>
 			</div>
@@ -58,4 +67,4 @@ class ButtonAppBar extends Component {
 	}
 }
 
-export default ButtonAppBar
+export default withRouter(ButtonAppBar)
