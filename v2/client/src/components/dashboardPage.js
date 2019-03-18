@@ -2,6 +2,12 @@ import React from 'react'
 import { Query } from "react-apollo"
 import { GET_VENUES_FOR_CURRENT_USER } from '../graphql/venueQueries'
 
+const venueItemStyle = {
+	container: {
+		fontFamily: "Roboto, Helvetica, Arial, sans-serif"
+	}
+}
+
 export default () => {
 	return (
 		<Query query={GET_VENUES_FOR_CURRENT_USER}>
@@ -14,7 +20,7 @@ export default () => {
 						<div>My destinations</div>
 						<div>
 							{data.me.venues.map(venue => (
-								<div key={venue.id}>
+								<div key={venue.id} style={venueItemStyle.container}>
 									<strong>{venue.name}</strong>&nbsp;
 									({(venue.venueTypes && venue.venueTypes.length) ? `${venue.venueTypes[0].name} in ` : ''}
 									{`${venue.city}, ${venue.state}`})
