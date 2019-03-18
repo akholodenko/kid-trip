@@ -3,8 +3,10 @@ import jwt from 'jsonwebtoken'
 import { APP_SECRET } from '../utils'
 import User from '../models/user'
 import Venue from "../models/venue"
+import City from "../models/city"
 
 import { fromDbVenueTransform } from './venue'
+import VenueType from "../models/venue_type"
 
 const fromDbUserTransform = (user) => {
 	return {
@@ -59,8 +61,22 @@ async function login(parent, args) {
 const getUser = (userId, { fields }) => {
 	let associations = []
 
-	if (!!fields.venues) {
-		associations.push({ model: Venue })
+	if (fields && !!fields.venues) {
+		let venueAssociations = []
+
+		if (!!fields.venues.venueTypes) {
+			venueAssociations.push({ model: VenueType })
+		}
+
+		if (!!fields.venues.city || !!fields.venues.state) {
+			venueAssociations.push({ model: City })
+		}
+
+		associations.push({
+			model: Venue,
+			attributes: ['id', 'name', 'street_address', 'zipcode', 'lat', 'lng'],
+			include: venueAssociations,
+		})
 	}
 
 	return User.findByPk(userId, {

@@ -24,6 +24,13 @@ export default {
 		},
 		user(obj, args, context, info) {
 			return getUser(args.id, { fields: graphsqlFields(info) })
+		},
+		me (obj, args, { user }, info) {
+			if (!user) {
+				throw new Error('You are not authenticated!')
+			}
+
+			return getUser(user.userId, { fields: graphsqlFields(info) })
 		}
 	},
 	Mutation: {

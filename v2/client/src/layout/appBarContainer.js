@@ -22,7 +22,7 @@ const styles = {
 	}
 }
 
-const homepageStyles = {
+const nonHomepageStyles = {
 	...styles,
 	container: {
 		borderBottom: '1px solid',
@@ -39,10 +39,13 @@ const homepageStyles = {
 	loginButton: {
 		color: blueGrey[500],
 	},
+	logoText: {
+		color: blueGrey[500],
+	},
 }
 
 const AppBarContainer = (props) => {
-	const currentStyles = isHomepage(props.location) ? styles : homepageStyles
+	const currentStyles = isHomepage(props.location) ? styles : nonHomepageStyles
 	const AppBarWithStyles = withStyles(currentStyles)(AppBar)
 	return (<AppBarWithStyles/>)
 }

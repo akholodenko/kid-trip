@@ -13,6 +13,7 @@ import * as serviceWorker from './serviceWorker'
 import { BrowserRouter } from 'react-router-dom'
 import 'typeface-roboto'
 import { getUserInfoFromStorage } from "./utils/userUtils"
+import { AUTH_TOKEN } from "./constants"
 
 const cache = new InMemoryCache()
 
@@ -42,6 +43,15 @@ const stateLink = withClientState({
 	},
 })
 
+const token = localStorage.getItem(AUTH_TOKEN)
+const httpLink = new HttpLink({
+	uri: 'http://localhost:4000',
+	credentials: 'same-origin',
+	headers: {
+		authorization: token ? `Bearer ${token}` : '',
+	},
+})
+
 const client = new ApolloClient({
 	link: ApolloLink.from([
 		onError(({ graphQLErrors, networkError }) => {
@@ -54,10 +64,7 @@ const client = new ApolloClient({
 			if (networkError) console.log(`[Network error]: ${networkError}`)
 		}),
 		stateLink,
-		new HttpLink({
-			uri: 'http://localhost:4000',
-			credentials: 'same-origin',
-		}),
+		httpLink,
 	]),
 	cache: new InMemoryCache(),
 })

@@ -13,6 +13,8 @@ import LoginButton from '../components/shared/loginButton'
 import { logoutUser, isUserLoggedIn } from "../utils/userUtils"
 import { withRouter } from "react-router"
 
+import Routes from '../routes'
+
 class ButtonAppBar extends Component {
 	state = {
 		anchorEl: null,
@@ -29,7 +31,7 @@ class ButtonAppBar extends Component {
 			<div className={classes.root}>
 				<AppBar position="fixed" style={{ background: 'transparent', boxShadow: 'none' }}>
 					<Toolbar variant="dense" className={classes.container}>
-						<Typography variant="button" color="inherit">KidTrip</Typography>
+						<Typography className={classes.logoText} variant="button" color="inherit">KidTrip</Typography>
 						<Typography variant="h6" color="inherit" className={classes.grow}></Typography>
 						<LoginButton className={classes.loginButton}/>
 
@@ -46,10 +48,13 @@ class ButtonAppBar extends Component {
 								open={Boolean(this.state.anchorEl)}
 								onClose={this.toggleMenu}>
 								<MenuItem
-									component={RouterLink} to="/" onClick={this.toggleMenu}>
+									component={RouterLink} to={Routes.home} onClick={this.toggleMenu}>
 									Home
 								</MenuItem>
-								<MenuItem onClick={this.toggleMenu}>Profile</MenuItem>
+								<MenuItem
+									component={RouterLink} to={Routes.dashboard} onClick={this.toggleMenu}>
+									Dashboard
+								</MenuItem>
 								<MenuItem onClick={this.toggleMenu}>My account</MenuItem>
 								<MenuItem onClick={() => {
 									logoutUser()

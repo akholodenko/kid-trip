@@ -9,8 +9,10 @@ const Venue = sequelize.define('venue', {
   },
   name: Sequelize.STRING,
   street_address: Sequelize.STRING,
+  zipcode: Sequelize.INTEGER,
   lat: Sequelize.DECIMAL,
-  lng: Sequelize.DECIMAL
+  lng: Sequelize.DECIMAL,
+  city_id: Sequelize.INTEGER
 }, {
   tableName: 'venues',
   underscored: true,

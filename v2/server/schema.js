@@ -7,6 +7,7 @@ export default gql`
         venueTypes: [VenueType]!
         venueType(id: ID!): VenueType
         cities(first: Int): [City]!
+        me: User
     }
 
     type VenueType {
@@ -23,8 +24,11 @@ export default gql`
         lng: Float
         venueTypes: [VenueType]
         users: [User]
+        zipcode: Int!
+        city: String
+        state: String
     }
-
+    
     type City {
         id: Int!
         name: String!

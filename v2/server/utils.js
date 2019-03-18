@@ -12,3 +12,10 @@ export const getUserId = (context) => {
 
 	throw new Error('Not authenticated')
 }
+
+export const getUserByToken = (token) => {
+	if (token) {
+		token = token.replace('Bearer ', '')
+		return jwt.verify(token, APP_SECRET)
+	}
+}
