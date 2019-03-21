@@ -13,6 +13,20 @@ import theme from './theme'
 import AppBar from './layout/appBarContainer'
 
 const styles = {
+	'@global': {
+		body: {
+			fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+		},
+		'.mainContainer': {
+			display: 'flex',
+			justifyContent: 'center',
+		},
+		'.mainContent': {
+			maxWidth: '1200px',
+			flexGrow: '1',
+			margin: '50px',
+		},
+	},
 	appBarSpacer: {
 		height: '49px',
 	},
