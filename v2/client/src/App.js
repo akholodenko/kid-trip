@@ -6,6 +6,7 @@ import { isHomepage } from './utils/routeUtils'
 
 import HomePage from './components/homePage'
 import DashboardPage from './components/dashboardPage'
+import VenuePage from './components/venuePage'
 
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles'
@@ -47,6 +48,7 @@ class App extends Component {
 					<Switch>
 						<Route exact path={Routes.home} component={HomePage}/>
 						<Route exact path={Routes.dashboard} component={DashboardPage}/>
+						<Route path={Routes.venue} component={VenuePage}/>
 					</Switch>
 				</div>
 			</MuiThemeProvider>

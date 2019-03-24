@@ -3,6 +3,8 @@ import { withStyles } from '@material-ui/core/styles'
 import { Typography } from "@material-ui/core"
 
 import { venueMapLink, venueIcon } from '../../utils/venueUtils'
+import { Link as RouterLink } from "react-router-dom"
+import Routes from "../../routes"
 
 const styles = {
 	'@global': {
@@ -27,7 +29,10 @@ const VenueListItem = (props) => {
 
 	return (<div className='venueItem'>
 		<div>
-			<Typography variant='h6'>{venue.name}</Typography>
+			<Typography
+				variant='h6'
+				component={RouterLink}
+				to={Routes.venuePath(venue.id)}>{venue.name}</Typography>
 		</div>
 		<div>
 			{venueIcon(venue, 'venueIcon')}
