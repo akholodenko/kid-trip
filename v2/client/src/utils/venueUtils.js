@@ -22,3 +22,20 @@ export const venueIcon = (venue, cssClass) => {
 
 	return venueIconComponent
 }
+
+export const venueHeaderImage = (venue) => {
+	let file
+
+	switch (venue.venueTypes[0].name) {
+	case 'restaurant':
+		file = 'restaurant-header-cmp.jpg'
+		break
+	case 'outdoor playground':
+		file = 'outdoor-playground-header-cmp.jpg'
+		break
+	default:
+		file = 'restaurant-header-cmp.jpg'
+	}
+
+	return file
+}

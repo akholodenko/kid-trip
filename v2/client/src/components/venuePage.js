@@ -3,10 +3,9 @@ import { Query } from "react-apollo"
 import Typography from '@material-ui/core/Typography'
 import { GET_VENUE_BASICS } from '../graphql/venueQueries'
 
-import {headerStyles} from '../utils/styleUtils'
+import VenueHeader from './venue/header'
 
 const pageStyle = {
-	pageHeader: headerStyles('restaurant-header-cmp.jpg', '300px'),
 	sectionHeader: {
 		marginBottom: '15px',
 	},
@@ -29,11 +28,7 @@ export default ({ match }) => {
 					console.log('data', data)
 					return (
 						<div>
-							<div style={pageStyle.pageHeader.container}>
-								<Typography variant="h2" style={pageStyle.pageHeader.headerText}>
-									<strong>{venue.name}</strong>
-								</Typography>
-							</div>
+							<VenueHeader venue={venue}/>
 							<div className='mainContainer'>
 								<div className='mainContent'>
 									<Typography variant='h5' style={pageStyle.sectionHeader}>{venue.name}</Typography>
