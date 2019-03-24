@@ -27,6 +27,7 @@ const nonHomepageStyles = {
 	container: {
 		borderBottom: '1px solid',
 		borderBottomColor: blueGrey[100],
+		backgroundColor: 'white'
 	},
 	grow: {
 		...styles.grow,
