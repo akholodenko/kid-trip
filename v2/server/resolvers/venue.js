@@ -2,6 +2,7 @@ import Venue from '../models/venue'
 import VenueType from '../models/venue_type'
 import VenueClassification from '../models/venue_classification'
 import User from '../models/user'
+import UserVenue from '../models/user_venue'
 import City from '../models/city'
 
 import { fromDbUserTransform } from './user'
@@ -63,6 +64,11 @@ export const createVenue = (obj, args, { user }, info) => {
 		VenueClassification.create({
 			venue_id: newVenue.id,
 			venue_type_id: args.venueTypeId,
+		})
+
+		UserVenue.create({
+			venue_id: newVenue.id,
+			user_id: user.userId,
 		})
 
 		return fromDbVenueTransform(newVenue)
