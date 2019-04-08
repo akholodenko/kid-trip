@@ -45,3 +45,18 @@ export const getVenue = (venueId, { fields }) => {
 		return fromDbVenueTransform(venue)
 	})
 }
+
+export const createVenue = (obj, args, { user }, info) => {
+	if (!user) {
+		throw new Error('You are not authenticated!')
+	}
+	
+	return Venue.create({
+		name: args.name,
+		street_address: args.streetAddress,
+		zipcode: args.zipcode,
+		lat: args.lat,
+		lng: args.lng,
+		city_id: args.cityId
+	}).then(newVenue => fromDbVenueTransform(newVenue))
+}

@@ -1,7 +1,7 @@
 import graphsqlFields from 'graphql-fields'
 
 import { initModelAssociations } from './models/associations'
-import { getVenue } from './resolvers/venue'
+import { getVenue, createVenue } from './resolvers/venue'
 import { getVenueType, getVenueTypes } from "./resolvers/venue_type"
 import { getCities } from './resolvers/city'
 import { signup, login, getUser } from './resolvers/user'
@@ -36,5 +36,6 @@ export default {
 	Mutation: {
 		signup,
 		login,
+		createVenue,
 	},
 }
