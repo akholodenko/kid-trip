@@ -1,5 +1,6 @@
 import Venue from '../models/venue'
 import VenueType from '../models/venue_type'
+import VenueClassification from '../models/venue_classification'
 import User from '../models/user'
 import City from '../models/city'
 
@@ -34,7 +35,7 @@ export const getVenue = (venueId, { fields }) => {
 	if (!!fields.city || !!fields.state) {
 		associations.push({
 			model: City,
-			attributes: ['id', 'name', 'state']
+			attributes: ['id', 'name', 'state'],
 		})
 	}
 
@@ -50,13 +51,20 @@ export const createVenue = (obj, args, { user }, info) => {
 	if (!user) {
 		throw new Error('You are not authenticated!')
 	}
-	
+
 	return Venue.create({
 		name: args.name,
 		street_address: args.streetAddress,
 		zipcode: args.zipcode,
 		lat: args.lat,
 		lng: args.lng,
-		city_id: args.cityId
-	}).then(newVenue => fromDbVenueTransform(newVenue))
+		city_id: args.cityId,
+	}).then(newVenue => {
+		VenueClassification.create({
+			venue_id: newVenue.id,
+			venue_type_id: args.venueTypeId,
+		})
+
+		return fromDbVenueTransform(newVenue)
+	})
 }

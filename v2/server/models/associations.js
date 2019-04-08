@@ -16,10 +16,14 @@ export const initModelAssociations = () => {
 		otherKey: 'venue_type_id',
 	})
 
+	Venue.hasMany(VenueClassification, {
+		foreignKey: 'venue_id',
+	})
+
 	Venue.belongsToMany(User, {
 		through: UsersVenues,
 		foreignKey: 'venue_id',
-		otherKey: 'user_id'
+		otherKey: 'user_id',
 	})
 
 	Venue.belongsTo(Zipcode, {
@@ -28,7 +32,7 @@ export const initModelAssociations = () => {
 	})
 
 	Venue.belongsTo(City, {
-		foreignKey: 'city_id'
+		foreignKey: 'city_id',
 	})
 
 	VenueType.belongsToMany(Venue, {
@@ -47,18 +51,18 @@ export const initModelAssociations = () => {
 		through: CityZipcode,
 		foreignKey: 'city_id',
 		otherKey: 'zipcode',
-		targetKey: 'zip'
+		targetKey: 'zip',
 	})
 
 	Zipcode.belongsToMany(City, {
 		through: CityZipcode,
 		foreignKey: 'zipcode',
 		otherKey: 'city_id',
-		sourceKey: 'zip'
+		sourceKey: 'zip',
 	})
 
 	Zipcode.hasMany(Venue, {
 		foreignKey: 'zipcode',
-		sourceKey: 'zip'
+		sourceKey: 'zip',
 	})
 }
