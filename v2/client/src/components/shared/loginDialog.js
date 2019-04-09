@@ -2,6 +2,7 @@ import React, { Component } from 'react'
 import { withRouter } from 'react-router'
 
 import { setUserInfo } from '../../utils/userUtils'
+import Routes from "../../routes"
 import { Mutation } from 'react-apollo'
 import { SIGNUP_MUTATION, LOGIN_MUTATION } from "../../graphql/userMutations"
 
@@ -147,7 +148,11 @@ class LoginDialog extends Component {
 		const { token, user } = this.state.login ? data.login : data.signup
 		this._saveUserData(token, user)
 
-		this.props.history.push(`/`)
+		if (this.state.login) {
+			document.location = Routes.dashboard
+		} else {
+			this.props.history.push(`/`)
+		}
 	}
 
 	_saveUserData = (token, user) => {
