@@ -12,9 +12,9 @@ const addVenueDialog = (props) => {
 			onClose={props.toggleDialog}
 			maxWidth='sm' fullWidth={true}
 			aria-labelledby="form-dialog-title">
-			<DialogTitle>title</DialogTitle>
+			<DialogTitle>Add New Destination</DialogTitle>
 			<DialogContent>
-				content
+				content (title, type, location),
 			</DialogContent>
 			<DialogActions>
 				actions
