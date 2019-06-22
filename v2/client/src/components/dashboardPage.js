@@ -23,6 +23,7 @@ export default () => {
 
 	const toggleDialog = () => {
 		setDialogOpen(!dialogOpen)
+		console.log('closed')
 	}
 
 	return (
@@ -39,10 +40,10 @@ export default () => {
 								<Button variant="outlined" onClick={toggleDialog}>
 									<Add/>
 									Add Destination
-									<AddVenueDialog
-										open={dialogOpen}
-										toggleDialog={toggleDialog}/>
 								</Button>
+								<AddVenueDialog
+									open={dialogOpen}
+									toggleDialog={toggleDialog}/>
 							</div>
 							<div>
 								{data.me.venues.sort((a, b) => {
