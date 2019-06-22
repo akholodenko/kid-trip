@@ -6,7 +6,7 @@ export default gql`
         venue(id: ID!): Venue!
         venueTypes: [VenueType]!
         venueType(id: ID!): VenueType
-        cities(first: Int): [City]!
+        cities(first: Int, query: String): [City]!
         me: User
     }
 

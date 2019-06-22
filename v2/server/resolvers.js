@@ -20,7 +20,7 @@ export default {
 			return getVenueType(args.id)
 		},
 		cities(obj, args) {
-			return getCities({ limit: args.first })
+			return getCities({ limit: args.first, query: args.query })
 		},
 		user(obj, args, context, info) {
 			return getUser(args.id, { fields: graphsqlFields(info) })
