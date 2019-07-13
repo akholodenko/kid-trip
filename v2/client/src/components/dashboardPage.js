@@ -23,7 +23,6 @@ export default () => {
 
 	const toggleDialog = () => {
 		setDialogOpen(!dialogOpen)
-		console.log('closed')
 	}
 
 	return (

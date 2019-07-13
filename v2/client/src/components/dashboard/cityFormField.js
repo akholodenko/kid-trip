@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react'
+import Select from 'react-select'
 import { GET_CITIES } from "../../graphql/cityQueries"
-import { Query, withApollo } from "react-apollo"
+import { withApollo } from "react-apollo"
 
 const style = {
 	container: {
 		position: 'relative',
+		maxWidth: '500px'
 	},
 	input: {
 		border: '1px solid #ccc',
@@ -28,18 +30,20 @@ const style = {
 
 const CityFormField = ({ client, onCitySelected }) => {
 	const [query, setQuery] = useState('')
-	const [suggestions, setSuggestions] = useState([])
+	const [selectedOption, setSelectedOption] = useState({})
+	const [options, setOptions] = useState([])
+
 
 	useEffect(
 		() => {
-			console.log('query: ', query)
-
 			if (query && query.length >= 3) {
 				getSuggestions(query).then(({ data }) => {
-					setSuggestions(data.cities)
+					setOptions(data.cities.map(city => {
+						return {value: city.id, label: `${city.name}, ${city.state}`}
+					}))
 				})
 			} else {
-				setSuggestions([])
+				setOptions([])
 			}
 		},
 		[query],
@@ -52,30 +56,29 @@ const CityFormField = ({ client, onCitySelected }) => {
 		})
 	}
 
-	const haveSuggestions = () => !!suggestions.length
-
-	const handleChange = (e) => {
-		setQuery(e.target.value)
+	const handleInputChange = (text) => {
+		setQuery(text)
 	}
 
-	const handleSelection = (city) => {
-		setQuery(`${city.name}, ${city.state}`)
-		onCitySelected(city)
+	const handleOptionChange = option => {
+		setSelectedOption(option)
+		onCitySelected(option)
 	}
+
+	const hasOptions = () => options && options.length
 
 	return (
 		<div style={style.container}>
-			<input onChange={handleChange} value={query} style={style.input}/>
-			{haveSuggestions() && (
-				<div style={style.suggestionsContainer}>
-					{suggestions.map(city => (
-						<div key={city.id} style={style.suggestionItem} onClick={() => handleSelection(city)}>
-							{`${city.name}, ${city.state}`}
-						</div>),
-					)}
-				</div>
-			)}
-
+			<Select
+				value={selectedOption}
+				onChange={handleOptionChange}
+				options={options}
+				onInputChange={handleInputChange}
+				placeholder="Type in name of city"
+				isClearable={true}
+				menuIsOpen={hasOptions()}
+				escapeClearsValue={true}
+			/>
 		</div>
 	)
 }
