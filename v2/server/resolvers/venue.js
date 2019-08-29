@@ -59,11 +59,11 @@ export const createVenue = (obj, args, { user }, info) => {
 		zipcode: args.zipcode,
 		lat: args.lat,
 		lng: args.lng,
-		city_id: args.cityId,
+		city_id: args.city.id,
 	}).then(newVenue => {
 		VenueClassification.create({
 			venue_id: newVenue.id,
-			venue_type_id: args.venueTypeId,
+			venue_type_id: args.venueType.id,
 		})
 
 		UserVenue.create({

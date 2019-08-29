@@ -36,3 +36,12 @@ export const GET_VENUES_FOR_CURRENT_USER = gql`
         }
     }
 `
+
+export const GET_VENUE_TYPES = gql`
+    query {
+        venueTypes {
+            id
+            name
+        }
+    }
+`

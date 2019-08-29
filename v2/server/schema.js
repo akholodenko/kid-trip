@@ -41,7 +41,15 @@ export default gql`
 #        post(url: String!, description: String!): Link!
         signup(email: String!, password: String!, firstName: String!, lastName: String!): AuthPayload
         login(email: String!, password: String!): AuthPayload
-        createVenue(name: String!, streetAddress: String!, zipcode: Int!, lat: Float, lng: Float, cityId: Int!, venueTypeId: Int): Venue
+        createVenue(name: String!, streetAddress: String!, zipcode: Int!, lat: Float, lng: Float, city: CityInput, venueType: VenueTypeInput): Venue
+    }
+
+    input CityInput {
+        id: Int!
+    }
+
+    input VenueTypeInput {
+        id: Int!
     }
 
     type AuthPayload {

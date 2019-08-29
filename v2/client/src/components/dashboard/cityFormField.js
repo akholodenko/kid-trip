@@ -33,7 +33,6 @@ const CityFormField = ({ client, onCitySelected }) => {
 	const [selectedOption, setSelectedOption] = useState({})
 	const [options, setOptions] = useState([])
 
-
 	useEffect(
 		() => {
 			if (query && query.length >= 3) {
