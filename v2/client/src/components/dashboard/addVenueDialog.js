@@ -11,9 +11,15 @@ import CityFormField from './cityFormField'
 import VenueTypeFormField from './venueTypeFormField'
 
 const style = {
+	title: {
+		margin: '0 auto',
+	},
+	body: {
+		margin: '0 auto',
+	},
 	input: {
 		minWidth: '500px',
-	}
+	},
 }
 
 const addVenueDialog = (props) => {
@@ -50,10 +56,10 @@ const addVenueDialog = (props) => {
 			onClose={props.toggleDialog}
 			fullScreen={true}
 			aria-labelledby="form-dialog-title">
-			<DialogTitle>Add New Destination</DialogTitle>
-			<DialogContent>
+			<DialogTitle style={style.title}>Add New Destination</DialogTitle>
+			<DialogContent style={style.body}>
 				<DialogContentText>
-					content (title, type, location),
+					Please enter information about a venue
 				</DialogContentText>
 				<TextField
 					id="venue-name"
@@ -64,7 +70,7 @@ const addVenueDialog = (props) => {
 					style={style.input}
 				/>
 				<br/>
-				<VenueTypeFormField onVenueTypeSelected={onVenueTypeSelected} />
+				<VenueTypeFormField onVenueTypeSelected={onVenueTypeSelected}/>
 				<CityFormField onCitySelected={onCitySelected}/>
 			</DialogContent>
 			<DialogActions>
