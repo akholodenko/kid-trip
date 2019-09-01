@@ -2,11 +2,13 @@ import React, { useState, useEffect } from 'react'
 import Select from 'react-select'
 import { GET_CITIES } from "../../graphql/cityQueries"
 import { withApollo } from "react-apollo"
+import InputLabel from "@material-ui/core/InputLabel"
+import FormControl from "@material-ui/core/FormControl"
 
 const style = {
 	container: {
 		position: 'relative',
-		maxWidth: '500px'
+		width: '500px'
 	},
 	input: {
 		border: '1px solid #ccc',
@@ -25,6 +27,12 @@ const style = {
 	suggestionItem: {
 		width: '100%',
 		padding: '10px'
+	},
+	formControl: {
+		minWidth: '500px',
+		marginTop: '16px',
+		marginBottom: '8px',
+		height: '16px'
 	}
 }
 
@@ -68,6 +76,10 @@ const CityFormField = ({ client, onCitySelected }) => {
 
 	return (
 		<div style={style.container}>
+			<FormControl style={style.formControl}>
+				<InputLabel shrink={true}
+										htmlFor="age-simple">City</InputLabel>
+			</FormControl>
 			<Select
 				value={selectedOption}
 				onChange={handleOptionChange}
@@ -78,6 +90,7 @@ const CityFormField = ({ client, onCitySelected }) => {
 				menuIsOpen={hasOptions()}
 				escapeClearsValue={true}
 			/>
+
 		</div>
 	)
 }
