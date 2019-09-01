@@ -15,7 +15,7 @@ const style = {
 	}
 }
 
-const venueTypeFormField = ({ onVenueTypeSelected }) => {
+export default ({ onVenueTypeSelected }) => {
 	const [selectedOption, setSelectedOption] = useState('')
 
 	const handleOptionChange = option => {
@@ -52,5 +52,3 @@ const venueTypeFormField = ({ onVenueTypeSelected }) => {
 		</Query>
 	)
 }
-
-export default venueTypeFormField

@@ -22,7 +22,7 @@ const style = {
 	},
 }
 
-const addVenueDialog = (props) => {
+export default (props) => {
 	const [newVenue, setNewVenue] = useState({
 		name: '',
 		type: {
@@ -79,5 +79,3 @@ const addVenueDialog = (props) => {
 		</Dialog>
 	)
 }
-
-export default addVenueDialog

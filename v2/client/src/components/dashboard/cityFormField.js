@@ -43,6 +43,13 @@ const CityFormField = ({ client, onCitySelected }) => {
 
 	useEffect(
 		() => {
+			const getSuggestions = (query) => {
+				return client.query({
+					query: GET_CITIES,
+					variables: { limit: 10, query },
+				})
+			}
+
 			if (query && query.length >= 3) {
 				getSuggestions(query).then(({ data }) => {
 					setOptions(data.cities.map(city => {
@@ -53,15 +60,8 @@ const CityFormField = ({ client, onCitySelected }) => {
 				setOptions([])
 			}
 		},
-		[query],
+		[query, client],
 	)
-
-	const getSuggestions = (query) => {
-		return client.query({
-			query: GET_CITIES,
-			variables: { limit: 10, query },
-		})
-	}
 
 	const handleInputChange = (text) => {
 		setQuery(text)
