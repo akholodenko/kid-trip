@@ -148,7 +148,7 @@ class LoginDialog extends Component {
 		const { token, user } = this.state.login ? data.login : data.signup
 		this._saveUserData(token, user)
 
-		this.props.history.push(Routes.dashboard)
+		document.location = Routes.dashboard
 	}
 
 	_saveUserData = (token, user) => {
