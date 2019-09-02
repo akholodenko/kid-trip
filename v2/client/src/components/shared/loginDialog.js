@@ -116,7 +116,7 @@ class LoginDialog extends Component {
 					<Mutation
 						mutation={login ? LOGIN_MUTATION : SIGNUP_MUTATION}
 						variables={{ email, password, firstName, lastName }}
-						update={(cache, { data: { login } }) => this._update(cache, login)}
+						update={(cache, { data }) => this._update(cache, (login ? data.login : data.signup))}
 						onCompleted={data => this._confirm(data)}
 						onError={error => this._error(error)}
 					>
@@ -148,11 +148,7 @@ class LoginDialog extends Component {
 		const { token, user } = this.state.login ? data.login : data.signup
 		this._saveUserData(token, user)
 
-		if (this.state.login) {
-			document.location = Routes.dashboard
-		} else {
-			this.props.history.push(`/`)
-		}
+		this.props.history.push(Routes.dashboard)
 	}
 
 	_saveUserData = (token, user) => {
