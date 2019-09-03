@@ -1,5 +1,6 @@
 import { AUTH_TOKEN, USER_INFO } from "../constants"
-import { compose, graphql } from "react-apollo"
+import { graphql } from "react-apollo"
+import { compose } from "recompose"
 import { CURRENT_USER_QUERY } from "../graphql/userQueries"
 
 export const isUserLoggedIn = () => !!localStorage.getItem(AUTH_TOKEN)
