@@ -1,7 +1,7 @@
 import React from 'react'
 import { Query } from "react-apollo"
 import Typography from '@material-ui/core/Typography'
-import { GET_VENUE_BASICS } from '../graphql/venueQueries'
+import { GET_VENUE_BY_SLUG } from '../graphql/venueQueries'
 
 import VenueHeader from './venue/header'
 
@@ -13,18 +13,18 @@ const pageStyle = {
 
 
 export default ({ match }) => {
-	const venueId = match.params.venueId
+	const venueSlug = match.params.venueSlug
 
-	if (!venueId) {
+	if (!venueSlug) {
 		return (<div>Venue not found.</div>)
 	} else {
 		return (
-			<Query query={GET_VENUE_BASICS} variables={{ venueId }}>
+			<Query query={GET_VENUE_BY_SLUG} variables={{ venueSlug }}>
 				{({ loading, error, data }) => {
 					if (loading) return "Loading..."
 					if (error) return `Error! ${error.message}`
 
-					const venue = data.venue
+					const venue = data.venueBySlug
 					console.log('data', data)
 					return (
 						<div>

@@ -32,7 +32,7 @@ const VenueListItem = (props) => {
 			<Typography
 				variant='h6'
 				component={RouterLink}
-				to={Routes.venuePath(venue.id)}>{venue.name}</Typography>
+				to={Routes.venuePath(venue.slug)}>{venue.name}</Typography>
 		</div>
 		<div>
 			{venueIcon(venue, 'venueIcon')}

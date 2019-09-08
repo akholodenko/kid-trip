@@ -21,6 +21,5 @@ connection.query(
 			connection.query('UPDATE venues SET slug = ? where id = ?', [venueNameSlug(result.name), result.id])
 		})
 		console.log('done')
-		process.exit()
 	}
 );

@@ -8,6 +8,7 @@ const Venue = sequelize.define('venue', {
     autoIncrement: true,
   },
   name: Sequelize.STRING,
+  slug: Sequelize.STRING,
   street_address: Sequelize.STRING,
   zipcode: Sequelize.INTEGER,
   lat: Sequelize.DECIMAL,

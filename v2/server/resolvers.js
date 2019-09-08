@@ -1,7 +1,7 @@
 import graphsqlFields from 'graphql-fields'
 
 import { initModelAssociations } from './models/associations'
-import { getVenue, createVenue } from './resolvers/venue'
+import { getVenue, getVenueBySlug, createVenue } from './resolvers/venue'
 import { getVenueType, getVenueTypes } from "./resolvers/venue_type"
 import { getCities } from './resolvers/city'
 import { signup, login, getUser } from './resolvers/user'
@@ -12,6 +12,9 @@ export default {
 	Query: {
 		venue(obj, args, context, info) {
 			return getVenue(args.id, { fields: graphsqlFields(info) })
+		},
+		venueBySlug(obj, args, context, info) {
+			return getVenueBySlug(args.slug, { fields: graphsqlFields(info) })
 		},
 		venueTypes() {
 			return getVenueTypes()

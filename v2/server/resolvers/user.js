@@ -74,7 +74,7 @@ const getUser = (userId, { fields }) => {
 
 		associations.push({
 			model: Venue,
-			attributes: ['id', 'name', 'street_address', 'zipcode', 'lat', 'lng'],
+			attributes: ['id', 'name', 'slug', 'street_address', 'zipcode', 'lat', 'lng'],
 			include: venueAssociations,
 		})
 	}

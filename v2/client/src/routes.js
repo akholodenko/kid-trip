@@ -1,6 +1,6 @@
 export default {
 	home: '/',
 	dashboard: '/dashboard',
-	venue: '/venue/:venueId',
-	venuePath: (venueId) => `/venue/${venueId}`
+	venue: '/venue/:venueSlug',
+	venuePath: (venueSlug) => `/venue/${venueSlug}`
 }

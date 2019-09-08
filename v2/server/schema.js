@@ -4,6 +4,7 @@ export default gql`
     type Query {
         user(id: ID!): User!
         venue(id: ID!): Venue!
+        venueBySlug(slug: String!): Venue!
         venueTypes: [VenueType]!
         venueType(id: ID!): VenueType
         cities(first: Int, query: String): [City]!
@@ -19,6 +20,7 @@ export default gql`
     type Venue {
         id: Int!
         name: String!
+				slug: String!
         streetAddress: String!
         lat: Float
         lng: Float

@@ -1,4 +1,3 @@
-import slugify from "slugify"
 import Venue from '../models/venue'
 import VenueType from '../models/venue_type'
 import VenueClassification from '../models/venue_classification'
@@ -6,12 +5,15 @@ import User from '../models/user'
 import UserVenue from '../models/user_venue'
 import City from '../models/city'
 
+import { slug } from "../utils/stringUtils"
+
 import { fromDbUserTransform } from './user'
 
 export const fromDbVenueTransform = (venue) => {
 	return {
 		id: venue.id,
 		name: venue.name,
+		slug: venue.slug,
 		streetAddress: venue.street_address,
 		city: venue.city ? venue.city.name : null,
 		state: venue.city ? venue.city.state : null,
@@ -42,7 +44,35 @@ export const getVenue = (venueId, { fields }) => {
 	}
 
 	return Venue.findByPk(venueId, {
-		attributes: ['id', 'name', 'street_address', 'zipcode', 'lat', 'lng'],
+		attributes: ['id', 'name', 'slug', 'street_address', 'zipcode', 'lat', 'lng'],
+		include: associations,
+	}).then((venue) => {
+		return fromDbVenueTransform(venue)
+	})
+}
+
+export const getVenueBySlug = (venueSlug, { fields }) => {
+	console.log(venueSlug, venueSlug)
+	let associations = []
+
+	if (!!fields.venueTypes) {
+		associations.push({ model: VenueType })
+	}
+
+	if (!!fields.users) {
+		associations.push({ model: User })
+	}
+
+	if (!!fields.city || !!fields.state) {
+		associations.push({
+			model: City,
+			attributes: ['id', 'name', 'state'],
+		})
+	}
+
+	return Venue.findOne({
+		where: { slug: venueSlug },
+		attributes: ['id', 'name', 'slug', 'street_address', 'city_id', 'zipcode', 'lat', 'lng'],
 		include: associations,
 	}).then((venue) => {
 		return fromDbVenueTransform(venue)
@@ -56,6 +86,7 @@ export const createVenue = (obj, args, { user }, info) => {
 
 	return Venue.create({
 		name: args.name,
+		slug: slug(args.name),
 		street_address: args.streetAddress,
 		zipcode: args.zipcode,
 		lat: args.lat,
