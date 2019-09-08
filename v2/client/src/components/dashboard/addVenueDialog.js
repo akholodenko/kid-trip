@@ -16,8 +16,13 @@ import VenueTypeFormField from './venueTypeFormField'
 import { CREATE_VENUE_MUTATION } from "../../graphql/venueMutations"
 import Button from "@material-ui/core/Button"
 
+import { validateVenue } from "../../utils/validationUtils"
+
 import { useMutation } from '@apollo/react-hooks'
 import { GET_VENUES_FOR_CURRENT_USER } from "../../graphql/venueQueries"
+
+const USER_ACTION_TEXT = 'Please enter information about a venue'
+const USER_ACTION_TEXT_ERROR = 'Please enter valid venue information'
 
 const style = {
 	appBar: {
@@ -48,6 +53,9 @@ const venueStub = {
 
 export default (props) => {
 	const [addVenue] = useMutation(CREATE_VENUE_MUTATION, {
+		onError(error) {
+			console.log('error', error)
+		},
 		onCompleted(data) {
 			console.log('data', data)
 		},
@@ -57,6 +65,7 @@ export default (props) => {
 	})
 
 	const [newVenue, setNewVenue] = useState({ ...venueStub })
+	const [userActionText, setUserActionText] = useState(USER_ACTION_TEXT)
 
 	const onCitySelected = city => {
 		console.log('city selected:', city)
@@ -74,30 +83,27 @@ export default (props) => {
 	}
 
 	const onSubmit = () => {
-		addVenue({
-			variables: {
-				name: newVenue.name,
-				typeId: newVenue.type.id,
-				streetAddress: newVenue.streetAddress,
-				zipcode: parseInt(newVenue.zipcode),
-				cityId: newVenue.city.id,
-			},
-		}).then(response => {
-			console.log('response', response)
+		if(validateVenue(newVenue)) {
+			addVenue({
+				variables: {
+					name: newVenue.name,
+					typeId: newVenue.type.id,
+					streetAddress: newVenue.streetAddress,
+					zipcode: parseInt(newVenue.zipcode),
+					cityId: newVenue.city.id,
+				},
+			}).then(response => {
+				console.log('response', response)
 
-			setNewVenue({ ...venueStub })
+				setNewVenue({ ...venueStub })
 
-			props.toggleDialog()
-		})
+				props.toggleDialog()
+			})
+		}
+		else {
+			setUserActionText(USER_ACTION_TEXT_ERROR)
+		}
 	}
-
-	// _error = async ({ graphQLErrors }) => {
-	// 	if (this.state.login && graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message) {
-	// 		this.setState({ errorMessage: graphQLErrors[0].message })
-	// 	} else if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].extensions.exception.errors[0].message) {
-	// 		this.setState({ errorMessage: graphQLErrors[0].extensions.exception.errors[0].message })
-	// 	}
-	// }
 
 	return (
 		<Dialog
@@ -115,7 +121,7 @@ export default (props) => {
 			<DialogTitle style={style.title}>Add New Destination</DialogTitle>
 			<DialogContent style={style.body}>
 				<DialogContentText>
-					Please enter information about a venue
+					{userActionText}
 				</DialogContentText>
 				<TextField
 					id="venue-name"
