@@ -1,3 +1,4 @@
+import slugify from "slugify"
 import Venue from '../models/venue'
 import VenueType from '../models/venue_type'
 import VenueClassification from '../models/venue_classification'
