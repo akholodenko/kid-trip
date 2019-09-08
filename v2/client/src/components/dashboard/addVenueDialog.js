@@ -6,6 +6,10 @@ import DialogTitle from '@material-ui/core/DialogTitle'
 import DialogContentText from '@material-ui/core/DialogContentText'
 import TextField from '@material-ui/core/TextField'
 import NumberFormat from 'react-number-format'
+import AppBar from '@material-ui/core/AppBar'
+import Toolbar from '@material-ui/core/Toolbar'
+import CloseIcon from '@material-ui/icons/Close'
+import IconButton from '@material-ui/core/IconButton'
 
 import CityFormField from './cityFormField'
 import VenueTypeFormField from './venueTypeFormField'
@@ -16,6 +20,9 @@ import { useMutation } from '@apollo/react-hooks'
 import { GET_VENUES_FOR_CURRENT_USER } from "../../graphql/venueQueries"
 
 const style = {
+	appBar: {
+		position: 'relative',
+	},
 	title: {
 		margin: '0 auto',
 	},
@@ -98,6 +105,13 @@ export default (props) => {
 			onClose={props.toggleDialog}
 			fullScreen={true}
 			aria-labelledby="form-dialog-title">
+			<AppBar style={style.appBar}>
+				<Toolbar>
+					<IconButton edge="start" color="inherit" onClick={props.toggleDialog} aria-label="close">
+						<CloseIcon/>
+					</IconButton>
+				</Toolbar>
+			</AppBar>
 			<DialogTitle style={style.title}>Add New Destination</DialogTitle>
 			<DialogContent style={style.body}>
 				<DialogContentText>
@@ -136,9 +150,10 @@ export default (props) => {
 											style={style.input}
 											autoComplete="postal-code"
 											format="#####"/>
-				<div><Button color='primary' onClick={onSubmit}>
-					Create venue
-				</Button>
+				<div>
+					<Button color='primary' onClick={onSubmit}>
+						Create venue
+					</Button>
 				</div>
 			</DialogContent>
 		</Dialog>
