@@ -5,7 +5,7 @@ import User from '../models/user'
 import UserVenue from '../models/user_venue'
 import City from '../models/city'
 
-import { slug } from "../utils/stringUtils"
+import { slug, uniqueSlug } from "../utils/stringUtils"
 
 import { fromDbUserTransform } from './user'
 
@@ -84,25 +84,41 @@ export const createVenue = (obj, args, { user }, info) => {
 		throw new Error('You are not authenticated!')
 	}
 
-	return Venue.create({
-		name: args.name,
-		slug: slug(args.name),
-		street_address: args.streetAddress,
-		zipcode: args.zipcode,
-		lat: args.lat,
-		lng: args.lng,
-		city_id: args.city.id,
-	}).then(newVenue => {
-		VenueClassification.create({
-			venue_id: newVenue.id,
-			venue_type_id: args.venueType.id,
-		})
+	let venueSlug = slug(args.name)
 
-		UserVenue.create({
-			venue_id: newVenue.id,
-			user_id: user.userId,
-		})
+	return getSimilarVenueSlugs(slug(venueSlug)).then((venues) => {
+		const existingSlugs = venues.map(u => u.get("slug"))
+		venueSlug = uniqueSlug(venueSlug, existingSlugs, args.zipcode)
 
-		return fromDbVenueTransform(newVenue)
+		return Venue.create({
+			name: args.name,
+			slug: venueSlug,
+			street_address: args.streetAddress,
+			zipcode: args.zipcode,
+			lat: args.lat,
+			lng: args.lng,
+			city_id: args.city.id,
+		}).then(newVenue => {
+			VenueClassification.create({
+				venue_id: newVenue.id,
+				venue_type_id: args.venueType.id,
+			})
+
+			UserVenue.create({
+				venue_id: newVenue.id,
+				user_id: user.userId,
+			})
+
+			return fromDbVenueTransform(newVenue)
+		})
+	})
+}
+
+const getSimilarVenueSlugs = slug => {
+	return Venue.findAll({
+		attributes: ['slug'],
+		where: {
+			slug: { $like: `${slug}%` },
+		},
 	})
 }
