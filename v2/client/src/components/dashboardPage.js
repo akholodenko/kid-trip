@@ -25,6 +25,34 @@ export default () => {
 		setDialogOpen(!dialogOpen)
 	}
 
+	const venuesByType = venues => {
+		let results = {}
+
+		for(let x = 0; x < venues.length; x++) {
+			if((venues[x].venueTypes && venues[x].venueTypes.length)) {
+				if(results[venues[x].venueTypes[0].name]) {
+					results[venues[x].venueTypes[0].name].venues.push(venues[x])
+				}
+				else {
+					results[venues[x].venueTypes[0].name] = {
+						type: {
+							id: venues[x].venueTypes[0].id,
+							name: venues[x].venueTypes[0].name,
+						},
+						venues: [venues[x]],
+					}
+				}
+			}
+		}
+		console.log(results)
+		let types = Object.keys(results)
+		return <div>{types.sort().map(type => (
+			<span key={type}>{type}</span>
+		))
+
+		}</div>
+	}
+
 	return (
 		<Query query={GET_VENUES_FOR_CURRENT_USER}>
 			{({ loading, error, data }) => {
@@ -44,6 +72,7 @@ export default () => {
 									open={dialogOpen}
 									toggleDialog={toggleDialog}/>
 							</div>
+							{venuesByType(data.me.venues)}
 							<div>
 								{data.me.venues.sort((a, b) => {
 									if (a.name > b.name) return 1
