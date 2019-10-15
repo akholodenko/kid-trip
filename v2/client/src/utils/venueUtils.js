@@ -27,11 +27,18 @@ export const venueHeaderImage = (venue) => {
 	let file
 
 	switch (venue.venueTypes[0].name) {
-	case 'restaurant':
-		file = 'restaurant-header-cmp.jpg'
+
+	case 'museum':
+		file = 'museum-header-cmp.jpg'
 		break
 	case 'outdoor playground':
 		file = 'outdoor-playground-header-cmp.jpg'
+		break
+	case 'restaurant':
+		file = 'restaurant-header-cmp.jpg'
+		break
+	case 'zoo':
+		file = 'zoo-header-cmp.jpg'
 		break
 	default:
 		file = 'restaurant-header-cmp.jpg'

@@ -7,6 +7,7 @@ import { GET_VENUES_FOR_CURRENT_USER } from '../graphql/venueQueries'
 
 import VenueListItem from './dashboard/venueListItem'
 import AddVenueDialog from './dashboard/addVenueDialog'
+import VenueTypeTabs from './dashboard/venueTypeTabs'
 
 const pageStyle = {
 	sectionHeader: {
@@ -16,41 +17,17 @@ const pageStyle = {
 	sectionHeaderTitle: {
 		flexGrow: 2,
 	},
+	venueList: {
+		marginLeft: '320px'
+	}
 }
 
 export default () => {
 	const [dialogOpen, setDialogOpen] = useState(false)
+	const [venueTypeFilter, setVenueTypeFilter] = useState('all')
 
 	const toggleDialog = () => {
 		setDialogOpen(!dialogOpen)
-	}
-
-	const venuesByType = venues => {
-		let results = {}
-
-		for(let x = 0; x < venues.length; x++) {
-			if((venues[x].venueTypes && venues[x].venueTypes.length)) {
-				if(results[venues[x].venueTypes[0].name]) {
-					results[venues[x].venueTypes[0].name].venues.push(venues[x])
-				}
-				else {
-					results[venues[x].venueTypes[0].name] = {
-						type: {
-							id: venues[x].venueTypes[0].id,
-							name: venues[x].venueTypes[0].name,
-						},
-						venues: [venues[x]],
-					}
-				}
-			}
-		}
-		console.log(results)
-		let types = Object.keys(results)
-		return <div>{types.sort().map(type => (
-			<span key={type}>{type}</span>
-		))
-
-		}</div>
 	}
 
 	return (
@@ -58,6 +35,12 @@ export default () => {
 			{({ loading, error, data }) => {
 				if (loading) return "Loading..."
 				if (error) return `Error! ${error.message}`
+
+				const venues = data.me.venues.sort((a, b) => {
+					if (a.name > b.name) return 1
+					if (b.name > a.name) return -1
+					return 0
+				})
 
 				return (
 					<div className='mainContainer'>
@@ -72,13 +55,14 @@ export default () => {
 									open={dialogOpen}
 									toggleDialog={toggleDialog}/>
 							</div>
-							{venuesByType(data.me.venues)}
-							<div>
-								{data.me.venues.sort((a, b) => {
-									if (a.name > b.name) return 1
-									if (b.name > a.name) return -1
-									return 0
-								}).map(venue => (
+							<VenueTypeTabs
+								venues={venues}
+								onSetVenueTypeFilter={setVenueTypeFilter}
+								venueTypeFilter={venueTypeFilter}></VenueTypeTabs>
+							<div style={pageStyle.venueList}>
+								{venues
+									.filter(venue => (venueTypeFilter === 'all' || venue.venueTypes[0].name === venueTypeFilter ))
+									.map(venue => (
 									<VenueListItem key={venue.id} venue={venue}/>
 								))}
 							</div>

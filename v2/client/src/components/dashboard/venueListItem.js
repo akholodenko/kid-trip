@@ -9,10 +9,10 @@ import Routes from "../../routes"
 const styles = {
 	'@global': {
 		'.venueItem': {
-			marginBottom: '10px',
+			marginTop: '5px',
+			marginBottom: '5px',
 			backgroundColor: '#f6f6f6',
 			padding: '15px',
-			borderRadius: '5px',
 		},
 		'.venueIcon': {
 			width: '15px',
