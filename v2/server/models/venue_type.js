@@ -7,7 +7,8 @@ const VenueType = sequelize.define('venueType', {
 		primaryKey: true,
 		autoIncrement: true,
 	},
-	name: Sequelize.STRING
+	name: Sequelize.STRING,
+	image: Sequelize.STRING,
 }, {
 	tableName: 'venue_types',
 	timestamps: false

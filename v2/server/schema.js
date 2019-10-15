@@ -14,13 +14,14 @@ export default gql`
     type VenueType {
         id: Int!
         name: String!
+        image: String
         venues: [Venue]
     }
 
     type Venue {
         id: Int!
         name: String!
-				slug: String!
+        slug: String!
         streetAddress: String!
         lat: Float
         lng: Float
@@ -30,7 +31,7 @@ export default gql`
         city: String
         state: String
     }
-    
+
     type City {
         id: Int!
         name: String!
@@ -40,7 +41,7 @@ export default gql`
     }
 
     type Mutation {
-#        post(url: String!, description: String!): Link!
+        #        post(url: String!, description: String!): Link!
         signup(email: String!, password: String!, firstName: String!, lastName: String!): AuthPayload
         login(email: String!, password: String!): AuthPayload
         createVenue(name: String!, streetAddress: String!, zipcode: Int!, lat: Float, lng: Float, city: CityInput, venueType: VenueTypeInput): Venue

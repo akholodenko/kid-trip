@@ -1,6 +1,6 @@
 import gql from "graphql-tag"
 
-const VenueDetails = gql `
+const VenueDetails = gql`
     fragment VenueDetails on Venue {
         id
         name
@@ -14,6 +14,7 @@ const VenueDetails = gql `
         venueTypes {
             id
             name
+            image
         }
     }
 `
@@ -52,6 +53,7 @@ export const GET_VENUE_TYPES = gql`
         venueTypes {
             id
             name
+            image
         }
     }
 `

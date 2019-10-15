@@ -4,13 +4,14 @@ import { fromDbVenueTransform } from './venue'
 
 export const getVenueTypes = () => {
 	return VenueType.findAll({
-		attributes: ['id', 'name'],
+		attributes: ['id', 'name', 'image'],
 		order: [['name', 'ASC']]
 	}).then((venueTypes) => {
 		return venueTypes.map((venueType) => {
 			return {
 				id: venueType.id,
-				name: venueType.name
+				name: venueType.name,
+				image: venueType.image,
 			}
 		})
 	})
@@ -18,7 +19,7 @@ export const getVenueTypes = () => {
 
 export const getVenueType = (venueTypeId) => {
 	return VenueType.findByPk(venueTypeId, {
-		attributes: ['id', 'name'],
+		attributes: ['id', 'name', 'image'],
 		include: [{
 			model: Venue,
 			attributes: ['id', 'name', 'street_address']
@@ -28,6 +29,7 @@ export const getVenueType = (venueTypeId) => {
 		return {
 			id: venueType.id,
 			name: venueType.name,
+			image: venueType.image,
 			venues: venueType.venues.map((venue) => {
 				return fromDbVenueTransform(venue)
 			})
