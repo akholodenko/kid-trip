@@ -10,7 +10,7 @@ export const getCities = (options) => {
 	if (options.query && options.query.length) {
 		details.where = {
 			name: {
-				[Op.like]: `${options.query}%`
+				[Op.iLike]: `${options.query}%`
 			}
 		}
 	}
