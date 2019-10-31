@@ -4,6 +4,7 @@ import VenueClassification from '../models/venue_classification'
 import User from '../models/user'
 import UserVenue from '../models/user_venue'
 import City from '../models/city'
+import {getVenueType} from './venue_type'
 
 import { slug, uniqueSlug } from "../utils/stringUtils"
 
@@ -76,6 +77,19 @@ export const getVenueBySlug = (venueSlug, { fields }) => {
 		include: associations,
 	}).then((venue) => {
 		return fromDbVenueTransform(venue)
+	})
+}
+
+export const getSimilarVenuesInRadius = (venueId = null, radius = 5, limit = 3,  { fields }) => {
+	console.log(venueId, radius, fields)
+	return getVenue(venueId, { fields: { venueTypes: true } }).then(response => {
+		console.log('response', response.venueTypes[0].id)
+
+		return getVenueType(response.venueTypes[0].id).then(venueType => {
+			console.log('venueType', venueType)
+
+			return venueType.venues.slice(0, limit)
+		})
 	})
 }
 

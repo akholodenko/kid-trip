@@ -1,7 +1,7 @@
 import graphsqlFields from 'graphql-fields'
 
 import { initModelAssociations } from './models/associations'
-import { getVenue, getVenueBySlug, createVenue } from './resolvers/venue'
+import { getVenue, getVenueBySlug, getSimilarVenuesInRadius, createVenue } from './resolvers/venue'
 import { getVenueType, getVenueTypes } from "./resolvers/venue_type"
 import { getCities } from './resolvers/city'
 import { signup, login, getUser } from './resolvers/user'
@@ -21,6 +21,9 @@ export default {
 		},
 		venueType(obj, args, context, info) {
 			return getVenueType(args.id)
+		},
+		similarVenues(obj, args, context, info) {
+			return getSimilarVenuesInRadius(args.id, args.radius, args.first, { fields: graphsqlFields(info) })
 		},
 		cities(obj, args) {
 			return getCities({ limit: args.first, query: args.query })

@@ -7,6 +7,7 @@ export default gql`
         venueBySlug(slug: String!): Venue!
         venueTypes: [VenueType]!
         venueType(id: ID!): VenueType
+				similarVenues(id: ID!, radius: Int, first: Int): [Venue]
         cities(first: Int, query: String): [City]!
         me: User
     }

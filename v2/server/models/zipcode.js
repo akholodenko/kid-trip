@@ -9,7 +9,8 @@ export default sequelize.define('Zipcode', {
 	},
 	zip: Sequelize.INTEGER,
 	lat: Sequelize.DECIMAL,
-	lng: Sequelize.DECIMAL
+	lng: Sequelize.DECIMAL,
+	geom: Sequelize.GEOMETRY('POINT', 4326)
 }, {
 	tableName: 'zipcodes',
 	timestamps: false

@@ -22,7 +22,7 @@ export const getVenueType = (venueTypeId) => {
 		attributes: ['id', 'name', 'image'],
 		include: [{
 			model: Venue,
-			attributes: ['id', 'name', 'street_address']
+			attributes: ['id', 'name', 'street_address', 'zipcode']
 		}],
 		order: [['name', 'ASC']]
 	}).then((venueType) => {
