@@ -1,12 +1,15 @@
+import sequelize from '../config/sequelize'
+
 import Venue from '../models/venue'
 import VenueType from '../models/venue_type'
 import VenueClassification from '../models/venue_classification'
 import User from '../models/user'
 import UserVenue from '../models/user_venue'
 import City from '../models/city'
-import {getVenueType} from './venue_type'
+import { getZipCode } from './zipcode'
 
 import { slug, uniqueSlug } from "../utils/stringUtils"
+import { fromMiles } from '../utils/numberUtils'
 
 import { fromDbUserTransform } from './user'
 
@@ -80,18 +83,36 @@ export const getVenueBySlug = (venueSlug, { fields }) => {
 	})
 }
 
-export const getSimilarVenuesInRadius = (venueId = null, radius = 5, limit = 3,  { fields }) => {
-	console.log(venueId, radius, fields)
+export const getSimilarVenuesInRadius = (venueId = null, radius = 5, limit = 3, { fields }) => {
 	return getVenue(venueId, { fields: { venueTypes: true } }).then(response => {
-		console.log('response', response.venueTypes[0].id)
+		const venueTypeId = response.venueTypes[0].id
+		const lat = response.lat
+		const lng = response.lng
 
-		return getVenueType(response.venueTypes[0].id).then(venueType => {
-			console.log('venueType', venueType)
-
-			return venueType.venues.slice(0, limit)
-		})
+		if (!lat || !lng) {
+			return getZipCode(response.zipcode).then(coordinates => {
+				return sqlQueryVenuesByTypeInRadius(venueTypeId, radius, coordinates, limit, [venueId])
+			})
+		} else {
+			return sqlQueryVenuesByTypeInRadius(venueTypeId, radius, { lat: lat, lng: lng }, limit, [venueId])
+		}
 	})
 }
+
+const sqlQueryVenuesByTypeInRadius = (venueTypeId, radius, coordinates, limit, excludedVenueIds = []) => sequelize.query(`
+			select * from
+				(SELECT 
+					venues.*,
+					(ST_SetSRID(geom, 4269)::geography <-> ST_Transform(ST_SetSRID(ST_MakePoint(${coordinates.lat},${coordinates.lng}),4326),4269)::geography) as distance
+				FROM venues
+				join venues_classifications vc on vc.venue_id = venues.id
+				where 
+					venues.lat is not null and 
+					vc.venue_type_id = ${venueTypeId} 
+					${(excludedVenueIds ? ` and venues.id not in (${excludedVenueIds.join(',')})` : '')} 
+				ORDER BY distance LIMIT ${limit}) as list
+			where list.distance < ${fromMiles(radius)}`)
+	.then(response => response[0].map(venue => fromDbVenueTransform(venue)))
 
 export const createVenue = (obj, args, { user }, info) => {
 	if (!user) {
