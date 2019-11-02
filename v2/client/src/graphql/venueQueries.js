@@ -57,3 +57,15 @@ export const GET_VENUE_TYPES = gql`
         }
     }
 `
+
+export const GET_SIMILAR_VENUES_IN_RADIUS = gql`
+    query ($venueId: ID!, $limit: Int, $radius: Int) {
+        similarVenues(id: $venueId, first: $limit, radius: $radius) {
+            id
+            name
+            streetAddress
+            zipcode
+            city
+        }
+    }
+`

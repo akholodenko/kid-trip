@@ -4,11 +4,21 @@ import Typography from '@material-ui/core/Typography'
 import { GET_VENUE_BY_SLUG } from '../graphql/venueQueries'
 
 import VenueHeader from './venue/header'
+import SimilarVenues from './venue/similarVenues'
 
 const pageStyle = {
 	sectionHeader: {
 		marginBottom: '15px',
 	},
+	columnWrapper: {
+		display: 'flex'
+	},
+	mainColumn: {
+		flexGrow: 3
+	},
+	sideColumm: {
+		flexGrow: 1
+	}
 }
 
 
@@ -32,6 +42,14 @@ export default ({ match }) => {
 							<div className='mainContainer'>
 								<div className='mainContent'>
 									<Typography variant='h5' style={pageStyle.sectionHeader}>{venue.name}</Typography>
+									<div style={pageStyle.columnWrapper}>
+										<div style={pageStyle.mainColumn}>
+											main
+										</div>
+										<div style={pageStyle.sideColumm}>
+											<SimilarVenues venue={venue} />
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>
