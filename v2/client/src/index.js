@@ -15,6 +15,8 @@ import 'typeface-roboto'
 import { getUserInfoFromStorage } from "./utils/userUtils"
 import { AUTH_TOKEN } from "./constants"
 
+const SERVER_HOST = process.env.REACT_APP_SERVER_HOST
+
 const cache = new InMemoryCache()
 
 const defaultState = {
@@ -45,7 +47,7 @@ const stateLink = withClientState({
 
 const token = localStorage.getItem(AUTH_TOKEN)
 const httpLink = new HttpLink({
-	uri: 'http://localhost:4000',
+	uri: SERVER_HOST, // || 'http://localhost:4000',
 	credentials: 'same-origin',
 	headers: {
 		authorization: token ? `Bearer ${token}` : '',
