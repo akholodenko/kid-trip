@@ -8,6 +8,8 @@ import City from "../models/city"
 import { fromDbVenueTransform } from './venue'
 import VenueType from "../models/venue_type"
 
+import {sendWelcomeEmail} from '../utils/emailUtils'
+
 const fromDbUserTransform = (user) => {
 	return {
 		id: user.id,
@@ -31,6 +33,8 @@ async function signup(parent, args) {
 	})
 
 	const token = jwt.sign({ userId: user.id }, APP_SECRET)
+
+	sendWelcomeEmail(user)
 
 	return {
 		token,
