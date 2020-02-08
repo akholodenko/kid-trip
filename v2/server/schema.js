@@ -43,7 +43,7 @@ export default gql`
 
     type Mutation {
         #        post(url: String!, description: String!): Link!
-        signup(email: String!, password: String!, firstName: String!, lastName: String!): AuthPayload
+        signup(email: String!, password: String!, firstName: String!, lastName: String!, zipcode: String): AuthPayload
         login(email: String!, password: String!): AuthPayload
         createVenue(name: String!, streetAddress: String!, zipcode: Int!, lat: Float, lng: Float, city: CityInput, venueType: VenueTypeInput): Venue
     }
@@ -66,6 +66,7 @@ export default gql`
         firstName: String!
         lastName: String!
         email: String!
+        zipcode: String
         venues: [Venue]
     }
 `

@@ -16,6 +16,7 @@ const fromDbUserTransform = (user) => {
 		firstName: user.first_name,
 		lastName: user.last_name,
 		email: user.email,
+		zipcode: user.zipcode,
 		venues: user.venues ? user.venues.map(venue => fromDbVenueTransform(venue)) : null,
 	}
 }
@@ -28,6 +29,7 @@ async function signup(parent, args) {
 		last_name: args.lastName,
 		email: args.email,
 		password,
+		zipcode: args.zode || null
 	}).then(newUser => {
 		return fromDbUserTransform(newUser)
 	})
@@ -84,7 +86,7 @@ const getUser = (userId, { fields }) => {
 	}
 
 	return User.findByPk(userId, {
-		attributes: ['id', 'first_name', 'last_name', 'email'],
+		attributes: ['id', 'first_name', 'last_name', 'email', 'zipcode'],
 		include: associations,
 	}).then(user => fromDbUserTransform(user))
 }

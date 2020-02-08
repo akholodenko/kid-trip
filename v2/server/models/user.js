@@ -23,12 +23,15 @@ const User = sequelize.define('user', {
 		},
 	},
 	password: Sequelize.STRING,
+	zipcode: Sequelize.STRING
 }, {
 	tableName: 'users',
 	underscored: true,
 	indexes: [{
 		unique: true,
 		fields: ['email'],
+	}, {
+		fields: ['zipcode']
 	}],
 })
 
