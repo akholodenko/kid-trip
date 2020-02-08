@@ -12,4 +12,5 @@ const { DB_SCHEMA, DB_USER, DB_PASSWORD, DB_HOST } = result.parsed
 export default new Sequelize(DB_SCHEMA, DB_USER, DB_PASSWORD, {
 	host: DB_HOST,
 	dialect: 'postgres',
+	operatorsAliases: false,
 })
