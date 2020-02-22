@@ -1,0 +1,11 @@
+.value-prop-container {
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+@media (max-width: 900px) {
+    .value-prop-container {
+        display: block;
+    }
+}
