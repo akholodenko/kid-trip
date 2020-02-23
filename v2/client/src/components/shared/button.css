@@ -1,0 +1,28 @@
+.form-button {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-shadow: 1px 1px 1px rgba(0,0,0,0.004);
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    box-shadow: none;
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    height: 45px;
+    min-width: 100px;
+    font-size: 14px;
+    font-weight: 700;
+    border-radius: 3px;
+    outline: none;
+    background-color: #3CB371;
+    border-color: #3CB371;
+    color: #ffffff;
+    margin: 0 auto 50px;
+    display: block;
+    text-transform: uppercase;
+
+}
+
+.form-button:hover {
+    opacity: .9;
+    cursor: pointer;
+}
