@@ -18,5 +18,5 @@ export default () => {
     )
   }
 
-  return <div>{isUserLoggedIn() ? 'yes' : renderSignUp()}</div>
+  return <div>{!isUserLoggedIn() && renderSignUp()}</div>
 }
