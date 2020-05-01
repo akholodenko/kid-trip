@@ -15,7 +15,8 @@ const pageStyle = {
     display: 'flex'
   },
   mainColumn: {
-    flexGrow: 3
+    flexGrow: 3,
+    maxWidth: '800px'
   },
   sideColumm: {
     flexGrow: 1
@@ -47,6 +48,7 @@ export default ({ match }) => {
                   </Typography>
                   <div style={pageStyle.columnWrapper}>
                     <div style={pageStyle.mainColumn}>
+                      {venue.description && <span>{venue.description}</span>}
                       This {venueTypeName} is located in {venue.city},{' '}
                       {venue.state}.
                     </div>
