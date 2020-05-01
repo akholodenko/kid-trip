@@ -27,3 +27,17 @@ export const venueHeaderImage = venue =>
   venue.venueTypes[0].image || 'restaurant-header-cmp.jpg'
 
 export const venuePrimaryTypeName = venue => venue.venueTypes[0].name || 'venue'
+
+export const venueAddress = (venue, separator = ', ') => {
+  if (venue) {
+    return (
+      <span>
+        {venue.streetAddress}
+        {separator}
+        {venue.city}, {venue.state} {venue.zipcode}
+      </span>
+    )
+  }
+
+  return ''
+}

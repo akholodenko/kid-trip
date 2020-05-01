@@ -6,6 +6,7 @@ import { GET_VENUE_BY_SLUG } from '../graphql/venueQueries'
 import VenueHeader from './venue/header'
 import SimilarVenues from './venue/similarVenues'
 import { venuePrimaryTypeName } from '../utils/venueUtils'
+import LocationInfo from './venue/locationInfo'
 
 const pageStyle = {
   sectionHeader: {
@@ -19,7 +20,8 @@ const pageStyle = {
     maxWidth: '800px'
   },
   sideColumm: {
-    flexGrow: 1
+    flexGrow: 1,
+    marginTop: '-20px'
   }
 }
 
@@ -53,6 +55,7 @@ export default ({ match }) => {
                       {venue.state}.
                     </div>
                     <div style={pageStyle.sideColumm}>
+                      <LocationInfo venue={venue} />
                       <SimilarVenues venue={venue} />
                     </div>
                   </div>
