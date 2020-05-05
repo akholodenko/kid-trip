@@ -37,7 +37,7 @@ export const fromDbVenueTransform = venue => {
   };
 };
 
-export const getVenue = (venueId, { fields }) => {
+export const getVenue = (venueId, userId, { fields }) => {
   let associations = [];
 
   if (!!fields.venueTypes) {
@@ -68,11 +68,18 @@ export const getVenue = (venueId, { fields }) => {
     ],
     include: associations
   }).then(venue => {
-    return fromDbVenueTransform(venue);
+    if (!!fields.venueStats) {
+      return getVenueStats(venue.id, userId).then(venueStats => {
+        venue.venueStats = venueStats;
+        return fromDbVenueTransform(venue);
+      });
+    } else {
+      return fromDbVenueTransform(venue);
+    }
   });
 };
 
-export const getVenueBySlug = (venueSlug, { fields }) => {
+export const getVenueBySlug = (venueSlug, userId, { fields }) => {
   let associations = [];
 
   if (!!fields.venueTypes) {
@@ -106,7 +113,7 @@ export const getVenueBySlug = (venueSlug, { fields }) => {
     include: associations
   }).then(venue => {
     if (!!fields.venueStats) {
-      return getVenueStats(venue.id).then(venueStats => {
+      return getVenueStats(venue.id, userId).then(venueStats => {
         venue.venueStats = venueStats;
         return fromDbVenueTransform(venue);
       });
@@ -122,31 +129,33 @@ export const getSimilarVenuesInRadius = (
   limit = 3,
   { fields }
 ) => {
-  return getVenue(venueId, { fields: { venueTypes: true } }).then(response => {
-    const venueTypeId = response.venueTypes[0].id;
-    const lat = response.lat;
-    const lng = response.lng;
+  return getVenue(venueId, null, { fields: { venueTypes: true } }).then(
+    response => {
+      const venueTypeId = response.venueTypes[0].id;
+      const lat = response.lat;
+      const lng = response.lng;
 
-    if (!lat || !lng) {
-      return getZipCode(response.zipcode).then(coordinates => {
+      if (!lat || !lng) {
+        return getZipCode(response.zipcode).then(coordinates => {
+          return sqlQueryVenuesByTypeInRadius(
+            venueTypeId,
+            radius,
+            coordinates,
+            limit,
+            [venueId]
+          );
+        });
+      } else {
         return sqlQueryVenuesByTypeInRadius(
           venueTypeId,
           radius,
-          coordinates,
+          { lat: lat, lng: lng },
           limit,
           [venueId]
         );
-      });
-    } else {
-      return sqlQueryVenuesByTypeInRadius(
-        venueTypeId,
-        radius,
-        { lat: lat, lng: lng },
-        limit,
-        [venueId]
-      );
+      }
     }
-  });
+  );
 };
 
 const sqlQueryVenuesByTypeInRadius = (
@@ -228,7 +237,7 @@ export const createUserVenueFavorite = (obj, args, { user }, info) => {
       user_id: user.userId
     }
   }).then(favorite => {
-    return getVenueStats(args.venueId);
+    return getVenueStats(args.venueId, user.userId);
   });
 };
 
@@ -241,7 +250,7 @@ const getSimilarVenueSlugs = slug => {
   });
 };
 
-const getVenueStats = venueId => {
+const getVenueStats = (venueId, userId = null) => {
   return UserVenueFavorite.findAll({
     attributes: [
       "venue_id",
@@ -251,9 +260,14 @@ const getVenueStats = venueId => {
     group: ["venue_id"]
   })
     .map(el => el.get({ plain: true }))
-    .then(data => {
-      return {
-        favorites: data[0].count
-      };
+    .then(totalData => {
+      return UserVenueFavorite.findOne({
+        where: { venue_id: venueId, user_id: userId }
+      }).then(favoriteByCurrentUser => {
+        return {
+          favorites: totalData[0] ? totalData[0].count : 0,
+          favoriteByCurrentUser: !!favoriteByCurrentUser
+        };
+      });
     });
 };

@@ -9,6 +9,7 @@ import VenueHeader from './venue/header'
 import SimilarVenues from './venue/similarVenues'
 import { venuePrimaryTypeName } from '../utils/venueUtils'
 import LocationInfo from './venue/locationInfo'
+import FavoriteButton from './venue/favoriteButton'
 
 const pageStyle = {
   sectionHeader: {
@@ -62,7 +63,12 @@ export default ({ match }) => {
                           />{' '}
                           {pluralize('person', venue.venueStats.favorites)}
                         </strong>
-                        .
+                        . &nbsp;
+                        {venue.venueStats.favoriteByCurrentUser ? (
+                          <span>including you</span>
+                        ) : (
+                          <FavoriteButton venueId={venue.id} />
+                        )}
                       </div>
                       <br />
                       {venue.description && <span>{venue.description}</span>}

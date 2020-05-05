@@ -37,6 +37,7 @@ export default gql`
 
   type VenueStats {
     favorites: Int
+    favoriteByCurrentUser: Boolean
   }
 
   type City {

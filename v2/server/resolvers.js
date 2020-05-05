@@ -16,11 +16,13 @@ initModelAssociations();
 
 export default {
   Query: {
-    venue(obj, args, context, info) {
-      return getVenue(args.id, { fields: graphsqlFields(info) });
+    venue(obj, args, { user }, info) {
+      return getVenue(args.id, user.userId, { fields: graphsqlFields(info) });
     },
-    venueBySlug(obj, args, context, info) {
-      return getVenueBySlug(args.slug, { fields: graphsqlFields(info) });
+    venueBySlug(obj, args, { user }, info) {
+      return getVenueBySlug(args.slug, user.userId, {
+        fields: graphsqlFields(info)
+      });
     },
     venueTypes() {
       return getVenueTypes();

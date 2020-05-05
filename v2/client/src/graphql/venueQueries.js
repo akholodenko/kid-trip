@@ -24,6 +24,7 @@ const VenueStats = gql`
   fragment VenueStats on Venue {
     venueStats {
       favorites
+      favoriteByCurrentUser
     }
   }
 `
@@ -35,6 +36,17 @@ export const GET_VENUE_BASICS = gql`
     }
   }
   ${VenueDetails}
+`
+
+export const GET_VENUE_ADVANCED = gql`
+  query($venueId: ID!) {
+    venue(id: $venueId) {
+      ...VenueDetails
+      ...VenueStats
+    }
+  }
+  ${VenueDetails}
+  ${VenueStats}
 `
 
 export const GET_VENUE_BY_SLUG = gql`
