@@ -5,7 +5,8 @@ import {
   getVenue,
   getVenueBySlug,
   getSimilarVenuesInRadius,
-  createVenue
+  createVenue,
+  createUserVenueFavorite
 } from "./resolvers/venue";
 import { getVenueType, getVenueTypes } from "./resolvers/venue_type";
 import { getCities } from "./resolvers/city";
@@ -49,6 +50,7 @@ export default {
   Mutation: {
     signup,
     login,
-    createVenue
+    createVenue,
+    createUserVenueFavorite
   }
 };

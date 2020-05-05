@@ -32,6 +32,11 @@ export default gql`
     zipcode: Int!
     city: String
     state: String
+    venueStats: VenueStats
+  }
+
+  type VenueStats {
+    favorites: Int
   }
 
   type City {
@@ -61,6 +66,7 @@ export default gql`
       city: CityInput
       venueType: VenueTypeInput
     ): Venue
+    createUserVenueFavorite(venueId: Int!): VenueStats
   }
 
   input CityInput {

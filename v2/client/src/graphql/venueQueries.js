@@ -20,6 +20,14 @@ const VenueDetails = gql`
   }
 `
 
+const VenueStats = gql`
+  fragment VenueStats on Venue {
+    venueStats {
+      favorites
+    }
+  }
+`
+
 export const GET_VENUE_BASICS = gql`
   query($venueId: ID!) {
     venue(id: $venueId) {
@@ -33,9 +41,11 @@ export const GET_VENUE_BY_SLUG = gql`
   query($venueSlug: String!) {
     venueBySlug(slug: $venueSlug) {
       ...VenueDetails
+      ...VenueStats
     }
   }
   ${VenueDetails}
+  ${VenueStats}
 `
 
 export const GET_VENUES_FOR_CURRENT_USER = gql`

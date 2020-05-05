@@ -1,6 +1,8 @@
 import React from 'react'
 import { Query } from 'react-apollo'
 import Typography from '@material-ui/core/Typography'
+import NumberFormat from 'react-number-format'
+import pluralize from 'pluralize'
 import { GET_VENUE_BY_SLUG } from '../graphql/venueQueries'
 
 import VenueHeader from './venue/header'
@@ -50,6 +52,19 @@ export default ({ match }) => {
                   </Typography>
                   <div style={pageStyle.columnWrapper}>
                     <div style={pageStyle.mainColumn}>
+                      <div>
+                        Liked by{' '}
+                        <strong>
+                          <NumberFormat
+                            value={venue.venueStats.favorites}
+                            thousandSeparator={true}
+                            displayType={'text'}
+                          />{' '}
+                          {pluralize('person', venue.venueStats.favorites)}
+                        </strong>
+                        .
+                      </div>
+                      <br />
                       {venue.description && <span>{venue.description}</span>}
                       This {venueTypeName} is located in {venue.city},{' '}
                       {venue.state}.

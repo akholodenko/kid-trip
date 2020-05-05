@@ -1,68 +1,77 @@
-import Venue from './venue'
-import VenueType from './venue_type'
-import VenueClassification from './venue_classification'
+import Venue from "./venue";
+import VenueType from "./venue_type";
+import VenueClassification from "./venue_classification";
 
-import User from './user'
-import UsersVenues from './user_venue'
+import User from "./user";
+import UsersVenues from "./user_venue";
+import UsersVenuesFavorites from "./user_venue_favorite";
 
-import City from './city'
-import CityZipcode from './city_zipcode'
-import Zipcode from './zipcode'
+import City from "./city";
+import CityZipcode from "./city_zipcode";
+import Zipcode from "./zipcode";
 
 export const initModelAssociations = () => {
-	Venue.belongsToMany(VenueType, {
-		through: VenueClassification,
-		foreignKey: 'venue_id',
-		otherKey: 'venue_type_id',
-	})
+  Venue.belongsToMany(VenueType, {
+    through: VenueClassification,
+    foreignKey: "venue_id",
+    otherKey: "venue_type_id"
+  });
 
-	Venue.hasMany(VenueClassification, {
-		foreignKey: 'venue_id',
-	})
+  Venue.hasMany(VenueClassification, {
+    foreignKey: "venue_id"
+  });
 
-	Venue.belongsToMany(User, {
-		through: UsersVenues,
-		foreignKey: 'venue_id',
-		otherKey: 'user_id',
-	})
+  Venue.hasMany(UsersVenuesFavorites, {
+    foreignKey: "venue_id"
+  });
 
-	Venue.belongsTo(Zipcode, {
-		foreignKey: 'zipcode',
-		targetKey: 'zip',
-	})
+  Venue.belongsToMany(User, {
+    through: UsersVenues,
+    foreignKey: "venue_id",
+    otherKey: "user_id"
+  });
 
-	Venue.belongsTo(City, {
-		foreignKey: 'city_id',
-	})
+  Venue.belongsTo(Zipcode, {
+    foreignKey: "zipcode",
+    targetKey: "zip"
+  });
 
-	VenueType.belongsToMany(Venue, {
-		through: VenueClassification,
-		foreignKey: 'venue_type_id',
-		otherKey: 'venue_id',
-	})
+  Venue.belongsTo(City, {
+    foreignKey: "city_id"
+  });
 
-	User.belongsToMany(Venue, {
-		through: UsersVenues,
-		foreignKey: 'user_id',
-		otherKey: 'venue_id',
-	})
+  VenueType.belongsToMany(Venue, {
+    through: VenueClassification,
+    foreignKey: "venue_type_id",
+    otherKey: "venue_id"
+  });
 
-	City.belongsToMany(Zipcode, {
-		through: CityZipcode,
-		foreignKey: 'city_id',
-		otherKey: 'zipcode',
-		targetKey: 'zip',
-	})
+  User.belongsToMany(Venue, {
+    through: UsersVenues,
+    foreignKey: "user_id",
+    otherKey: "venue_id"
+  });
 
-	Zipcode.belongsToMany(City, {
-		through: CityZipcode,
-		foreignKey: 'zipcode',
-		otherKey: 'city_id',
-		sourceKey: 'zip',
-	})
+  User.hasMany(UsersVenuesFavorites, {
+    foreignKey: "user_id"
+  });
 
-	Zipcode.hasMany(Venue, {
-		foreignKey: 'zipcode',
-		sourceKey: 'zip',
-	})
-}
+  City.belongsToMany(Zipcode, {
+    through: CityZipcode,
+    foreignKey: "city_id",
+    otherKey: "zipcode",
+    targetKey: "zip"
+  });
+
+  Zipcode.belongsToMany(City, {
+    through: CityZipcode,
+    foreignKey: "zipcode",
+    otherKey: "city_id",
+    sourceKey: "zip"
+  });
+
+  Zipcode.hasMany(Venue, {
+    foreignKey: "zipcode",
+    sourceKey: "zip"
+  });
+};

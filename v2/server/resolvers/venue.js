@@ -5,6 +5,7 @@ import VenueType from "../models/venue_type";
 import VenueClassification from "../models/venue_classification";
 import User from "../models/user";
 import UserVenue from "../models/user_venue";
+import UserVenueFavorite from "../models/user_venue_favorite";
 import City from "../models/city";
 import { getZipCode } from "./zipcode";
 
@@ -31,7 +32,8 @@ export const fromDbVenueTransform = venue => {
     venueTypes: venue.venueTypes,
     users: venue.users
       ? venue.users.map(user => fromDbUserTransform(user))
-      : null
+      : null,
+    venueStats: venue.venueStats
   };
 };
 
@@ -103,7 +105,14 @@ export const getVenueBySlug = (venueSlug, { fields }) => {
     ],
     include: associations
   }).then(venue => {
-    return fromDbVenueTransform(venue);
+    if (!!fields.venueStats) {
+      return getVenueStats(venue.id).then(venueStats => {
+        venue.venueStats = venueStats;
+        return fromDbVenueTransform(venue);
+      });
+    } else {
+      return fromDbVenueTransform(venue);
+    }
   });
 };
 
@@ -206,6 +215,23 @@ export const createVenue = (obj, args, { user }, info) => {
   });
 };
 
+export const createUserVenueFavorite = (obj, args, { user }, info) => {
+  if (!user) {
+    throw new Error("You are not authenticated!");
+  }
+
+  console.log(`venue ID: ${args.venueId} | user ID: ${user.userId}`);
+
+  return UserVenueFavorite.findOrCreate({
+    where: {
+      venue_id: args.venueId,
+      user_id: user.userId
+    }
+  }).then(favorite => {
+    return getVenueStats(args.venueId);
+  });
+};
+
 const getSimilarVenueSlugs = slug => {
   return Venue.findAll({
     attributes: ["slug"],
@@ -213,4 +239,21 @@ const getSimilarVenueSlugs = slug => {
       slug: { $like: `${slug}%` }
     }
   });
+};
+
+const getVenueStats = venueId => {
+  return UserVenueFavorite.findAll({
+    attributes: [
+      "venue_id",
+      [sequelize.fn("count", sequelize.col("id")), "count"]
+    ],
+    where: { venue_id: venueId },
+    group: ["venue_id"]
+  })
+    .map(el => el.get({ plain: true }))
+    .then(data => {
+      return {
+        favorites: data[0].count
+      };
+    });
 };
