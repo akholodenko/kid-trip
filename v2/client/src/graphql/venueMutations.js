@@ -32,3 +32,11 @@ export const CREATE_USER_VENUE_FAVORITE_MUTATION = gql`
     }
   }
 `
+
+export const DELETE_USER_VENUE_FAVORITE_MUTATION = gql`
+  mutation DeleteUserVenueFavorite($venueId: Int!) {
+    deleteUserVenueFavorite(venueId: $venueId) {
+      favorites
+    }
+  }
+`

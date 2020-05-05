@@ -171,11 +171,13 @@ const sqlQueryVenuesByTypeInRadius = (
 			select * from
 				(SELECT 
 					venues.*,
+					c.name as "city_name",
 					(ST_SetSRID(geom, 4269)::geography <-> ST_Transform(ST_SetSRID(ST_MakePoint(${
             coordinates.lat
           },${coordinates.lng}),4326),4269)::geography) as distance
 				FROM venues
 				join venues_classifications vc on vc.venue_id = venues.id
+				join cities c on c.id = venues.city_id
 				where 
 					venues.lat is not null and 
 					vc.venue_type_id = ${venueTypeId} 
@@ -187,7 +189,13 @@ const sqlQueryVenuesByTypeInRadius = (
 				ORDER BY distance LIMIT ${limit}) as list
 			where list.distance < ${fromMiles(radius)}`
     )
-    .then(response => response[0].map(venue => fromDbVenueTransform(venue)));
+    .then(response =>
+      response[0].map(venue => {
+        venue.city = venue.city_name ? { name: venue.city_name } : null;
+
+        return fromDbVenueTransform(venue);
+      })
+    );
 
 export const createVenue = (obj, args, { user }, info) => {
   if (!user) {
@@ -229,14 +237,27 @@ export const createUserVenueFavorite = (obj, args, { user }, info) => {
     throw new Error("You are not authenticated!");
   }
 
-  console.log(`venue ID: ${args.venueId} | user ID: ${user.userId}`);
-
   return UserVenueFavorite.findOrCreate({
     where: {
       venue_id: args.venueId,
       user_id: user.userId
     }
   }).then(favorite => {
+    return getVenueStats(args.venueId, user.userId);
+  });
+};
+
+export const deleteUserVenueFavorite = (obj, args, { user }, info) => {
+  if (!user) {
+    throw new Error("You are not authenticated!");
+  }
+
+  return UserVenueFavorite.destroy({
+    where: {
+      venue_id: args.venueId,
+      user_id: user.userId
+    }
+  }).then(() => {
     return getVenueStats(args.venueId, user.userId);
   });
 };

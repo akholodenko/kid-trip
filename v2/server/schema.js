@@ -68,6 +68,7 @@ export default gql`
       venueType: VenueTypeInput
     ): Venue
     createUserVenueFavorite(venueId: Int!): VenueStats
+    deleteUserVenueFavorite(venueId: Int!): VenueStats
   }
 
   input CityInput {

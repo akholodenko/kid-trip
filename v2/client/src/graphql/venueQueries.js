@@ -86,6 +86,7 @@ export const GET_SIMILAR_VENUES_IN_RADIUS = gql`
     similarVenues(id: $venueId, first: $limit, radius: $radius) {
       id
       name
+      slug
       streetAddress
       zipcode
       city

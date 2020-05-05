@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { withApollo } from 'react-apollo'
 import { GET_SIMILAR_VENUES_IN_RADIUS } from '../../graphql/venueQueries'
 import '../shared/sidebarModule.css'
+import { Link as RouterLink } from 'react-router-dom'
+import Routes from '../../routes'
 
 const SimilarVenues = ({ client, venue }) => {
   const [similarVenues, setSimilarVenues] = useState([])
@@ -21,7 +23,13 @@ const SimilarVenues = ({ client, venue }) => {
       <h3>Similar places near by</h3>
       <div className="sidebar-module-body">
         {similarVenues &&
-          similarVenues.map(venue => <div key={venue.id}>{venue.name}</div>)}
+          similarVenues.map(venue => (
+            <div key={venue.id}>
+              <RouterLink to={Routes.venuePath(venue.slug)}>
+                {venue.name}
+              </RouterLink>
+            </div>
+          ))}
       </div>
     </div>
   )

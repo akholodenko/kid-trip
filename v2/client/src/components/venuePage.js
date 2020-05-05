@@ -8,6 +8,7 @@ import { GET_VENUE_BY_SLUG } from '../graphql/venueQueries'
 import VenueHeader from './venue/header'
 import SimilarVenues from './venue/similarVenues'
 import { venuePrimaryTypeName } from '../utils/venueUtils'
+import { isUserLoggedIn } from '../utils/userUtils'
 import LocationInfo from './venue/locationInfo'
 import FavoriteButton from './venue/favoriteButton'
 
@@ -64,10 +65,13 @@ export default ({ match }) => {
                           {pluralize('person', venue.venueStats.favorites)}
                         </strong>
                         . &nbsp;
-                        {venue.venueStats.favoriteByCurrentUser ? (
-                          <span>including you</span>
-                        ) : (
-                          <FavoriteButton venueId={venue.id} />
+                        {isUserLoggedIn() && (
+                          <FavoriteButton
+                            venueId={venue.id}
+                            favoriteByCurrentUser={
+                              venue.venueStats.favoriteByCurrentUser
+                            }
+                          />
                         )}
                       </div>
                       <br />

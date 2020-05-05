@@ -6,7 +6,8 @@ import {
   getVenueBySlug,
   getSimilarVenuesInRadius,
   createVenue,
-  createUserVenueFavorite
+  createUserVenueFavorite,
+  deleteUserVenueFavorite
 } from "./resolvers/venue";
 import { getVenueType, getVenueTypes } from "./resolvers/venue_type";
 import { getCities } from "./resolvers/city";
@@ -17,10 +18,12 @@ initModelAssociations();
 export default {
   Query: {
     venue(obj, args, { user }, info) {
-      return getVenue(args.id, user.userId, { fields: graphsqlFields(info) });
+      return getVenue(args.id, user ? user.userId : null, {
+        fields: graphsqlFields(info)
+      });
     },
     venueBySlug(obj, args, { user }, info) {
-      return getVenueBySlug(args.slug, user.userId, {
+      return getVenueBySlug(args.slug, user ? user.userId : null, {
         fields: graphsqlFields(info)
       });
     },
@@ -53,6 +56,7 @@ export default {
     signup,
     login,
     createVenue,
-    createUserVenueFavorite
+    createUserVenueFavorite,
+    deleteUserVenueFavorite
   }
 };
