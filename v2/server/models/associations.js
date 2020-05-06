@@ -56,6 +56,16 @@ export const initModelAssociations = () => {
     foreignKey: "user_id"
   });
 
+  UsersVenuesFavorites.hasMany(Venue, {
+    foreignKey: "id",
+    sourceKey: "venue_id"
+  });
+
+  UsersVenuesFavorites.hasMany(User, {
+    foreignKey: "id",
+    sourceKey: "user_id"
+  });
+
   City.belongsToMany(Zipcode, {
     through: CityZipcode,
     foreignKey: "city_id",

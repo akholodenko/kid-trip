@@ -66,6 +66,9 @@ export const GET_VENUES_FOR_CURRENT_USER = gql`
       venues {
         ...VenueDetails
       }
+      favoriteVenues {
+        ...VenueDetails
+      }
     }
   }
   ${VenueDetails}

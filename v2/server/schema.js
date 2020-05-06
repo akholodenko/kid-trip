@@ -91,5 +91,6 @@ export default gql`
     email: String!
     zipcode: String
     venues: [Venue]
+    favoriteVenues: [Venue]
   }
 `;

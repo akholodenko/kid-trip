@@ -14,6 +14,18 @@ import { fromMiles } from "../utils/numberUtils";
 
 import { fromDbUserTransform } from "./user";
 
+export const VENUE_ATTRIBUTES = [
+  "id",
+  "name",
+  "slug",
+  "description",
+  "street_address",
+  "city_id",
+  "zipcode",
+  "lat",
+  "lng"
+];
+
 export const fromDbVenueTransform = venue => {
   return {
     id: venue.id,
@@ -56,16 +68,7 @@ export const getVenue = (venueId, userId, { fields }) => {
   }
 
   return Venue.findByPk(venueId, {
-    attributes: [
-      "id",
-      "name",
-      "slug",
-      "description",
-      "street_address",
-      "zipcode",
-      "lat",
-      "lng"
-    ],
+    attributes: VENUE_ATTRIBUTES,
     include: associations
   }).then(venue => {
     if (!!fields.venueStats) {
@@ -99,17 +102,7 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
 
   return Venue.findOne({
     where: { slug: venueSlug },
-    attributes: [
-      "id",
-      "name",
-      "slug",
-      "description",
-      "street_address",
-      "city_id",
-      "zipcode",
-      "lat",
-      "lng"
-    ],
+    attributes: VENUE_ATTRIBUTES,
     include: associations
   }).then(venue => {
     if (!!fields.venueStats) {
