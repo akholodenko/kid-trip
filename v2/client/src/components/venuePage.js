@@ -43,7 +43,7 @@ export default ({ match }) => {
 
           const venue = data.venueBySlug
           const venueTypeName = venuePrimaryTypeName(venue)
-          console.log('data', data)
+
           return (
             <div>
               <VenueHeader venue={venue} />

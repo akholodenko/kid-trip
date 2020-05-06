@@ -95,7 +95,8 @@ const getUser = (userId, { fields }) => {
 
   return User.findByPk(userId, {
     attributes: ["id", "first_name", "last_name", "email", "zipcode"],
-    include: associations
+    include: associations,
+    order: [[Venue, "name", "ASC"]]
   }).then(user => {
     if (!!fields && !!fields.favoriteVenues) {
       return getUserFavoriteVenues(userId, fields).then(response => {
@@ -128,7 +129,8 @@ const getUserFavoriteVenues = (userId, fields) => {
 
   return Venue.findAll({
     attributes: VENUE_ATTRIBUTES,
-    include: associations
+    include: associations,
+    order: [["name", "ASC"]]
   });
 };
 
