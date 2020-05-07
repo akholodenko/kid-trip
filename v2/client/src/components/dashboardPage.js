@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Query, withApollo } from 'react-apollo'
+import { withApollo } from 'react-apollo'
 import Typography from '@material-ui/core/Typography'
 import Button from '@material-ui/core/Button'
 import { Add } from '@material-ui/icons'

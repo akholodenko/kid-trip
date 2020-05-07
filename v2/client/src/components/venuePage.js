@@ -68,6 +68,7 @@ export default ({ match }) => {
                         {isUserLoggedIn() && (
                           <FavoriteButton
                             venueId={venue.id}
+                            venueSlug={venueSlug}
                             favoriteByCurrentUser={
                               venue.venueStats.favoriteByCurrentUser
                             }

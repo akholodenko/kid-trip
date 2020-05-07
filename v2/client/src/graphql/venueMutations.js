@@ -29,6 +29,7 @@ export const CREATE_USER_VENUE_FAVORITE_MUTATION = gql`
   mutation CreateUserVenueFavorite($venueId: Int!) {
     createUserVenueFavorite(venueId: $venueId) {
       favorites
+      favoriteByCurrentUser
     }
   }
 `
@@ -37,6 +38,7 @@ export const DELETE_USER_VENUE_FAVORITE_MUTATION = gql`
   mutation DeleteUserVenueFavorite($venueId: Int!) {
     deleteUserVenueFavorite(venueId: $venueId) {
       favorites
+      favoriteByCurrentUser
     }
   }
 `
