@@ -5,45 +5,45 @@ import {
   DELETE_USER_VENUE_FAVORITE_MUTATION
 } from '../../graphql/venueMutations'
 import {
-  GET_VENUE_ADVANCED,
-  // GET_VENUE_BY_SLUG,
+  GET_VENUE_BY_SLUG,
   GET_VENUES_FOR_CURRENT_USER
 } from '../../graphql/venueQueries'
 
-export default ({ venueId, venueSlug, favoriteByCurrentUser }) => {
+export default ({
+  venueId,
+  venueSlug,
+  favoriteByCurrentUser,
+  onUpdateFavoritesStats
+}) => {
   const refetchQueries = [
-    {
-      query: GET_VENUE_ADVANCED,
-      variables: { venueId: venueId }
-    },
     {
       query: GET_VENUES_FOR_CURRENT_USER
     }
   ]
 
+  const updateFavoriteStats = (store, venueStats) => {
+    let data = store.readQuery({
+      query: GET_VENUE_BY_SLUG,
+      variables: { venueSlug }
+    })
+
+    data.venueBySlug.venueStats = venueStats
+    onUpdateFavoritesStats(venueStats)
+
+    store.writeQuery({
+      query: GET_VENUE_BY_SLUG,
+      variables: { venueSlug },
+      data
+    })
+  }
+
   const [addFavorite] = useMutation(CREATE_USER_VENUE_FAVORITE_MUTATION, {
     onError(error) {
       console.log('error', error)
     },
-    // update: (store, { data: { createUserVenueFavorite } }) => {
-    //   console.log('update', createUserVenueFavorite)
-    //   let data = store.readQuery({
-    //     query: GET_VENUE_BY_SLUG,
-    //     variables: { venueSlug }
-    //   })
-    //
-    //   data.venueBySlug.venueStats = createUserVenueFavorite
-    //   console.log(data.venueBySlug)
-    //
-    //   store.writeQuery({
-    //     query: GET_VENUE_BY_SLUG,
-    //     variables: { venueSlug },
-    //     data
-    //   })
-    // },
-    // onCompleted(data) {
-    //   console.log('data', data)
-    // },
+    update: (store, { data: { createUserVenueFavorite } }) => {
+      updateFavoriteStats(store, createUserVenueFavorite)
+    },
     refetchQueries
   })
 
@@ -51,9 +51,9 @@ export default ({ venueId, venueSlug, favoriteByCurrentUser }) => {
     onError(error) {
       console.log('error', error)
     },
-    // onCompleted(data) {
-    //   console.log('data', data)
-    // },
+    update: (store, { data: { deleteUserVenueFavorite } }) => {
+      updateFavoriteStats(store, deleteUserVenueFavorite)
+    },
     refetchQueries
   })
 

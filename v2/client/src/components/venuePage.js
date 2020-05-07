@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Query } from 'react-apollo'
 import Typography from '@material-ui/core/Typography'
 import NumberFormat from 'react-number-format'
@@ -31,6 +31,12 @@ const pageStyle = {
 
 export default ({ match }) => {
   const venueSlug = match.params.venueSlug
+  const [venue, setVenue] = useState(null)
+  const [venueTypeName, setVenueTypeName] = useState('')
+
+  const onUpdateFavoritesStats = venueStats => {
+    setVenue({ ...venue, venueStats: { ...venueStats } })
+  }
 
   if (!venueSlug) {
     return <div>Venue not found.</div>
@@ -41,53 +47,56 @@ export default ({ match }) => {
           if (loading) return 'Loading...'
           if (error) return `Error! ${error.message}`
 
-          const venue = data.venueBySlug
-          const venueTypeName = venuePrimaryTypeName(venue)
+          setVenue(data.venueBySlug)
+          setVenueTypeName(venuePrimaryTypeName(data.venueBySlug))
 
           return (
-            <div>
-              <VenueHeader venue={venue} />
-              <div className="mainContainer">
-                <div className="mainContent">
-                  <Typography variant="h5" style={pageStyle.sectionHeader}>
-                    {venue.name}
-                  </Typography>
-                  <div style={pageStyle.columnWrapper}>
-                    <div style={pageStyle.mainColumn}>
-                      <div>
-                        Liked by{' '}
-                        <strong>
-                          <NumberFormat
-                            value={venue.venueStats.favorites}
-                            thousandSeparator={true}
-                            displayType={'text'}
-                          />{' '}
-                          {pluralize('person', venue.venueStats.favorites)}
-                        </strong>
-                        . &nbsp;
-                        {isUserLoggedIn() && (
-                          <FavoriteButton
-                            venueId={venue.id}
-                            venueSlug={venueSlug}
-                            favoriteByCurrentUser={
-                              venue.venueStats.favoriteByCurrentUser
-                            }
-                          />
-                        )}
+            venue && (
+              <div>
+                <VenueHeader venue={venue} />
+                <div className="mainContainer">
+                  <div className="mainContent">
+                    <Typography variant="h5" style={pageStyle.sectionHeader}>
+                      {venue.name}
+                    </Typography>
+                    <div style={pageStyle.columnWrapper}>
+                      <div style={pageStyle.mainColumn}>
+                        <div>
+                          Liked by{' '}
+                          <strong>
+                            <NumberFormat
+                              value={venue.venueStats.favorites}
+                              thousandSeparator={true}
+                              displayType={'text'}
+                            />{' '}
+                            {pluralize('person', venue.venueStats.favorites)}
+                          </strong>
+                          . &nbsp;
+                          {isUserLoggedIn() && (
+                            <FavoriteButton
+                              venueId={venue.id}
+                              venueSlug={venueSlug}
+                              favoriteByCurrentUser={
+                                venue.venueStats.favoriteByCurrentUser
+                              }
+                              onUpdateFavoritesStats={onUpdateFavoritesStats}
+                            />
+                          )}
+                        </div>
+                        <br />
+                        {venue.description && <span>{venue.description}</span>}
+                        This {venueTypeName} is located in {venue.city},{' '}
+                        {venue.state}.
                       </div>
-                      <br />
-                      {venue.description && <span>{venue.description}</span>}
-                      This {venueTypeName} is located in {venue.city},{' '}
-                      {venue.state}.
-                    </div>
-                    <div style={pageStyle.sideColumm}>
-                      <LocationInfo venue={venue} />
-                      <SimilarVenues venue={venue} />
+                      <div style={pageStyle.sideColumm}>
+                        <LocationInfo venue={venue} />
+                        <SimilarVenues venue={venue} />
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            </div>
+            )
           )
         }}
       </Query>
