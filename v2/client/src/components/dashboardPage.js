@@ -49,15 +49,23 @@ const DashboardPage = ({ client }) => {
   )
 
   useEffect(() => {
+    getVenueData()
+  }, [client])
+
+  const getVenueData = () => {
     client
       .query({
         query: GET_VENUES_FOR_CURRENT_USER
       })
       .then(({ data }) => {
         setDashboardData(data.me)
-        setVenues(data.me.venues)
+        setVenues(
+          currentVenueGroup === VENUE_GROUP.FAVORITES
+            ? data.me.favoriteVenues
+            : data.me.venues
+        )
       })
-  }, [client])
+  }
 
   const toggleDialog = () => {
     setDialogOpen(!dialogOpen)
@@ -73,6 +81,10 @@ const DashboardPage = ({ client }) => {
     setVenueTypeFilter('all')
     setVenues(dashboardData.favoriteVenues)
     setCurrentVenueGroup(VENUE_GROUP.FAVORITES)
+  }
+
+  const onDeleteFavorite = () => {
+    getVenueData()
   }
 
   const renderVenueGroupHeader = (text, venueGroup, onClick) => {
@@ -128,7 +140,10 @@ const DashboardPage = ({ client }) => {
               <VenueListItem
                 key={venue.id}
                 venue={venue}
-                showUnlikeButton={currentVenueGroup === VENUE_GROUP.FAVORITES}
+                showDeleteFavoriteButton={
+                  currentVenueGroup === VENUE_GROUP.FAVORITES
+                }
+                onDeleteFavoriteCallback={onDeleteFavorite}
               />
             ))}
         </div>

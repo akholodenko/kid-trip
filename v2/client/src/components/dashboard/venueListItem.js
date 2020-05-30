@@ -5,6 +5,12 @@ import { Typography } from '@material-ui/core'
 import { venueMapLink, venueIcon } from '../../utils/venueUtils'
 import { Link as RouterLink } from 'react-router-dom'
 import Routes from '../../routes'
+import { useMutation } from '@apollo/react-hooks'
+import { DELETE_USER_VENUE_FAVORITE_MUTATION } from '../../graphql/venueMutations'
+import {
+  GET_VENUE_BY_SLUG,
+  GET_VENUES_FOR_CURRENT_USER
+} from '../../graphql/venueQueries'
 
 const styles = {
   '@global': {
@@ -28,11 +34,62 @@ const styles = {
 }
 
 const VenueListItem = props => {
-  const { venue, showUnlikeButton } = props
+  const { venue, showDeleteFavoriteButton, onDeleteFavoriteCallback } = props
+
+  const [deleteFavorite] = useMutation(DELETE_USER_VENUE_FAVORITE_MUTATION, {
+    onError(error) {
+      console.log('error', error)
+    },
+    update: (store, { data: { deleteUserVenueFavorite } }) => {
+      updateFavoriteStats(store, deleteUserVenueFavorite)
+    },
+    onCompleted: () => {
+      onDeleteFavoriteCallback()
+    },
+    refetchQueries: [
+      {
+        query: GET_VENUES_FOR_CURRENT_USER
+      }
+    ],
+    awaitRefetchQueries: true
+  })
+
+  const updateFavoriteStats = (store, venueStats) => {
+    try {
+      let data = store.readQuery({
+        query: GET_VENUE_BY_SLUG,
+        variables: { venueSlug: venue.slug }
+      })
+
+      data.venueBySlug.venueStats = venueStats
+
+      store.writeQuery({
+        query: GET_VENUE_BY_SLUG,
+        variables: { venueSlug: venue.slug },
+        data
+      })
+    } catch (e) {}
+  }
+
+  const onDeleteFavorite = () =>
+    deleteFavorite({
+      variables: {
+        venueId: venue.id
+      }
+    })
 
   return (
     <div className="venueItem">
-      {showUnlikeButton && <div className="venueUnlike">Unlike</div>}
+      {showDeleteFavoriteButton && (
+        <button
+          onClick={() => {
+            onDeleteFavorite()
+          }}
+          className="venueUnlike"
+        >
+          Unlike
+        </button>
+      )}
 
       <div>
         <Typography
