@@ -20,15 +20,20 @@ const styles = {
       marginRight: '5px',
       position: 'relative',
       top: '2px'
+    },
+    '.venueUnlike': {
+      float: 'right'
     }
   }
 }
 
 const VenueListItem = props => {
-  const { venue } = props
+  const { venue, showUnlikeButton } = props
 
   return (
     <div className="venueItem">
+      {showUnlikeButton && <div className="venueUnlike">Unlike</div>}
+
       <div>
         <Typography
           variant="h6"
