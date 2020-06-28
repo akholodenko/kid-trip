@@ -1,15 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { withApollo } from 'react-apollo'
 import { withStyles } from '@material-ui/core/styles'
+import { Link as RouterLink } from 'react-router-dom'
 import Button from '@material-ui/core/Button'
 import { Add } from '@material-ui/icons'
 import { GET_VENUES_FOR_CURRENT_USER } from '../graphql/venueQueries'
+import Routes from '../routes'
 
 import VenueListItem from './dashboard/venueListItem'
 import AddVenueDialog from './dashboard/addVenueDialog'
 import VenueTypeTabs from './dashboard/venueTypeTabs'
 
-const VENUE_GROUP = {
+const DASHBOARD_SECTION = {
+  FOLLOWED_DESTINATIONS: 'followed-destinations',
   MY_DESTINATIONS: 'my-destinations',
   FAVORITES: 'favorites'
 }
@@ -29,7 +32,9 @@ const styles = {
       fontWeight: 400,
       lineHeight: 1.334,
       letterSpacing: '0em',
-      cursor: 'pointer'
+      cursor: 'pointer',
+      textDecoration: 'none',
+      color: '#111'
     },
     '.sectionHeaderTitleSelected': {
       textDecoration: 'underline'
@@ -40,18 +45,20 @@ const styles = {
   }
 }
 
-const DashboardPage = ({ client }) => {
+const DashboardPage = ({ client, match }) => {
+  const currentDashboardSection = Routes.validatePageSection(
+    match.params.section,
+    DASHBOARD_SECTION,
+    DASHBOARD_SECTION.MY_DESTINATIONS
+  )
+
   const [dialogOpen, setDialogOpen] = useState(false)
   const [venueTypeFilter, setVenueTypeFilter] = useState('all')
-  const [dashboardData, setDashboardData] = useState({})
   const [venues, setVenues] = useState([])
-  const [currentVenueGroup, setCurrentVenueGroup] = useState(
-    VENUE_GROUP.MY_DESTINATIONS
-  )
 
   useEffect(() => {
     getVenueData()
-  }, [client])
+  }, [client, match])
 
   const getVenueData = () => {
     client
@@ -59,9 +66,8 @@ const DashboardPage = ({ client }) => {
         query: GET_VENUES_FOR_CURRENT_USER
       })
       .then(({ data }) => {
-        setDashboardData(data.me)
         setVenues(
-          currentVenueGroup === VENUE_GROUP.FAVORITES
+          currentDashboardSection === DASHBOARD_SECTION.FAVORITES
             ? data.me.favoriteVenues
             : data.me.venues
         )
@@ -72,32 +78,22 @@ const DashboardPage = ({ client }) => {
     setDialogOpen(!dialogOpen)
   }
 
-  const onShowMyVenues = () => {
-    setVenueTypeFilter('all')
-    setVenues(dashboardData.venues)
-    setCurrentVenueGroup(VENUE_GROUP.MY_DESTINATIONS)
-  }
-
-  const onShowFavorites = () => {
-    setVenueTypeFilter('all')
-    setVenues(dashboardData.favoriteVenues)
-    setCurrentVenueGroup(VENUE_GROUP.FAVORITES)
-  }
-
   const onDeleteFavorite = () => {
     getVenueData()
   }
 
-  const renderVenueGroupHeader = (text, venueGroup, onClick) => {
+  const renderVenueGroupHeader = (text, dashboardSection) => {
     return (
-      <h5
+      <RouterLink
+        to={Routes.dashboardPath(dashboardSection)}
         className={`sectionHeaderTitle ${
-          currentVenueGroup === venueGroup ? 'sectionHeaderTitleSelected' : ''
+          currentDashboardSection === dashboardSection
+            ? 'sectionHeaderTitleSelected'
+            : ''
         }`}
-        onClick={onClick}
       >
         {text}
-      </h5>
+      </RouterLink>
     )
   }
 
@@ -107,13 +103,11 @@ const DashboardPage = ({ client }) => {
         <div className="sectionHeader">
           {renderVenueGroupHeader(
             'My destinations',
-            VENUE_GROUP.MY_DESTINATIONS,
-            onShowMyVenues
+            DASHBOARD_SECTION.MY_DESTINATIONS
           )}
           {renderVenueGroupHeader(
             'Favorite destinations',
-            VENUE_GROUP.FAVORITES,
-            onShowFavorites
+            DASHBOARD_SECTION.FAVORITES
           )}
           <Button
             variant="outlined"
@@ -142,7 +136,7 @@ const DashboardPage = ({ client }) => {
                 key={venue.id}
                 venue={venue}
                 showDeleteFavoriteButton={
-                  currentVenueGroup === VENUE_GROUP.FAVORITES
+                  currentDashboardSection === DASHBOARD_SECTION.FAVORITES
                 }
                 onDeleteFavoriteCallback={onDeleteFavorite}
               />

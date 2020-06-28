@@ -1,39 +1,39 @@
-import React, { Component } from "react"
-import { withRouter } from "react-router"
+import React, { Component } from 'react'
+import { withRouter } from 'react-router'
 
-import { setUserInfo } from "../../utils/userUtils"
-import Routes from "../../routes"
-import { Mutation } from "react-apollo"
-import { SIGNUP_MUTATION, LOGIN_MUTATION } from "../../graphql/userMutations"
+import { setUserInfo } from '../../utils/userUtils'
+import Routes from '../../routes'
+import { Mutation } from 'react-apollo'
+import { SIGNUP_MUTATION, LOGIN_MUTATION } from '../../graphql/userMutations'
 
-import TextField from "@material-ui/core/TextField"
-import Button from "@material-ui/core/Button"
+import TextField from '@material-ui/core/TextField'
+import Button from '@material-ui/core/Button'
 
-import { withStyles } from "@material-ui/core/styles"
-import Dialog from "@material-ui/core/Dialog"
-import DialogActions from "@material-ui/core/DialogActions"
-import DialogContent from "@material-ui/core/DialogContent"
-import DialogContentText from "@material-ui/core/DialogContentText"
-import DialogTitle from "@material-ui/core/DialogTitle"
+import { withStyles } from '@material-ui/core/styles'
+import Dialog from '@material-ui/core/Dialog'
+import DialogActions from '@material-ui/core/DialogActions'
+import DialogContent from '@material-ui/core/DialogContent'
+import DialogContentText from '@material-ui/core/DialogContentText'
+import DialogTitle from '@material-ui/core/DialogTitle'
 
 const styles = {
   dialogMainContent: {
-    display: "flex",
-    justifyContent: "center",
-    flexDirection: "column"
+    display: 'flex',
+    justifyContent: 'center',
+    flexDirection: 'column'
   },
   dialogMainError: {
-    textAlign: "center"
+    textAlign: 'center'
   }
 }
 
 class LoginDialog extends Component {
   state = {
     login: this.props.login !== undefined ? this.props.login : true, // switch between Login and SignUp
-    email: "",
-    password: "",
-    firstName: "",
-    lastName: "",
+    email: '',
+    password: '',
+    firstName: '',
+    lastName: '',
     errorMessage: null
   }
 
@@ -66,7 +66,7 @@ class LoginDialog extends Component {
         aria-labelledby="form-dialog-title"
       >
         <DialogTitle id="login-dialog-title">
-          {login ? "Login" : "Sign Up"}
+          {login ? 'Login' : 'Sign Up'}
         </DialogTitle>
         <DialogContent>
           {errorMessage && (
@@ -122,9 +122,9 @@ class LoginDialog extends Component {
           <Button
             onClick={() => this.setState({ login: !login, errorMessage: null })}
             color="primary"
-            style={{ marginRight: "auto" }}
+            style={{ marginRight: 'auto' }}
           >
-            {login ? "need to create an account?" : "already have an account?"}
+            {login ? 'need to create an account?' : 'already have an account?'}
           </Button>
 
           <Button onClick={this.props.toggleDialog} color="primary">
@@ -141,7 +141,7 @@ class LoginDialog extends Component {
           >
             {mutation => (
               <Button color="primary" onClick={mutation}>
-                {login ? "login" : "create account"}
+                {login ? 'login' : 'create account'}
               </Button>
             )}
           </Mutation>

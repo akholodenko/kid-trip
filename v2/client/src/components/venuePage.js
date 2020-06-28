@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { Query } from 'react-apollo'
 import Typography from '@material-ui/core/Typography'
 import NumberFormat from 'react-number-format'

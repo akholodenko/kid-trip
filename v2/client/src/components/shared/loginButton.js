@@ -1,13 +1,13 @@
-import React, { Component } from "react"
-import Button from "@material-ui/core/Button"
-import { withRouter } from "react-router"
+import React, { Component } from 'react'
+import Button from '@material-ui/core/Button'
+import { withRouter } from 'react-router'
 import {
   isUserLoggedIn,
   withCurrentUser,
   listenForOpenSignUpDialog
-} from "../../utils/userUtils"
-import LoginDialog from "./loginDialog"
-import Typography from "@material-ui/core/Typography"
+} from '../../utils/userUtils'
+import LoginDialog from './loginDialog'
+import Typography from '@material-ui/core/Typography'
 
 class LoginButton extends Component {
   state = {
@@ -29,7 +29,7 @@ class LoginButton extends Component {
     if (currentUser && currentUser.id) {
       return `Welcome, ${currentUser.firstName}`
     } else {
-      return ""
+      return ''
     }
   }
 
