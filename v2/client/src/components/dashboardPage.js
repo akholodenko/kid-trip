@@ -56,10 +56,6 @@ const DashboardPage = ({ client, match }) => {
   const [venueTypeFilter, setVenueTypeFilter] = useState('all')
   const [venues, setVenues] = useState([])
 
-  useEffect(() => {
-    getVenueData()
-  }, [client, match])
-
   const getVenueData = () => {
     client
       .query({
@@ -74,6 +70,10 @@ const DashboardPage = ({ client, match }) => {
       })
   }
 
+  useEffect(() => {
+    getVenueData()
+  }, [client, match, getVenueData])
+
   const toggleDialog = () => {
     setDialogOpen(!dialogOpen)
   }
@@ -86,6 +86,9 @@ const DashboardPage = ({ client, match }) => {
     return (
       <RouterLink
         to={Routes.dashboardPath(dashboardSection)}
+        onClick={() => {
+          setVenueTypeFilter('all')
+        }}
         className={`sectionHeaderTitle ${
           currentDashboardSection === dashboardSection
             ? 'sectionHeaderTitleSelected'
