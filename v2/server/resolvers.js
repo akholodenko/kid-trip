@@ -4,6 +4,7 @@ import { initModelAssociations } from "./models/associations";
 import {
   getVenue,
   getVenueBySlug,
+  getVenues,
   getSimilarVenuesInRadius,
   createVenue,
   createUserVenueFavorite,
@@ -32,6 +33,11 @@ export default {
     },
     venueType(obj, args, context, info) {
       return getVenueType(args.id);
+    },
+    venues(obj, args, context, info) {
+      return getVenues(args.venueTypeIds, args.sort, args.first, {
+        fields: graphsqlFields(info)
+      });
     },
     similarVenues(obj, args, context, info) {
       return getSimilarVenuesInRadius(args.id, args.radius, args.first, {

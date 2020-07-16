@@ -39,6 +39,7 @@ export const fromDbVenueTransform = venue => {
     city: venue.city ? venue.city.name : null,
     state: venue.city ? venue.city.state : null,
     zipcode: venue.zipcode,
+    createdAt: venue.created_at ? venue.created_at.toString() : null,
     lat: venue.lat,
     lng: venue.lng,
     venueTypes: venue.venueTypes,
@@ -114,6 +115,47 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
       return fromDbVenueTransform(venue);
     }
   });
+};
+
+export const getVenues = (
+  venueTypeIds,
+  sort = "desc",
+  limit = 10,
+  { fields }
+) => {
+  let associations = [];
+
+  if (!!fields.venueTypes) {
+    let venueTypeAssociation = { model: VenueType };
+
+    if (!!venueTypeIds) {
+      venueTypeAssociation.where = {
+        id: {
+          [sequelize.Op.in]: venueTypeIds.split(",").map(item => parseInt(item))
+        }
+      };
+    }
+
+    associations.push(venueTypeAssociation);
+  }
+
+  if (!!fields.users) {
+    associations.push({ model: User });
+  }
+
+  if (!!fields.city || !!fields.state) {
+    associations.push({
+      model: City,
+      attributes: ["id", "name", "state"]
+    });
+  }
+
+  return Venue.findAll({
+    attributes: VENUE_ATTRIBUTES.concat(["created_at"]),
+    include: associations,
+    order: [["created_at", sort]],
+    limit: limit
+  }).then(response => response.map(venue => fromDbVenueTransform(venue)));
 };
 
 export const getSimilarVenuesInRadius = (
