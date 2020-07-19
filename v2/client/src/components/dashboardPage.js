@@ -72,7 +72,7 @@ const DashboardPage = ({ client, match }) => {
 
   useEffect(() => {
     getVenueData()
-  }, [client, match, getVenueData])
+  }, [match.params.section, getVenueData])
 
   const toggleDialog = () => {
     setDialogOpen(!dialogOpen)

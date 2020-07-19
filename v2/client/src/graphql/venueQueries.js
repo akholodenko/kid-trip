@@ -96,3 +96,31 @@ export const GET_SIMILAR_VENUES_IN_RADIUS = gql`
     }
   }
 `
+
+export const GET_FEED_VENUES = gql`
+  query($cityIds: String, $venueTypeIds: String, $sort: String, $first: Int) {
+    venues(
+      cityIds: $cityIds
+      venueTypeIds: $venueTypeIds
+      sort: $sort
+      first: $first
+    ) {
+      id
+      createdAt
+      name
+      slug
+      description
+      streetAddress
+      zipcode
+      city
+      state
+      lat
+      lng
+      venueTypes {
+        id
+        name
+        image
+      }
+    }
+  }
+`

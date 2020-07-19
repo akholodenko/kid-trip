@@ -35,7 +35,7 @@ export default {
       return getVenueType(args.id);
     },
     venues(obj, args, context, info) {
-      return getVenues(args.venueTypeIds, args.sort, args.first, {
+      return getVenues(args, {
         fields: graphsqlFields(info)
       });
     },

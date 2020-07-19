@@ -118,9 +118,7 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
 };
 
 export const getVenues = (
-  venueTypeIds,
-  sort = "desc",
-  limit = 10,
+  { cityIds, venueTypeIds, sort = "desc", limit = 10 },
   { fields }
 ) => {
   let associations = [];
@@ -144,10 +142,20 @@ export const getVenues = (
   }
 
   if (!!fields.city || !!fields.state) {
-    associations.push({
+    let cityAssociation = {
       model: City,
       attributes: ["id", "name", "state"]
-    });
+    };
+
+    if (!!cityIds) {
+      cityAssociation.where = {
+        id: {
+          [sequelize.Op.in]: cityIds.split(",").map(item => parseInt(item))
+        }
+      };
+    }
+
+    associations.push(cityAssociation);
   }
 
   return Venue.findAll({
