@@ -16,7 +16,8 @@ import AppBar from './layout/appBarContainer'
 const styles = {
   '@global': {
     body: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif'
+      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontWeight: 400
     },
     '.mainContainer': {
       display: 'flex',
