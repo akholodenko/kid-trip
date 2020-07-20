@@ -21,7 +21,13 @@ export const sinceCreated = timestamp => {
   } else if (diffSeconds <= 86400) {
     response = Math.round(diffSeconds / 3600) + ' hours ago'
   } else {
-    response = 'on ' + then.toLocaleDateString()
+    response =
+      'on ' +
+      then.toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric'
+      })
   }
 
   return response
