@@ -118,7 +118,7 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
 };
 
 export const getVenues = (
-  { cityIds, venueTypeIds, sort = "desc", limit = 10 },
+  { cityIds, venueTypeIds, sort = "desc", first = 10 },
   { fields }
 ) => {
   let associations = [];
@@ -162,7 +162,7 @@ export const getVenues = (
     attributes: VENUE_ATTRIBUTES.concat(["created_at"]),
     include: associations,
     order: [["created_at", sort]],
-    limit: limit
+    limit: first
   }).then(response => response.map(venue => fromDbVenueTransform(venue)));
 };
 

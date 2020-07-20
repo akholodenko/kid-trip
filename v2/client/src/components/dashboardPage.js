@@ -7,6 +7,7 @@ import Routes from '../routes'
 
 import AddVenueDialog from './dashboard/addVenueDialog'
 import VenueList from './dashboard/venueList'
+import Feed from './dashboard/feed'
 
 const DASHBOARD_SECTION = {
   FEED: 'feed',
@@ -24,8 +25,6 @@ const styles = {
     '.sectionHeaderTitle': {
       flexGrow: 2,
       maxWidth: '250px',
-      fontFamily: '"Roboto", "Helvetica", "Arial", sans-serif',
-      letterSpacing: '0em',
       cursor: 'pointer',
       textDecoration: 'none',
       color: '#666',
@@ -33,9 +32,10 @@ const styles = {
       textTransform: 'uppercase',
       borderRadius: '8px',
       margin: '0px 10px',
-      fontSize: '16px',
+      fontSize: '14px',
       fontWeight: 600,
       lineHeight: 2.5,
+      letterSpacing: '1.3px',
       border: '1px solid #eee'
     },
     '.sectionHeaderTitleSelected': {
@@ -51,7 +51,7 @@ const DashboardPage = ({ match }) => {
   const currentDashboardSection = Routes.validatePageSection(
     match.params.section,
     DASHBOARD_SECTION,
-    DASHBOARD_SECTION.MY_DESTINATIONS
+    DASHBOARD_SECTION.FEED
   )
 
   const [dialogOpen, setDialogOpen] = useState(false)
@@ -99,7 +99,7 @@ const DashboardPage = ({ match }) => {
           <AddVenueDialog open={dialogOpen} toggleDialog={toggleDialog} />
         </div>
         {currentDashboardSection === DASHBOARD_SECTION.FEED ? (
-          <div>feed here</div>
+          <Feed></Feed>
         ) : (
           <VenueList
             currentDashboardSection={currentDashboardSection}
