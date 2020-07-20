@@ -14,10 +14,11 @@ import {
 const styles = {
   '@global': {
     '.venueItem': {
+      border: '1px solid #eee',
       borderRadius: '8px',
       marginTop: '5px',
       marginBottom: '5px',
-      backgroundColor: '#f6f6f6',
+      // backgroundColor: '#f6f6f6',
       padding: '15px',
       width: '49%',
       display: 'inline-block',
