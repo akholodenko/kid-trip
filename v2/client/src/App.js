@@ -26,7 +26,10 @@ const styles = {
     '.mainContent': {
       maxWidth: '1200px',
       flexGrow: '1',
-      margin: '50px'
+      margin: '25px',
+      backgroundColor: '#fff',
+      padding: '25px',
+      borderRadius: '8px'
     }
   },
   appBarSpacer: {

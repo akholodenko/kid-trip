@@ -1,35 +1,35 @@
-import { AUTH_TOKEN, USER_INFO } from "../constants";
-import { graphql } from "react-apollo";
-import { compose } from "recompose";
-import { CURRENT_USER_QUERY } from "../graphql/userQueries";
+import { AUTH_TOKEN, USER_INFO } from '../constants'
+import { graphql } from 'react-apollo'
+import { compose } from 'recompose'
+import { CURRENT_USER_QUERY } from '../graphql/userQueries'
 
-export const isUserLoggedIn = () => !!localStorage.getItem(AUTH_TOKEN);
+export const isUserLoggedIn = () => !!localStorage.getItem(AUTH_TOKEN)
 
 export const logoutUser = () => {
-  localStorage.removeItem(AUTH_TOKEN);
-  localStorage.removeItem(USER_INFO);
-};
+  localStorage.removeItem(AUTH_TOKEN)
+  localStorage.removeItem(USER_INFO)
+}
 
 export const setUserInfo = (token, user) => {
-  localStorage.setItem(AUTH_TOKEN, token);
-  localStorage.setItem(USER_INFO, JSON.stringify(user));
-};
+  localStorage.setItem(AUTH_TOKEN, token)
+  localStorage.setItem(USER_INFO, JSON.stringify(user))
+}
 
 export const getUserInfoFromStorage = () => {
-  const userInfo = localStorage.getItem(USER_INFO);
+  const userInfo = localStorage.getItem(USER_INFO)
 
   if (userInfo) {
-    return JSON.parse(userInfo);
+    return JSON.parse(userInfo)
   } else {
     return {
-      __typename: "User",
+      __typename: 'User',
       id: null,
       firstName: null,
       lastName: null,
       email: null
-    };
+    }
   }
-};
+}
 
 export const withCurrentUser = WrappedComponent => {
   return compose(
@@ -38,13 +38,21 @@ export const withCurrentUser = WrappedComponent => {
         currentUser
       })
     })
-  )(WrappedComponent);
-};
+  )(WrappedComponent)
+}
 
 export const listenForOpenSignUpDialog = callback => {
-  window.addEventListener("openSignUpModal", () => callback());
-};
+  window.addEventListener('openSignUpModal', () => callback())
+}
 export const openSignUpDialog = () => {
-  const event = new Event("openSignUpModal");
-  window.dispatchEvent(event);
-};
+  const event = new Event('openSignUpModal')
+  window.dispatchEvent(event)
+}
+
+export const shortName = user => {
+  if (user && user.firstName && user.lastName) {
+    return `${user.firstName} ${user.lastName[0]}.`
+  }
+
+  return ''
+}

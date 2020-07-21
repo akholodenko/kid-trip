@@ -31,6 +31,11 @@ export const initModelAssociations = () => {
     otherKey: "user_id"
   });
 
+  Venue.belongsTo(User, {
+    as: "creator",
+    foreignKey: "user_id"
+  });
+
   Venue.belongsTo(Zipcode, {
     foreignKey: "zipcode",
     targetKey: "zip"

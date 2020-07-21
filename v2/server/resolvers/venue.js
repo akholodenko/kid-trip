@@ -27,6 +27,7 @@ export const VENUE_ATTRIBUTES = [
 ];
 
 export const fromDbVenueTransform = venue => {
+  console.log(venue.creator);
   return {
     id: venue.id,
     name: venue.name,
@@ -46,7 +47,8 @@ export const fromDbVenueTransform = venue => {
     users: venue.users
       ? venue.users.map(user => fromDbUserTransform(user))
       : null,
-    venueStats: venue.venueStats
+    venueStats: venue.venueStats,
+    creator: venue.creator ? fromDbUserTransform(venue.creator) : null
   };
 };
 
@@ -141,6 +143,10 @@ export const getVenues = (
     associations.push({ model: User });
   }
 
+  if (!!fields.creator) {
+    associations.push({ model: User, as: "creator" });
+  }
+
   if (!!fields.city || !!fields.state) {
     let cityAssociation = {
       model: City,
@@ -159,7 +165,7 @@ export const getVenues = (
   }
 
   return Venue.findAll({
-    attributes: VENUE_ATTRIBUTES.concat(["created_at"]),
+    attributes: VENUE_ATTRIBUTES.concat(["created_at", "user_id"]),
     include: associations,
     order: [["created_at", sort]],
     limit: first
@@ -258,7 +264,8 @@ export const createVenue = (obj, args, { user }, info) => {
       zipcode: args.zipcode,
       lat: args.lat,
       lng: args.lng,
-      city_id: args.city.id
+      city_id: args.city.id,
+      user_id: user.userId
     }).then(newVenue => {
       VenueClassification.create({
         venue_id: newVenue.id,

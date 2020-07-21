@@ -1,8 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { withApollo } from 'react-apollo'
+import { withStyles } from '@material-ui/core/styles'
 import { GET_FEED_VENUES } from '../../graphql/venueQueries'
 
 import FeedItem from './feedItem'
+
+const styles = {
+  '@global': {
+    '.feedContainer': {
+      maxWidth: '50%',
+      minWidth: '400px'
+    }
+  }
+}
 
 const Feed = ({ client }) => {
   const [feedVenues, setFeedVenues] = useState([])
@@ -23,7 +33,7 @@ const Feed = ({ client }) => {
   }, [client])
 
   return (
-    <div>
+    <div className="feedContainer">
       {feedVenues.map(venue => (
         <FeedItem key={venue.id} venue={venue}></FeedItem>
       ))}
@@ -31,4 +41,4 @@ const Feed = ({ client }) => {
   )
 }
 
-export default withApollo(Feed)
+export default withStyles(styles)(withApollo(Feed))

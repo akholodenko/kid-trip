@@ -34,6 +34,7 @@ export default gql`
     lat: Float
     lng: Float
     venueTypes: [VenueType]
+    creator: User
     users: [User]
     zipcode: Int!
     city: String

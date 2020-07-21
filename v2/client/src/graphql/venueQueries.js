@@ -116,6 +116,11 @@ export const GET_FEED_VENUES = gql`
       state
       lat
       lng
+      creator {
+        id
+        firstName
+        lastName
+      }
       venueTypes {
         id
         name
