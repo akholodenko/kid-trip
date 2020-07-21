@@ -55,6 +55,10 @@ const DashboardPage = ({ match }) => {
   )
 
   const [dialogOpen, setDialogOpen] = useState(false)
+  const [
+    externalTriggerVenueRefresh,
+    setExternalTriggerVenueRefresh
+  ] = useState(true)
 
   const toggleDialog = () => {
     setDialogOpen(!dialogOpen)
@@ -74,6 +78,9 @@ const DashboardPage = ({ match }) => {
       </RouterLink>
     )
   }
+
+  const onCreatedVenue = () =>
+    setExternalTriggerVenueRefresh(!externalTriggerVenueRefresh)
 
   return (
     <div className="mainContainer">
@@ -96,7 +103,11 @@ const DashboardPage = ({ match }) => {
             <Add />
             Add Destination
           </Button>
-          <AddVenueDialog open={dialogOpen} toggleDialog={toggleDialog} />
+          <AddVenueDialog
+            open={dialogOpen}
+            toggleDialog={toggleDialog}
+            onCreatedVenue={onCreatedVenue}
+          />
         </div>
         {currentDashboardSection === DASHBOARD_SECTION.FEED ? (
           <Feed></Feed>
@@ -106,6 +117,7 @@ const DashboardPage = ({ match }) => {
             isFavoritesDashboardSection={
               currentDashboardSection === DASHBOARD_SECTION.FAVORITES
             }
+            externalTriggerVenueRefresh={externalTriggerVenueRefresh}
           ></VenueList>
         )}
       </div>

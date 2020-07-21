@@ -16,7 +16,8 @@ const styles = {
 const VenueList = ({
   client,
   currentDashboardSection,
-  isFavoritesDashboardSection
+  isFavoritesDashboardSection,
+  externalTriggerVenueRefresh
 }) => {
   const [venueTypeFilter, setVenueTypeFilter] = useState('all')
   const [venues, setVenues] = useState([])
@@ -42,6 +43,7 @@ const VenueList = ({
   }, [
     currentDashboardSection,
     triggerVenueRefresh,
+    externalTriggerVenueRefresh,
     isFavoritesDashboardSection,
     client
   ])

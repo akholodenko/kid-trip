@@ -51,19 +51,20 @@ const venueStub = {
   city: {}
 }
 
-export default props => {
+export default ({ open, toggleDialog, onCreatedVenue }) => {
   const [addVenue] = useMutation(CREATE_VENUE_MUTATION, {
     onError(error) {
       console.log('error', error)
     },
     onCompleted(data) {
-      console.log('data', data)
+      onCreatedVenue()
     },
     refetchQueries: [
       {
         query: GET_VENUES_FOR_CURRENT_USER
       }
-    ]
+    ],
+    awaitRefetchQueries: true
   })
 
   const [newVenue, setNewVenue] = useState({ ...venueStub })
@@ -78,12 +79,10 @@ export default props => {
   }
 
   const onVenueTypeSelected = venueTypeId => {
-    console.log('venueTypeId selected:', venueTypeId)
     setNewVenue({ ...newVenue, type: { id: venueTypeId } })
   }
 
   const handleChange = name => event => {
-    console.log(name, event.target.value)
     setNewVenue({ ...newVenue, [name]: event.target.value })
   }
 
@@ -98,11 +97,8 @@ export default props => {
           cityId: newVenue.city.id
         }
       }).then(response => {
-        console.log('response', response)
-
         setNewVenue({ ...venueStub })
-
-        props.toggleDialog()
+        toggleDialog()
       })
     } else {
       setUserActionText(USER_ACTION_TEXT_ERROR)
@@ -111,8 +107,8 @@ export default props => {
 
   return (
     <Dialog
-      open={props.open}
-      onClose={props.toggleDialog}
+      open={open}
+      onClose={toggleDialog}
       fullScreen={true}
       aria-labelledby="form-dialog-title"
     >
@@ -121,7 +117,7 @@ export default props => {
           <IconButton
             edge="start"
             color="inherit"
-            onClick={props.toggleDialog}
+            onClick={toggleDialog}
             aria-label="close"
           >
             <CloseIcon />

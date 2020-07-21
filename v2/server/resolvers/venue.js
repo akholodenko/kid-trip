@@ -316,7 +316,7 @@ const getSimilarVenueSlugs = slug => {
   return Venue.findAll({
     attributes: ["slug"],
     where: {
-      slug: { $like: `${slug}%` }
+      slug: { [sequelize.Op.iLike]: `${slug}%` }
     }
   });
 };
