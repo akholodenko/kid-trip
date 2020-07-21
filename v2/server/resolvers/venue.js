@@ -27,6 +27,7 @@ export const VENUE_ATTRIBUTES = [
 ];
 
 export const fromDbVenueTransform = venue => {
+  console.log(venue.creator);
   return {
     id: venue.id,
     name: venue.name,
@@ -39,13 +40,15 @@ export const fromDbVenueTransform = venue => {
     city: venue.city ? venue.city.name : null,
     state: venue.city ? venue.city.state : null,
     zipcode: venue.zipcode,
+    createdAt: venue.created_at ? venue.created_at.toString() : null,
     lat: venue.lat,
     lng: venue.lng,
     venueTypes: venue.venueTypes,
     users: venue.users
       ? venue.users.map(user => fromDbUserTransform(user))
       : null,
-    venueStats: venue.venueStats
+    venueStats: venue.venueStats,
+    creator: venue.creator ? fromDbUserTransform(venue.creator) : null
   };
 };
 
@@ -114,6 +117,59 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
       return fromDbVenueTransform(venue);
     }
   });
+};
+
+export const getVenues = (
+  { cityIds, venueTypeIds, sort = "desc", first = 10 },
+  { fields }
+) => {
+  let associations = [];
+
+  if (!!fields.venueTypes) {
+    let venueTypeAssociation = { model: VenueType };
+
+    if (!!venueTypeIds) {
+      venueTypeAssociation.where = {
+        id: {
+          [sequelize.Op.in]: venueTypeIds.split(",").map(item => parseInt(item))
+        }
+      };
+    }
+
+    associations.push(venueTypeAssociation);
+  }
+
+  if (!!fields.users) {
+    associations.push({ model: User });
+  }
+
+  if (!!fields.creator) {
+    associations.push({ model: User, as: "creator" });
+  }
+
+  if (!!fields.city || !!fields.state) {
+    let cityAssociation = {
+      model: City,
+      attributes: ["id", "name", "state"]
+    };
+
+    if (!!cityIds) {
+      cityAssociation.where = {
+        id: {
+          [sequelize.Op.in]: cityIds.split(",").map(item => parseInt(item))
+        }
+      };
+    }
+
+    associations.push(cityAssociation);
+  }
+
+  return Venue.findAll({
+    attributes: VENUE_ATTRIBUTES.concat(["created_at", "user_id"]),
+    include: associations,
+    order: [["created_at", sort]],
+    limit: first
+  }).then(response => response.map(venue => fromDbVenueTransform(venue)));
 };
 
 export const getSimilarVenuesInRadius = (
@@ -208,7 +264,8 @@ export const createVenue = (obj, args, { user }, info) => {
       zipcode: args.zipcode,
       lat: args.lat,
       lng: args.lng,
-      city_id: args.city.id
+      city_id: args.city.id,
+      user_id: user.userId
     }).then(newVenue => {
       VenueClassification.create({
         venue_id: newVenue.id,

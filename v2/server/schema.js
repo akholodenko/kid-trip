@@ -7,6 +7,12 @@ export default gql`
     venueBySlug(slug: String!): Venue!
     venueTypes: [VenueType]!
     venueType(id: ID!): VenueType
+    venues(
+      venueTypeIds: String
+      cityIds: String
+      sort: String
+      first: Int
+    ): [Venue]
     similarVenues(id: ID!, radius: Int, first: Int): [Venue]
     cities(first: Int, query: String): [City]!
     me: User
@@ -28,11 +34,13 @@ export default gql`
     lat: Float
     lng: Float
     venueTypes: [VenueType]
+    creator: User
     users: [User]
     zipcode: Int!
     city: String
     state: String
     venueStats: VenueStats
+    createdAt: String
   }
 
   type VenueStats {

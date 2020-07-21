@@ -16,7 +16,8 @@ import AppBar from './layout/appBarContainer'
 const styles = {
   '@global': {
     body: {
-      fontFamily: 'Roboto, Helvetica, Arial, sans-serif'
+      fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
+      fontWeight: 400
     },
     '.mainContainer': {
       display: 'flex',
@@ -25,7 +26,10 @@ const styles = {
     '.mainContent': {
       maxWidth: '1200px',
       flexGrow: '1',
-      margin: '50px'
+      margin: '25px',
+      backgroundColor: '#fff',
+      padding: '25px',
+      borderRadius: '8px'
     }
   },
   appBarSpacer: {

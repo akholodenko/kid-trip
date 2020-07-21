@@ -70,8 +70,11 @@ export default props => {
   const [userActionText, setUserActionText] = useState(USER_ACTION_TEXT)
 
   const onCitySelected = city => {
-    console.log('city selected:', city)
-    setNewVenue({ ...newVenue, city: { id: city.value } })
+    if (city && city.value) {
+      setNewVenue({ ...newVenue, city: { id: city.value } })
+    } else {
+      setNewVenue({ ...newVenue, city: {} })
+    }
   }
 
   const onVenueTypeSelected = venueTypeId => {
