@@ -27,7 +27,6 @@ export const VENUE_ATTRIBUTES = [
 ];
 
 export const fromDbVenueTransform = venue => {
-  console.log(venue.creator);
   return {
     id: venue.id,
     name: venue.name,
