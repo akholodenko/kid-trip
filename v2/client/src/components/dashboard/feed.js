@@ -4,6 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { GET_FEED_VENUES } from '../../graphql/venueQueries'
 
 import FeedItem from './feedItem'
+import FeedConfigurator from './feedConfigurator'
 
 const styles = {
   '@global': {
@@ -16,24 +17,47 @@ const styles = {
 
 const Feed = ({ client }) => {
   const [feedVenues, setFeedVenues] = useState([])
+  const [feedConfiguration, setFeedConfiguration] = useState({
+    cityIds: null,
+    venueTypeIds: null,
+    sort: 'DESC',
+    first: 25
+  })
+
   useEffect(() => {
     client
       .query({
         query: GET_FEED_VENUES,
         variables: {
-          // cityIds: '15354, 15071',
-          // venueTypeIds: '1,5',
-          sort: 'DESC',
-          first: 25
+          ...feedConfiguration
         }
       })
       .then(({ data }) => {
         setFeedVenues(data.venues)
       })
-  }, [client])
+  }, [client, feedConfiguration])
+
+  const onFeedConfigurationUpdated = newFeedConfiguration => {
+    if (newFeedConfiguration) {
+      if (newFeedConfiguration.cities) {
+        setFeedConfiguration({
+          ...feedConfiguration,
+          cityIds: newFeedConfiguration.cities.map(city => city.value).join(',')
+        })
+      } else {
+        setFeedConfiguration({
+          ...feedConfiguration,
+          cityIds: null
+        })
+      }
+    }
+  }
 
   return (
     <div className="feedContainer">
+      <FeedConfigurator
+        onFeedConfigurationUpdated={onFeedConfigurationUpdated}
+      ></FeedConfigurator>
       {feedVenues.map(venue => (
         <FeedItem key={venue.id} venue={venue}></FeedItem>
       ))}

@@ -52,13 +52,15 @@ export const venueHeaderImage = venue =>
 
 export const venuePrimaryTypeName = venue => venue.venueTypes[0].name || 'venue'
 
+export const venueCityState = venue => `${venue.city}, ${venue.state}`
+
 export const venueAddress = (venue, separator = ', ') => {
   if (venue) {
     return (
       <span>
         {venue.streetAddress}
         {separator}
-        {venue.city}, {venue.state} {venue.zipcode}
+        {venueCityState(venue)} {venue.zipcode}
       </span>
     )
   }

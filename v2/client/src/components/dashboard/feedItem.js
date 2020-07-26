@@ -4,6 +4,7 @@ import { sinceCreated } from '../../utils/dateUtils'
 import { shortName } from '../../utils/userUtils'
 import Routes from '../../routes'
 import { Link as RouterLink } from 'react-router-dom'
+import { venueCityState } from '../../utils/venueUtils'
 
 const styles = {
   '@global': {
@@ -32,7 +33,9 @@ const FeedItem = ({ venue }) => {
         {venue.name}
       </RouterLink>
       <div className="feedItemSubtitle">
-        {sinceCreated(venue.createdAt)} by {shortName(venue.creator)}
+        in {venueCityState(venue)}
+        <br />
+        added {sinceCreated(venue.createdAt)} by {shortName(venue.creator)}
       </div>
     </div>
   )

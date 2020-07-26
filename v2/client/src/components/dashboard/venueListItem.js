@@ -1,7 +1,7 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
-import { venueMapLink, venueIcon } from '../../utils/venueUtils'
+import { venueMapLink, venueIcon, venueCityState } from '../../utils/venueUtils'
 import { Link as RouterLink } from 'react-router-dom'
 import Routes from '../../routes'
 import { useMutation } from '@apollo/react-hooks'
@@ -154,7 +154,7 @@ const VenueListItem = props => {
           rel="noopener noreferrer"
           className="venueItemLocation"
         >
-          {venue.city}, {venue.state}
+          {venueCityState(venue)}
         </a>
       </div>
     </div>
