@@ -1,9 +1,23 @@
-import React from 'react'
+import React, { useState } from 'react'
 import CityFormField from './cityFormField'
+import VenueTypeMultiFormField from './venueTypeMultiFormField'
 
 const FeedConfigurator = ({ onFeedConfigurationUpdated }) => {
+  const [cityIds, setCityIds] = useState()
+  const [venueTypeIds, setVenueTypeIds] = useState()
+
   const onCitySelected = cities => {
-    onFeedConfigurationUpdated({ cities })
+    const ids = cities ? cities.map(city => city.value).join(',') : null
+    setCityIds(ids)
+    onFeedConfigurationUpdated({ cityIds: ids, venueTypeIds })
+  }
+
+  const onVenueTypeSelected = venueTypes => {
+    const ids = venueTypes
+      ? venueTypes.map(venueType => venueType.value).join(',')
+      : null
+    setVenueTypeIds(ids)
+    onFeedConfigurationUpdated({ venueTypeIds: ids, cityIds })
   }
 
   return (
@@ -14,6 +28,9 @@ const FeedConfigurator = ({ onFeedConfigurationUpdated }) => {
         placeholder="e.g.: San Francisco, CA"
         isMulti={true}
       ></CityFormField>
+      <VenueTypeMultiFormField
+        onVenueTypeSelected={onVenueTypeSelected}
+      ></VenueTypeMultiFormField>
     </div>
   )
 }

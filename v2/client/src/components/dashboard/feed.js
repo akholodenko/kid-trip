@@ -39,17 +39,7 @@ const Feed = ({ client }) => {
 
   const onFeedConfigurationUpdated = newFeedConfiguration => {
     if (newFeedConfiguration) {
-      if (newFeedConfiguration.cities) {
-        setFeedConfiguration({
-          ...feedConfiguration,
-          cityIds: newFeedConfiguration.cities.map(city => city.value).join(',')
-        })
-      } else {
-        setFeedConfiguration({
-          ...feedConfiguration,
-          cityIds: null
-        })
-      }
+      setFeedConfiguration({ ...newFeedConfiguration })
     }
   }
 
