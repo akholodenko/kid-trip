@@ -44,13 +44,15 @@ const Feed = ({ client }) => {
   }
 
   return (
-    <div className="feedContainer">
+    <div>
       <FeedConfigurator
         onFeedConfigurationUpdated={onFeedConfigurationUpdated}
       ></FeedConfigurator>
-      {feedVenues.map(venue => (
-        <FeedItem key={venue.id} venue={venue}></FeedItem>
-      ))}
+      <div className="feedContainer">
+        {feedVenues.map(venue => (
+          <FeedItem key={venue.id} venue={venue}></FeedItem>
+        ))}
+      </div>
     </div>
   )
 }

@@ -27,7 +27,12 @@ const FeedConfigurator = ({ onFeedConfigurationUpdated }) => {
         fieldLabel="Filter feed by city"
         placeholder="e.g.: San Francisco, CA"
         isMulti={true}
+        containerWidth="350px"
+        containerDisplay="inline-block"
       ></CityFormField>
+      <div
+        style={{ display: 'inline-block', width: '30px', height: '20px' }}
+      ></div>
       <VenueTypeMultiFormField
         onVenueTypeSelected={onVenueTypeSelected}
       ></VenueTypeMultiFormField>

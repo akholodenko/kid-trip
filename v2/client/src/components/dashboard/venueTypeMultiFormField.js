@@ -8,25 +8,8 @@ import { GET_VENUE_TYPES } from '../../graphql/venueQueries'
 const style = {
   container: {
     position: 'relative',
-    width: '500px'
-  },
-  input: {
-    border: '1px solid #ccc',
-    outline: 'none',
-    width: '300px',
-    padding: '20px',
-    fontSize: '17px'
-  },
-  suggestionsContainer: {
-    position: 'absolute',
-    width: '300px',
-    top: 62,
-    left: 0,
-    border: '1px solid #efefef'
-  },
-  suggestionItem: {
-    width: '100%',
-    padding: '10px'
+    width: '350px',
+    display: 'inline-block'
   },
   formControl: {
     minWidth: '500px',

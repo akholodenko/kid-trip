@@ -10,24 +10,6 @@ const style = {
     position: 'relative',
     width: '500px'
   },
-  input: {
-    border: '1px solid #ccc',
-    outline: 'none',
-    width: '300px',
-    padding: '20px',
-    fontSize: '17px'
-  },
-  suggestionsContainer: {
-    position: 'absolute',
-    width: '300px',
-    top: 62,
-    left: 0,
-    border: '1px solid #efefef'
-  },
-  suggestionItem: {
-    width: '100%',
-    padding: '10px'
-  },
   formControl: {
     minWidth: '500px',
     marginTop: '16px',
@@ -41,7 +23,9 @@ const CityFormField = ({
   onCitySelected,
   isMulti,
   fieldLabel,
-  placeholder
+  placeholder,
+  containerWidth,
+  containerDisplay
 }) => {
   const [query, setQuery] = useState('')
   const [selectedOption, setSelectedOption] = useState(isMulti ? [] : {})
@@ -80,7 +64,13 @@ const CityFormField = ({
   const hasOptions = () => options && options.length
 
   return (
-    <div style={style.container}>
+    <div
+      style={{
+        ...style.container,
+        width: containerWidth ? containerWidth : '500px',
+        display: containerDisplay ? containerDisplay : 'block'
+      }}
+    >
       <FormControl style={style.formControl}>
         <InputLabel shrink={true} htmlFor="age-simple">
           {fieldLabel ? fieldLabel : 'City'}
