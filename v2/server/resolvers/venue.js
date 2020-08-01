@@ -1,30 +1,30 @@
-import sequelize from "../config/sequelize";
+import sequelize from '../config/sequelize'
 
-import Venue from "../models/venue";
-import VenueType from "../models/venue_type";
-import VenueClassification from "../models/venue_classification";
-import User from "../models/user";
-import UserVenue from "../models/user_venue";
-import UserVenueFavorite from "../models/user_venue_favorite";
-import City from "../models/city";
-import { getZipCode } from "./zipcode";
+import Venue from '../models/venue'
+import VenueType from '../models/venue_type'
+import VenueClassification from '../models/venue_classification'
+import User from '../models/user'
+import UserVenue from '../models/user_venue'
+import UserVenueFavorite from '../models/user_venue_favorite'
+import City from '../models/city'
+import { getZipCode } from './zipcode'
 
-import { slug, uniqueSlug } from "../utils/stringUtils";
-import { fromMiles } from "../utils/numberUtils";
+import { slug, uniqueSlug } from '../utils/stringUtils'
+import { fromMiles } from '../utils/numberUtils'
 
-import { fromDbUserTransform } from "./user";
+import { fromDbUserTransform } from './user'
 
 export const VENUE_ATTRIBUTES = [
-  "id",
-  "name",
-  "slug",
-  "description",
-  "street_address",
-  "city_id",
-  "zipcode",
-  "lat",
-  "lng"
-];
+  'id',
+  'name',
+  'slug',
+  'description',
+  'street_address',
+  'city_id',
+  'zipcode',
+  'lat',
+  'lng'
+]
 
 export const fromDbVenueTransform = venue => {
   return {
@@ -48,25 +48,25 @@ export const fromDbVenueTransform = venue => {
       : null,
     venueStats: venue.venueStats,
     creator: venue.creator ? fromDbUserTransform(venue.creator) : null
-  };
-};
+  }
+}
 
 export const getVenue = (venueId, userId, { fields }) => {
-  let associations = [];
+  let associations = []
 
   if (!!fields.venueTypes) {
-    associations.push({ model: VenueType });
+    associations.push({ model: VenueType })
   }
 
   if (!!fields.users) {
-    associations.push({ model: User });
+    associations.push({ model: User })
   }
 
   if (!!fields.city || !!fields.state) {
     associations.push({
       model: City,
-      attributes: ["id", "name", "state"]
-    });
+      attributes: ['id', 'name', 'state']
+    })
   }
 
   return Venue.findByPk(venueId, {
@@ -75,31 +75,31 @@ export const getVenue = (venueId, userId, { fields }) => {
   }).then(venue => {
     if (!!fields.venueStats) {
       return getVenueStats(venue.id, userId).then(venueStats => {
-        venue.venueStats = venueStats;
-        return fromDbVenueTransform(venue);
-      });
+        venue.venueStats = venueStats
+        return fromDbVenueTransform(venue)
+      })
     } else {
-      return fromDbVenueTransform(venue);
+      return fromDbVenueTransform(venue)
     }
-  });
-};
+  })
+}
 
 export const getVenueBySlug = (venueSlug, userId, { fields }) => {
-  let associations = [];
+  let associations = []
 
   if (!!fields.venueTypes) {
-    associations.push({ model: VenueType });
+    associations.push({ model: VenueType })
   }
 
   if (!!fields.users) {
-    associations.push({ model: User });
+    associations.push({ model: User })
   }
 
   if (!!fields.city || !!fields.state) {
     associations.push({
       model: City,
-      attributes: ["id", "name", "state"]
-    });
+      attributes: ['id', 'name', 'state']
+    })
   }
 
   return Venue.findOne({
@@ -109,67 +109,67 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
   }).then(venue => {
     if (!!fields.venueStats) {
       return getVenueStats(venue.id, userId).then(venueStats => {
-        venue.venueStats = venueStats;
-        return fromDbVenueTransform(venue);
-      });
+        venue.venueStats = venueStats
+        return fromDbVenueTransform(venue)
+      })
     } else {
-      return fromDbVenueTransform(venue);
+      return fromDbVenueTransform(venue)
     }
-  });
-};
+  })
+}
 
 export const getVenues = (
-  { cityIds, venueTypeIds, sort = "desc", first = 10 },
+  { cityIds, venueTypeIds, sort = 'desc', first = 10 },
   { fields }
 ) => {
-  let associations = [];
+  let associations = []
 
   if (!!fields.venueTypes) {
-    let venueTypeAssociation = { model: VenueType };
+    let venueTypeAssociation = { model: VenueType }
 
     if (!!venueTypeIds) {
       venueTypeAssociation.where = {
         id: {
-          [sequelize.Op.in]: venueTypeIds.split(",").map(item => parseInt(item))
+          [sequelize.Op.in]: venueTypeIds.split(',').map(item => parseInt(item))
         }
-      };
+      }
     }
 
-    associations.push(venueTypeAssociation);
+    associations.push(venueTypeAssociation)
   }
 
   if (!!fields.users) {
-    associations.push({ model: User });
+    associations.push({ model: User })
   }
 
   if (!!fields.creator) {
-    associations.push({ model: User, as: "creator" });
+    associations.push({ model: User, as: 'creator' })
   }
 
   if (!!fields.city || !!fields.state) {
     let cityAssociation = {
       model: City,
-      attributes: ["id", "name", "state"]
-    };
+      attributes: ['id', 'name', 'state']
+    }
 
     if (!!cityIds) {
       cityAssociation.where = {
         id: {
-          [sequelize.Op.in]: cityIds.split(",").map(item => parseInt(item))
+          [sequelize.Op.in]: cityIds.split(',').map(item => parseInt(item))
         }
-      };
+      }
     }
 
-    associations.push(cityAssociation);
+    associations.push(cityAssociation)
   }
 
   return Venue.findAll({
-    attributes: VENUE_ATTRIBUTES.concat(["created_at", "user_id"]),
+    attributes: VENUE_ATTRIBUTES.concat(['created_at', 'user_id']),
     include: associations,
-    order: [["created_at", sort]],
+    order: [['created_at', sort]],
     limit: first
-  }).then(response => response.map(venue => fromDbVenueTransform(venue)));
-};
+  }).then(response => response.map(venue => fromDbVenueTransform(venue)))
+}
 
 export const getSimilarVenuesInRadius = (
   venueId = null,
@@ -179,9 +179,9 @@ export const getSimilarVenuesInRadius = (
 ) => {
   return getVenue(venueId, null, { fields: { venueTypes: true } }).then(
     response => {
-      const venueTypeId = response.venueTypes[0].id;
-      const lat = response.lat;
-      const lng = response.lng;
+      const venueTypeId = response.venueTypes[0].id
+      const lat = response.lat
+      const lng = response.lng
 
       if (!lat || !lng) {
         return getZipCode(response.zipcode).then(coordinates => {
@@ -191,8 +191,8 @@ export const getSimilarVenuesInRadius = (
             coordinates,
             limit,
             [venueId]
-          );
-        });
+          )
+        })
       } else {
         return sqlQueryVenuesByTypeInRadius(
           venueTypeId,
@@ -200,11 +200,11 @@ export const getSimilarVenuesInRadius = (
           { lat: lat, lng: lng },
           limit,
           [venueId]
-        );
+        )
       }
     }
-  );
-};
+  )
+}
 
 const sqlQueryVenuesByTypeInRadius = (
   venueTypeId,
@@ -231,30 +231,30 @@ const sqlQueryVenuesByTypeInRadius = (
 					vc.venue_type_id = ${venueTypeId} 
 					${
             excludedVenueIds
-              ? ` and venues.id not in (${excludedVenueIds.join(",")})`
-              : ""
+              ? ` and venues.id not in (${excludedVenueIds.join(',')})`
+              : ''
           } 
 				ORDER BY distance LIMIT ${limit}) as list
 			where list.distance < ${fromMiles(radius)}`
     )
     .then(response =>
       response[0].map(venue => {
-        venue.city = venue.city_name ? { name: venue.city_name } : null;
+        venue.city = venue.city_name ? { name: venue.city_name } : null
 
-        return fromDbVenueTransform(venue);
+        return fromDbVenueTransform(venue)
       })
-    );
+    )
 
 export const createVenue = (obj, args, { user }, info) => {
   if (!user) {
-    throw new Error("You are not authenticated!");
+    throw new Error('You are not authenticated!')
   }
 
-  let venueSlug = slug(args.name);
+  let venueSlug = slug(args.name)
 
   return getSimilarVenueSlugs(slug(venueSlug)).then(venues => {
-    const existingSlugs = venues.map(u => u.get("slug"));
-    venueSlug = uniqueSlug(venueSlug, existingSlugs, args.zipcode);
+    const existingSlugs = venues.map(u => u.get('slug'))
+    venueSlug = uniqueSlug(venueSlug, existingSlugs, args.zipcode)
 
     return Venue.create({
       name: args.name,
@@ -269,21 +269,21 @@ export const createVenue = (obj, args, { user }, info) => {
       VenueClassification.create({
         venue_id: newVenue.id,
         venue_type_id: args.venueType.id
-      });
+      })
 
       UserVenue.create({
         venue_id: newVenue.id,
         user_id: user.userId
-      });
+      })
 
-      return fromDbVenueTransform(newVenue);
-    });
-  });
-};
+      return fromDbVenueTransform(newVenue)
+    })
+  })
+}
 
 export const createUserVenueFavorite = (obj, args, { user }, info) => {
   if (!user) {
-    throw new Error("You are not authenticated!");
+    throw new Error('You are not authenticated!')
   }
 
   return UserVenueFavorite.findOrCreate({
@@ -292,13 +292,13 @@ export const createUserVenueFavorite = (obj, args, { user }, info) => {
       user_id: user.userId
     }
   }).then(favorite => {
-    return getVenueStats(args.venueId, user.userId);
-  });
-};
+    return getVenueStats(args.venueId, user.userId)
+  })
+}
 
 export const deleteUserVenueFavorite = (obj, args, { user }, info) => {
   if (!user) {
-    throw new Error("You are not authenticated!");
+    throw new Error('You are not authenticated!')
   }
 
   return UserVenueFavorite.destroy({
@@ -307,29 +307,29 @@ export const deleteUserVenueFavorite = (obj, args, { user }, info) => {
       user_id: user.userId
     }
   }).then(() => {
-    return getVenueStats(args.venueId, user.userId);
-  });
-};
+    return getVenueStats(args.venueId, user.userId)
+  })
+}
 
 const getSimilarVenueSlugs = slug => {
   return Venue.findAll({
-    attributes: ["slug"],
+    attributes: ['slug'],
     where: {
       slug: { [sequelize.Op.iLike]: `${slug}%` }
     }
-  });
-};
+  })
+}
 
 const getVenueStats = (venueId, userId = null) => {
   return UserVenueFavorite.findAll({
     attributes: [
-      "venue_id",
-      [sequelize.fn("count", sequelize.col("id")), "count"]
+      'venue_id',
+      [sequelize.fn('count', sequelize.col('id')), 'count']
     ],
     where: { venue_id: venueId },
-    group: ["venue_id"]
+    group: ['venue_id']
   })
-    .map(el => el.get({ plain: true }))
+    .then(results => results.map(el => el.get({ plain: true })))
     .then(totalData => {
       return UserVenueFavorite.findOne({
         where: { venue_id: venueId, user_id: userId }
@@ -337,7 +337,7 @@ const getVenueStats = (venueId, userId = null) => {
         return {
           favorites: totalData[0] ? totalData[0].count : 0,
           favoriteByCurrentUser: !!favoriteByCurrentUser
-        };
-      });
-    });
-};
+        }
+      })
+    })
+}
