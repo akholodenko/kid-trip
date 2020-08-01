@@ -1,4 +1,5 @@
 import sequelize from '../config/sequelize'
+import { Op } from 'sequelize'
 
 import Venue from '../models/venue'
 import VenueType from '../models/venue_type'
@@ -126,11 +127,10 @@ export const getVenues = (
 
   if (!!fields.venueTypes) {
     let venueTypeAssociation = { model: VenueType }
-
     if (!!venueTypeIds) {
       venueTypeAssociation.where = {
         id: {
-          [sequelize.Op.in]: venueTypeIds.split(',').map(item => parseInt(item))
+          [Op.in]: venueTypeIds.split(',').map(item => parseInt(item))
         }
       }
     }
@@ -155,7 +155,7 @@ export const getVenues = (
     if (!!cityIds) {
       cityAssociation.where = {
         id: {
-          [sequelize.Op.in]: cityIds.split(',').map(item => parseInt(item))
+          [Op.in]: cityIds.split(',').map(item => parseInt(item))
         }
       }
     }
@@ -315,7 +315,7 @@ const getSimilarVenueSlugs = slug => {
   return Venue.findAll({
     attributes: ['slug'],
     where: {
-      slug: { [sequelize.Op.iLike]: `${slug}%` }
+      slug: { [Op.iLike]: `${slug}%` }
     }
   })
 }
