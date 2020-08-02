@@ -1,4 +1,4 @@
-import { gql } from "apollo-server";
+import { gql } from 'apollo-server'
 
 export default gql`
   type Query {
@@ -100,5 +100,11 @@ export default gql`
     zipcode: String
     venues: [Venue]
     favoriteVenues: [Venue]
+    feedConfig: FeedConfig
   }
-`;
+
+  type FeedConfig {
+    cityIds: String
+    venueTypeIds: String
+  }
+`
