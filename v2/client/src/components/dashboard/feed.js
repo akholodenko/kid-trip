@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { withApollo } from 'react-apollo'
 import { withStyles } from '@material-ui/core/styles'
 import { GET_FEED_VENUES } from '../../graphql/venueQueries'
+import { CURRENT_USER_FEED_CONFIG_QUERY } from '../../graphql/userQueries'
 
 import FeedItem from './feedItem'
 import FeedConfigurator from './feedConfigurator'
@@ -27,6 +28,21 @@ const Feed = ({ client }) => {
   useEffect(() => {
     client
       .query({
+        query: CURRENT_USER_FEED_CONFIG_QUERY
+      })
+      .then(({ data }) => {
+        setFeedConfiguration({
+          sort: 'DESC',
+          first: 25,
+          cityIds: data.userFeedConfig.cityIds,
+          venueTypeIds: data.userFeedConfig.venueTypeIds
+        })
+      })
+  }, [client])
+
+  useEffect(() => {
+    client
+      .query({
         query: GET_FEED_VENUES,
         variables: {
           ...feedConfiguration
@@ -46,6 +62,7 @@ const Feed = ({ client }) => {
   return (
     <div>
       <FeedConfigurator
+        feedConfiguration={feedConfiguration}
         onFeedConfigurationUpdated={onFeedConfigurationUpdated}
       ></FeedConfigurator>
       <div className="feedContainer">

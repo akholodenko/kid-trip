@@ -19,7 +19,11 @@ const style = {
   }
 }
 
-const VenueTypeMultiFormField = ({ client, onVenueTypeSelected }) => {
+const VenueTypeMultiFormField = ({
+  client,
+  initialValue,
+  onVenueTypeSelected
+}) => {
   const [selectedOption, setSelectedOption] = useState([])
   const [options, setOptions] = useState([])
 
@@ -36,6 +40,20 @@ const VenueTypeMultiFormField = ({ client, onVenueTypeSelected }) => {
         )
       })
   }, [client])
+
+  useEffect(() => {
+    if (options && options.length && initialValue) {
+      const defaultVenueTypeIds = initialValue.split(',').map(venueTypeId => {
+        return parseInt(venueTypeId)
+      })
+
+      setSelectedOption(
+        options.filter(venueType =>
+          defaultVenueTypeIds.includes(venueType.value)
+        )
+      )
+    }
+  }, [options, initialValue])
 
   const handleOptionChange = option => {
     setSelectedOption(option)
