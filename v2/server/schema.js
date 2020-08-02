@@ -3,6 +3,7 @@ import { gql } from 'apollo-server'
 export default gql`
   type Query {
     user(id: ID!): User!
+    userFeedConfig: FeedConfig!
     venue(id: ID!): Venue!
     venueBySlug(slug: String!): Venue!
     venueTypes: [VenueType]!

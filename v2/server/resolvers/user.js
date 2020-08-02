@@ -146,9 +146,24 @@ const getUserFavoriteVenues = (userId, fields) => {
   })
 }
 
+const getUserFeedConfig = userId => {
+  return UserFeedConfig.findOne({
+    where: { user_id: userId },
+    attributes: ['config']
+  }).then(result =>
+    result && result.config
+      ? result.config
+      : {
+          cityIds: null,
+          venueTypeIds: null
+        }
+  )
+}
+
 module.exports = {
   signup,
   login,
   getUser,
+  getUserFeedConfig,
   fromDbUserTransform
 }
