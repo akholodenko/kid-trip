@@ -55,7 +55,6 @@ const CityFormField = ({
 
   useEffect(() => {
     if (initialValue && Array.isArray(initialValue) && initialValue.length) {
-      console.log('initialValue', initialValue)
       setSelectedOption(
         initialValue.map(city => {
           return { value: city.id, label: `${city.name}, ${city.state}` }
