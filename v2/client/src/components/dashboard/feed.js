@@ -34,8 +34,7 @@ const Feed = ({ client }) => {
         setFeedConfiguration({
           sort: 'DESC',
           first: 25,
-          cityIds: data.userFeedConfig.cityIds,
-          venueTypeIds: data.userFeedConfig.venueTypeIds
+          ...data.userFeedConfig
         })
       })
   }, [client])

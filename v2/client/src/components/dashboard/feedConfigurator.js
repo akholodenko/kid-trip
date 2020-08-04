@@ -11,7 +11,6 @@ const FeedConfigurator = ({
 
   useEffect(() => {
     setCityIds(feedConfiguration.cityIds)
-    console.log('NEED TO PRE-POPULATE CITY OPTIONS')
     setVenueTypeIds(feedConfiguration.venueTypeIds)
   }, [feedConfiguration])
 
@@ -38,6 +37,7 @@ const FeedConfigurator = ({
         isMulti={true}
         containerWidth="350px"
         containerDisplay="inline-block"
+        initialValue={feedConfiguration.cityDetails}
       ></CityFormField>
       <div
         style={{ display: 'inline-block', width: '30px', height: '20px' }}

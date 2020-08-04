@@ -107,5 +107,6 @@ export default gql`
   type FeedConfig {
     cityIds: String
     venueTypeIds: String
+    cityDetails: [City]
   }
 `

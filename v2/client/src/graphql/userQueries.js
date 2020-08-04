@@ -15,6 +15,11 @@ export const CURRENT_USER_FEED_CONFIG_QUERY = gql`
     userFeedConfig {
       cityIds
       venueTypeIds
+      cityDetails {
+        id
+        name
+        state
+      }
     }
   }
 `

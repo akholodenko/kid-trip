@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import { Op } from 'sequelize'
 import { APP_SECRET } from '../utils'
 import User from '../models/user'
 import Venue from '../models/venue'
@@ -150,14 +151,29 @@ const getUserFeedConfig = userId => {
   return UserFeedConfig.findOne({
     where: { user_id: userId },
     attributes: ['config']
-  }).then(result =>
-    result && result.config
-      ? result.config
-      : {
-          cityIds: null,
-          venueTypeIds: null
-        }
-  )
+  })
+    .then(result =>
+      result && result.config
+        ? result.config
+        : {
+            cityIds: null,
+            venueTypeIds: null
+          }
+    )
+    .then(config => {
+      if (config && config.cityIds) {
+        return City.findAll({
+          attributes: ['id', 'name', 'state'],
+          where: {
+            id: { [Op.in]: config.cityIds.split(',') }
+          }
+        }).then(cityDetails => {
+          return { ...config, cityDetails }
+        })
+      } else {
+        return config
+      }
+    })
 }
 
 module.exports = {
