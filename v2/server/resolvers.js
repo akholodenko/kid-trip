@@ -12,7 +12,13 @@ import {
 } from './resolvers/venue'
 import { getVenueType, getVenueTypes } from './resolvers/venue_type'
 import { getCities } from './resolvers/city'
-import { signup, login, getUser, getUserFeedConfig } from './resolvers/user'
+import {
+  signup,
+  login,
+  getUser,
+  getUserFeedConfig,
+  updateUserFeedConfig
+} from './resolvers/user'
 
 initModelAssociations()
 
@@ -70,6 +76,7 @@ export default {
     login,
     createVenue,
     createUserVenueFavorite,
-    deleteUserVenueFavorite
+    deleteUserVenueFavorite,
+    updateUserFeedConfig
   }
 }

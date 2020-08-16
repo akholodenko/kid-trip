@@ -25,7 +25,8 @@ const CityFormField = ({
   fieldLabel,
   placeholder,
   containerWidth,
-  containerDisplay
+  containerDisplay,
+  initialValue
 }) => {
   const [query, setQuery] = useState('')
   const [selectedOption, setSelectedOption] = useState(isMulti ? [] : {})
@@ -51,6 +52,16 @@ const CityFormField = ({
       setOptions([])
     }
   }, [query, client])
+
+  useEffect(() => {
+    if (initialValue && Array.isArray(initialValue) && initialValue.length) {
+      setSelectedOption(
+        initialValue.map(city => {
+          return { value: city.id, label: `${city.name}, ${city.state}` }
+        })
+      )
+    }
+  }, [initialValue])
 
   const handleInputChange = text => {
     setQuery(text)

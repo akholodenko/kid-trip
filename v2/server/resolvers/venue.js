@@ -40,7 +40,10 @@ export const fromDbVenueTransform = venue => {
     city: venue.city ? venue.city.name : null,
     state: venue.city ? venue.city.state : null,
     zipcode: venue.zipcode,
-    createdAt: venue.created_at ? venue.created_at.toString() : null,
+    createdAt:
+      venue.dataValues && venue.dataValues.created_at
+        ? venue.dataValues.created_at.toString()
+        : null,
     lat: venue.lat,
     lng: venue.lng,
     venueTypes: venue.venueTypes,

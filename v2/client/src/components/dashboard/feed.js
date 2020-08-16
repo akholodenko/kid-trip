@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { useMutation } from '@apollo/react-hooks'
 import { withApollo } from 'react-apollo'
 import { withStyles } from '@material-ui/core/styles'
 import { GET_FEED_VENUES } from '../../graphql/venueQueries'
+import { CURRENT_USER_FEED_CONFIG_QUERY } from '../../graphql/userQueries'
+import { UPDATE_CURRENT_USER_FEED_CONFIG_MUTATION } from '../../graphql/userMutations'
 
 import FeedItem from './feedItem'
 import FeedConfigurator from './feedConfigurator'
@@ -24,28 +27,56 @@ const Feed = ({ client }) => {
     first: 25
   })
 
+  const [updateCurrentUserFeedConfigMutation] = useMutation(
+    UPDATE_CURRENT_USER_FEED_CONFIG_MUTATION
+  )
+
   useEffect(() => {
     client
       .query({
-        query: GET_FEED_VENUES,
-        variables: {
-          ...feedConfiguration
-        }
+        query: CURRENT_USER_FEED_CONFIG_QUERY
       })
       .then(({ data }) => {
-        setFeedVenues(data.venues)
+        setFeedConfiguration({
+          sort: 'DESC',
+          first: 25,
+          ...data.userFeedConfig
+        })
       })
+  }, [client])
+
+  useEffect(() => {
+    if (feedConfiguration.cityIds && feedConfiguration.venueTypeIds) {
+      client
+        .query({
+          query: GET_FEED_VENUES,
+          variables: {
+            ...feedConfiguration
+          }
+        })
+        .then(({ data }) => {
+          setFeedVenues(data.venues)
+        })
+    }
   }, [client, feedConfiguration])
 
   const onFeedConfigurationUpdated = newFeedConfiguration => {
     if (newFeedConfiguration) {
       setFeedConfiguration({ ...newFeedConfiguration })
     }
+
+    updateCurrentUserFeedConfigMutation({
+      variables: {
+        cityIds: newFeedConfiguration.cityIds,
+        venueTypeIds: newFeedConfiguration.venueTypeIds
+      }
+    })
   }
 
   return (
     <div>
       <FeedConfigurator
+        feedConfiguration={feedConfiguration}
         onFeedConfigurationUpdated={onFeedConfigurationUpdated}
       ></FeedConfigurator>
       <div className="feedContainer">

@@ -78,6 +78,7 @@ export default gql`
     ): Venue
     createUserVenueFavorite(venueId: Int!): VenueStats
     deleteUserVenueFavorite(venueId: Int!): VenueStats
+    updateUserFeedConfig(venueTypeIds: String, cityIds: String): FeedConfig
   }
 
   input CityInput {
@@ -107,5 +108,6 @@ export default gql`
   type FeedConfig {
     cityIds: String
     venueTypeIds: String
+    cityDetails: [City]
   }
 `

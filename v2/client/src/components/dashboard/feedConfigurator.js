@@ -1,10 +1,18 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import CityFormField from './cityFormField'
 import VenueTypeMultiFormField from './venueTypeMultiFormField'
 
-const FeedConfigurator = ({ onFeedConfigurationUpdated }) => {
+const FeedConfigurator = ({
+  feedConfiguration,
+  onFeedConfigurationUpdated
+}) => {
   const [cityIds, setCityIds] = useState()
   const [venueTypeIds, setVenueTypeIds] = useState()
+
+  useEffect(() => {
+    setCityIds(feedConfiguration.cityIds)
+    setVenueTypeIds(feedConfiguration.venueTypeIds)
+  }, [feedConfiguration])
 
   const onCitySelected = cities => {
     const ids = cities ? cities.map(city => city.value).join(',') : null
@@ -29,11 +37,13 @@ const FeedConfigurator = ({ onFeedConfigurationUpdated }) => {
         isMulti={true}
         containerWidth="350px"
         containerDisplay="inline-block"
+        initialValue={feedConfiguration.cityDetails}
       ></CityFormField>
       <div
         style={{ display: 'inline-block', width: '30px', height: '20px' }}
       ></div>
       <VenueTypeMultiFormField
+        initialValue={venueTypeIds}
         onVenueTypeSelected={onVenueTypeSelected}
       ></VenueTypeMultiFormField>
     </div>
