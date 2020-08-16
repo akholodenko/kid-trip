@@ -181,8 +181,18 @@ const updateUserFeedConfig = (obj, args, { user }, info) => {
     throw new Error('You are not authenticated!')
   }
 
-  console.log('user', user, args)
-  // userId, cityIds, venueTypeIds
+  return UserFeedConfig.findOrCreate({
+    where: { user_id: user.userId }
+  }).then(result => {
+    if (!result) {
+      throw new Error('No config found')
+    }
+
+    const config = { cityIds: args.cityIds, venueTypeIds: args.venueTypeIds }
+    return result[0]
+      .update({ config })
+      .then(updatedResult => updatedResult.config)
+  })
 }
 
 module.exports = {
