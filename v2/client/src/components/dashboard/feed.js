@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from 'react'
+import { useMutation } from '@apollo/react-hooks'
 import { withApollo } from 'react-apollo'
 import { withStyles } from '@material-ui/core/styles'
 import { GET_FEED_VENUES } from '../../graphql/venueQueries'
 import { CURRENT_USER_FEED_CONFIG_QUERY } from '../../graphql/userQueries'
+import { UPDATE_CURRENT_USER_FEED_CONFIG_MUTATION } from '../../graphql/userMutations'
 
 import FeedItem from './feedItem'
 import FeedConfigurator from './feedConfigurator'
@@ -24,6 +26,10 @@ const Feed = ({ client }) => {
     sort: 'DESC',
     first: 25
   })
+
+  const [updateCurrentUserFeedConfigMutation] = useMutation(
+    UPDATE_CURRENT_USER_FEED_CONFIG_MUTATION
+  )
 
   useEffect(() => {
     client
@@ -58,6 +64,13 @@ const Feed = ({ client }) => {
     if (newFeedConfiguration) {
       setFeedConfiguration({ ...newFeedConfiguration })
     }
+
+    updateCurrentUserFeedConfigMutation({
+      variables: {
+        cityIds: newFeedConfiguration.cityIds,
+        venueTypeIds: newFeedConfiguration.venueTypeIds
+      }
+    })
   }
 
   return (
