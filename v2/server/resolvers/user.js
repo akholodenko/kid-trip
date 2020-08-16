@@ -176,10 +176,20 @@ const getUserFeedConfig = userId => {
     })
 }
 
+const updateUserFeedConfig = (obj, args, { user }, info) => {
+  if (!user) {
+    throw new Error('You are not authenticated!')
+  }
+
+  console.log('user', user, args)
+  // userId, cityIds, venueTypeIds
+}
+
 module.exports = {
   signup,
   login,
   getUser,
   getUserFeedConfig,
+  updateUserFeedConfig,
   fromDbUserTransform
 }

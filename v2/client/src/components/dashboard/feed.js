@@ -17,7 +17,6 @@ const styles = {
 }
 
 const Feed = ({ client }) => {
-  const [feedConfigInitialized, setFeedConfigInitialized] = useState(false)
   const [feedVenues, setFeedVenues] = useState([])
   const [feedConfiguration, setFeedConfiguration] = useState({
     cityIds: null,
@@ -32,7 +31,6 @@ const Feed = ({ client }) => {
         query: CURRENT_USER_FEED_CONFIG_QUERY
       })
       .then(({ data }) => {
-        setFeedConfigInitialized(true)
         setFeedConfiguration({
           sort: 'DESC',
           first: 25,
@@ -42,7 +40,7 @@ const Feed = ({ client }) => {
   }, [client])
 
   useEffect(() => {
-    if (feedConfigInitialized) {
+    if (feedConfiguration.cityIds && feedConfiguration.venueTypeIds) {
       client
         .query({
           query: GET_FEED_VENUES,
