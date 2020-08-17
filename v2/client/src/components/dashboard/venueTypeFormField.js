@@ -3,7 +3,7 @@ import InputLabel from '@material-ui/core/InputLabel'
 import Select from '@material-ui/core/Select'
 import MenuItem from '@material-ui/core/MenuItem'
 import FormControl from '@material-ui/core/FormControl'
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 
 import { GET_VENUE_TYPES } from '../../graphql/venueQueries'
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { withApollo } from 'react-apollo'
+import { withApollo } from '@apollo/client/react/hoc'
 import { GET_SIMILAR_VENUES_IN_RADIUS } from '../../graphql/venueQueries'
 import '../shared/sidebarModule.css'
 import { Link as RouterLink } from 'react-router-dom'

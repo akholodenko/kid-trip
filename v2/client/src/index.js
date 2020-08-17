@@ -1,12 +1,13 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { ApolloClient } from 'apollo-client'
-import { InMemoryCache } from 'apollo-cache-inmemory'
-import { HttpLink } from 'apollo-link-http'
-import { onError } from 'apollo-link-error'
-import { ApolloLink } from 'apollo-link'
-import { ApolloProvider } from 'react-apollo'
-import { withClientState } from 'apollo-link-state'
+import {
+  ApolloClient,
+  ApolloProvider,
+  ApolloLink,
+  HttpLink
+} from '@apollo/client'
+import { InMemoryCache } from '@apollo/client/cache'
+import { onError } from '@apollo/client/link/error'
 
 import App from './App'
 import * as serviceWorker from './serviceWorker'
@@ -14,36 +15,9 @@ import { BrowserRouter } from 'react-router-dom'
 import 'typeface-roboto'
 import { getUserInfoFromStorage } from './utils/userUtils'
 import { AUTH_TOKEN } from './constants'
+import { CURRENT_USER_QUERY } from './graphql/userQueries'
 
 const SERVER_HOST = process.env.REACT_APP_SERVER_HOST
-
-const cache = new InMemoryCache()
-
-const defaultState = {
-  currentUser: { ...getUserInfoFromStorage() }
-}
-
-const stateLink = withClientState({
-  cache,
-  defaults: defaultState,
-  resolvers: {
-    Mutation: {
-      updateUserInfo: (_, { id, firstName, lastName, email }, { cache }) => {
-        const data = {
-          user: {
-            __typename: 'User',
-            id,
-            firstName,
-            lastName,
-            email
-          }
-        }
-        cache.writeData({ data })
-        return null
-      }
-    }
-  }
-})
 
 const token = localStorage.getItem(AUTH_TOKEN)
 const httpLink = new HttpLink({
@@ -65,11 +39,17 @@ const client = new ApolloClient({
         )
       if (networkError) console.log(`[Network error]: ${networkError}`)
     }),
-    stateLink,
     httpLink
   ]),
   cache: new InMemoryCache(),
   resolvers: {}
+})
+
+client.writeQuery({
+  query: CURRENT_USER_QUERY,
+  data: {
+    currentUser: { ...getUserInfoFromStorage() }
+  }
 })
 
 ReactDOM.render(

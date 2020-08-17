@@ -3,7 +3,7 @@ import VenueTypeTabs from './venueTypeTabs'
 import VenueListItem from './venueListItem'
 import { withStyles } from '@material-ui/core/styles'
 import { GET_VENUES_FOR_CURRENT_USER } from '../../graphql/venueQueries'
-import { withApollo } from 'react-apollo'
+import { withApollo } from '@apollo/client/react/hoc'
 
 const styles = {
   '@global': {

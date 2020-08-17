@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
-import { useMutation } from '@apollo/react-hooks'
-import { withApollo } from 'react-apollo'
+import { useMutation } from '@apollo/client'
+import { withApollo } from '@apollo/client/react/hoc'
 import { withStyles } from '@material-ui/core/styles'
 import { GET_FEED_VENUES } from '../../graphql/venueQueries'
 import { CURRENT_USER_FEED_CONFIG_QUERY } from '../../graphql/userQueries'

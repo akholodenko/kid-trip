@@ -1,5 +1,5 @@
 import React from 'react'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import {
   CREATE_USER_VENUE_FAVORITE_MUTATION,
   DELETE_USER_VENUE_FAVORITE_MUTATION
@@ -27,13 +27,15 @@ export default ({
       variables: { venueSlug }
     })
 
-    data.venueBySlug.venueStats = venueStats
     onUpdateFavoritesStats(venueStats)
 
     store.writeQuery({
       query: GET_VENUE_BY_SLUG,
       variables: { venueSlug },
-      data
+      data: {
+        ...data,
+        venueBySlug: { ...data.venueBySlug, venueStats: { ...venueStats } }
+      }
     })
   }
 

@@ -57,7 +57,7 @@ async function signup(parent, args) {
 }
 
 async function login(parent, args) {
-  const user = await User.find({ where: { email: args.email } })
+  const user = await User.findOne({ where: { email: args.email } })
 
   if (!user) {
     throw new Error('No such user found')

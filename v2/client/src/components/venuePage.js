@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Query } from 'react-apollo'
+import { Query } from '@apollo/client/react/components'
 import Typography from '@material-ui/core/Typography'
 import NumberFormat from 'react-number-format'
 import pluralize from 'pluralize'
@@ -29,7 +29,7 @@ const pageStyle = {
   }
 }
 
-export default ({ match }) => {
+const VenuePage = ({ match }) => {
   const venueSlug = match.params.venueSlug
   const [venue, setVenue] = useState(null)
   const [venueTypeName, setVenueTypeName] = useState('')
@@ -103,3 +103,5 @@ export default ({ match }) => {
     )
   }
 }
+
+export default VenuePage

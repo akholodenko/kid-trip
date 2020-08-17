@@ -1,5 +1,5 @@
 import { AUTH_TOKEN, USER_INFO } from '../constants'
-import { graphql } from 'react-apollo'
+import { graphql } from '@apollo/client/react/hoc'
 import { compose } from 'recompose'
 import { CURRENT_USER_QUERY } from '../graphql/userQueries'
 
