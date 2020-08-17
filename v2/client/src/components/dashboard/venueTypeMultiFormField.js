@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Select from 'react-select'
-import { withApollo } from '@apollo/client/react/hoc'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
 import { GET_VENUE_TYPES } from '../../graphql/venueQueries'
+import { useApolloClient } from '@apollo/client'
 
 const style = {
   container: {
@@ -19,11 +19,8 @@ const style = {
   }
 }
 
-const VenueTypeMultiFormField = ({
-  client,
-  initialValue,
-  onVenueTypeSelected
-}) => {
+const VenueTypeMultiFormField = ({ initialValue, onVenueTypeSelected }) => {
+  const client = useApolloClient()
   const [selectedOption, setSelectedOption] = useState([])
   const [options, setOptions] = useState([])
 
@@ -82,4 +79,4 @@ const VenueTypeMultiFormField = ({
   )
 }
 
-export default withApollo(VenueTypeMultiFormField)
+export default VenueTypeMultiFormField

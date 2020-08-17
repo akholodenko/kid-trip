@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import Select from 'react-select'
 import { GET_CITIES } from '../../graphql/cityQueries'
-import { withApollo } from '@apollo/client/react/hoc'
 import InputLabel from '@material-ui/core/InputLabel'
 import FormControl from '@material-ui/core/FormControl'
+import { useApolloClient } from '@apollo/client'
 
 const style = {
   container: {
@@ -19,7 +19,6 @@ const style = {
 }
 
 const CityFormField = ({
-  client,
   onCitySelected,
   isMulti,
   fieldLabel,
@@ -28,6 +27,7 @@ const CityFormField = ({
   containerDisplay,
   initialValue
 }) => {
+  const client = useApolloClient()
   const [query, setQuery] = useState('')
   const [selectedOption, setSelectedOption] = useState(isMulti ? [] : {})
   const [options, setOptions] = useState([])
@@ -103,4 +103,4 @@ const CityFormField = ({
   )
 }
 
-export default withApollo(CityFormField)
+export default CityFormField

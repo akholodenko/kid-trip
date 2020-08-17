@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react'
-import { withApollo } from '@apollo/client/react/hoc'
 import { GET_SIMILAR_VENUES_IN_RADIUS } from '../../graphql/venueQueries'
 import '../shared/sidebarModule.css'
 import { Link as RouterLink } from 'react-router-dom'
 import Routes from '../../routes'
+import { useApolloClient } from '@apollo/client'
 
-const SimilarVenues = ({ client, venue }) => {
+const SimilarVenues = ({ venue }) => {
+  const client = useApolloClient()
   const [similarVenues, setSimilarVenues] = useState([])
   useEffect(() => {
     client
@@ -35,4 +36,4 @@ const SimilarVenues = ({ client, venue }) => {
   )
 }
 
-export default withApollo(SimilarVenues)
+export default SimilarVenues
