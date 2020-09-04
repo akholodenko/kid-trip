@@ -27,7 +27,7 @@ const styles = {
       maxWidth: '1200px',
       flexGrow: '1',
       margin: '25px',
-      backgroundColor: '#fff',
+      backgroundColor: '#ffffff',
       padding: '25px',
       borderRadius: '8px'
     }
