@@ -58,7 +58,6 @@ export default gql`
   }
 
   type Mutation {
-    #        post(url: String!, description: String!): Link!
     signup(
       email: String!
       password: String!
