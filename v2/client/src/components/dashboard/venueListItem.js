@@ -4,7 +4,7 @@ import { withStyles } from '@material-ui/core/styles'
 import { venueMapLink, venueIcon, venueCityState } from '../../utils/venueUtils'
 import { Link as RouterLink } from 'react-router-dom'
 import Routes from '../../routes'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { DELETE_USER_VENUE_FAVORITE_MUTATION } from '../../graphql/venueMutations'
 import {
   GET_VENUE_BY_SLUG,

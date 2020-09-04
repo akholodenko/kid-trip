@@ -3,7 +3,7 @@ import VenueTypeTabs from './venueTypeTabs'
 import VenueListItem from './venueListItem'
 import { withStyles } from '@material-ui/core/styles'
 import { GET_VENUES_FOR_CURRENT_USER } from '../../graphql/venueQueries'
-import { withApollo } from 'react-apollo'
+import { useApolloClient } from '@apollo/client'
 
 const styles = {
   '@global': {
@@ -14,11 +14,11 @@ const styles = {
 }
 
 const VenueList = ({
-  client,
   currentDashboardSection,
   isFavoritesDashboardSection,
   externalTriggerVenueRefresh
 }) => {
+  const client = useApolloClient()
   const [venueTypeFilter, setVenueTypeFilter] = useState('all')
   const [venues, setVenues] = useState([])
   const [triggerVenueRefresh, setTriggerVenueRefresh] = useState(true)
@@ -79,4 +79,4 @@ const VenueList = ({
   )
 }
 
-export default withStyles(styles)(withApollo(VenueList))
+export default withStyles(styles)(VenueList)

@@ -18,7 +18,7 @@ import Button from '@material-ui/core/Button'
 
 import { validateVenue } from '../../utils/validationUtils'
 
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { GET_VENUES_FOR_CURRENT_USER } from '../../graphql/venueQueries'
 
 const USER_ACTION_TEXT = 'Please enter information about a venue'

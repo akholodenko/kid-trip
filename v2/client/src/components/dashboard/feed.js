@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { useMutation } from '@apollo/react-hooks'
-import { withApollo } from 'react-apollo'
+import { useMutation, useApolloClient } from '@apollo/client'
 import { withStyles } from '@material-ui/core/styles'
 import { GET_FEED_VENUES } from '../../graphql/venueQueries'
 import { CURRENT_USER_FEED_CONFIG_QUERY } from '../../graphql/userQueries'
@@ -18,14 +17,15 @@ const styles = {
   }
 }
 
-const Feed = ({ client }) => {
-  const [feedConfigInitialized, setFeedConfigInitialized] = useState(false)
+const Feed = () => {
+  const client = useApolloClient()
   const [feedVenues, setFeedVenues] = useState([])
   const [feedConfiguration, setFeedConfiguration] = useState({
     cityIds: null,
     venueTypeIds: null,
     sort: 'DESC',
-    first: 25
+    first: 25,
+    init: false
   })
 
   const [updateCurrentUserFeedConfigMutation] = useMutation(
@@ -38,8 +38,8 @@ const Feed = ({ client }) => {
         query: CURRENT_USER_FEED_CONFIG_QUERY
       })
       .then(({ data }) => {
-        setFeedConfigInitialized(true)
         setFeedConfiguration({
+          init: true,
           sort: 'DESC',
           first: 25,
           ...data.userFeedConfig
@@ -48,7 +48,7 @@ const Feed = ({ client }) => {
   }, [client])
 
   useEffect(() => {
-    if (feedConfigInitialized) {
+    if (feedConfiguration.init) {
       client
         .query({
           query: GET_FEED_VENUES,
@@ -90,4 +90,4 @@ const Feed = ({ client }) => {
   )
 }
 
-export default withStyles(styles)(withApollo(Feed))
+export default withStyles(styles)(Feed)

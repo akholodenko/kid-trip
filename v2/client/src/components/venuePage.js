@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import { Query } from 'react-apollo'
+import React, { useEffect, useState } from 'react'
 import Typography from '@material-ui/core/Typography'
 import NumberFormat from 'react-number-format'
 import pluralize from 'pluralize'
@@ -11,6 +10,7 @@ import { venuePrimaryTypeName } from '../utils/venueUtils'
 import { isUserLoggedIn } from '../utils/userUtils'
 import LocationInfo from './venue/locationInfo'
 import FavoriteButton from './venue/favoriteButton'
+import { useQuery } from '@apollo/client'
 
 const pageStyle = {
   sectionHeader: {
@@ -29,77 +29,81 @@ const pageStyle = {
   }
 }
 
-export default ({ match }) => {
+const VenuePage = ({ match }) => {
   const venueSlug = match.params.venueSlug
   const [venue, setVenue] = useState(null)
   const [venueTypeName, setVenueTypeName] = useState('')
+
+  const { loading, error, data } = useQuery(GET_VENUE_BY_SLUG, {
+    variables: { venueSlug }
+  })
+
+  useEffect(() => {
+    if (data) {
+      setVenue(data.venueBySlug)
+      setVenueTypeName(venuePrimaryTypeName(data.venueBySlug))
+    }
+  }, [data])
 
   const onUpdateFavoritesStats = venueStats => {
     setVenue({ ...venue, venueStats: { ...venueStats } })
   }
 
+  if (loading) return null
+  if (error) return `Error! ${error}`
+
   if (!venueSlug) {
     return <div>Venue not found.</div>
   } else {
     return (
-      <Query query={GET_VENUE_BY_SLUG} variables={{ venueSlug }}>
-        {({ loading, error, data }) => {
-          if (loading) return 'Loading...'
-          if (error) return `Error! ${error.message}`
-
-          setVenue(data.venueBySlug)
-          setVenueTypeName(venuePrimaryTypeName(data.venueBySlug))
-
-          return (
-            venue && (
-              <div>
-                <VenueHeader venue={venue} />
-                <div className="mainContainer">
-                  <div className="mainContent">
-                    <Typography variant="h5" style={pageStyle.sectionHeader}>
-                      {venue.name}
-                    </Typography>
-                    <div style={pageStyle.columnWrapper}>
-                      <div style={pageStyle.mainColumn}>
-                        <div>
-                          Liked by{' '}
-                          <strong>
-                            <NumberFormat
-                              value={venue.venueStats.favorites}
-                              thousandSeparator={true}
-                              displayType={'text'}
-                            />{' '}
-                            {pluralize('person', venue.venueStats.favorites)}
-                          </strong>
-                          . &nbsp;
-                          {isUserLoggedIn() && (
-                            <FavoriteButton
-                              venueId={venue.id}
-                              venueSlug={venueSlug}
-                              favoriteByCurrentUser={
-                                venue.venueStats.favoriteByCurrentUser
-                              }
-                              onUpdateFavoritesStats={onUpdateFavoritesStats}
-                            />
-                          )}
-                        </div>
-                        <br />
-                        {venue.description && <span>{venue.description}</span>}
-                        This {venueTypeName} is located in {venue.city},{' '}
-                        {venue.state}.
-                      </div>
-                      <div style={pageStyle.sideColumm}>
-                        <LocationInfo venue={venue} />
-                        <SimilarVenues venue={venue} />
-                      </div>
-                    </div>
+      venue && (
+        <div>
+          <VenueHeader venue={venue} />
+          <div className="mainContainer">
+            <div className="mainContent">
+              <Typography variant="h5" style={pageStyle.sectionHeader}>
+                {venue.name}
+              </Typography>
+              <div style={pageStyle.columnWrapper}>
+                <div style={pageStyle.mainColumn}>
+                  <div>
+                    Liked by{' '}
+                    <strong>
+                      <NumberFormat
+                        value={venue.venueStats.favorites}
+                        thousandSeparator={true}
+                        displayType={'text'}
+                      />{' '}
+                      {pluralize('person', venue.venueStats.favorites)}
+                    </strong>
+                    . &nbsp;
+                    {isUserLoggedIn() && (
+                      <FavoriteButton
+                        venueId={venue.id}
+                        venueSlug={venueSlug}
+                        favoriteByCurrentUser={
+                          venue.venueStats.favoriteByCurrentUser
+                        }
+                        onUpdateFavoritesStats={onUpdateFavoritesStats}
+                      />
+                    )}
                   </div>
+                  <br />
+                  {venue.description && <span>{venue.description}</span>}
+                  This {venueTypeName} is located in {venue.city}, {venue.state}
+                  .
+                </div>
+                <div style={pageStyle.sideColumm}>
+                  <LocationInfo venue={venue} />
+                  <SimilarVenues venue={venue} />
                 </div>
               </div>
-            )
-          )
-        }}
-      </Query>
+            </div>
+          </div>
+        </div>
+      )
     )
   }
 }
+
+export default VenuePage

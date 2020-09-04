@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { useEffect, useState } from 'react'
 import Button from '@material-ui/core/Button'
 import { withRouter } from 'react-router'
+// import { useQuery } from '@apollo/client'
 import {
   isUserLoggedIn,
   withCurrentUser,
@@ -8,24 +9,26 @@ import {
 } from '../../utils/userUtils'
 import LoginDialog from './loginDialog'
 import Typography from '@material-ui/core/Typography'
+// import { CURRENT_USER_QUERY } from '../../graphql/userQueries'
 
-class LoginButton extends Component {
-  state = {
-    dialogOpen: false,
-    login: true
-  }
+const LoginButton = ({ currentUser, className }) => {
+  const [dialogOpen, setDialogOpen] = useState(false)
+  const [login, setLogin] = useState(true)
 
-  componentDidMount() {
+  useEffect(() => {
     listenForOpenSignUpDialog(() => {
       this.setState({ dialogOpen: true, login: false })
+      setDialogOpen(true)
+      setLogin(false)
     })
+  })
+
+  const toggleDialog = () => {
+    setDialogOpen(!dialogOpen)
+    setLogin(true)
   }
 
-  toggleDialog = () => {
-    this.setState({ dialogOpen: !this.state.dialogOpen, login: true })
-  }
-
-  renderUserInfo = currentUser => {
+  const renderUserInfo = currentUser => {
     if (currentUser && currentUser.id) {
       return `Welcome, ${currentUser.firstName}`
     } else {
@@ -33,34 +36,25 @@ class LoginButton extends Component {
     }
   }
 
-  render() {
-    const { currentUser } = this.props
+  // const { data } = useQuery(CURRENT_USER_QUERY)
+  // console.log('data', data)
 
-    return isUserLoggedIn() ? (
-      <Typography
-        variant="button"
-        color="inherit"
-        className={this.props.className}
-      >
-        {this.renderUserInfo(currentUser)}
-      </Typography>
-    ) : (
-      <span>
-        <Button
-          onClick={this.toggleDialog}
-          className={this.props.className}
-          color="inherit"
-        >
-          Login
-        </Button>
-        <LoginDialog
-          open={this.state.dialogOpen}
-          login={this.state.login}
-          toggleDialog={this.toggleDialog}
-        />
-      </span>
-    )
-  }
+  return isUserLoggedIn() ? (
+    <Typography variant="button" color="inherit" className={className}>
+      {renderUserInfo(currentUser)}
+    </Typography>
+  ) : (
+    <span>
+      <Button onClick={toggleDialog} className={className} color="inherit">
+        Login
+      </Button>
+      <LoginDialog
+        open={dialogOpen}
+        login={login}
+        toggleDialog={toggleDialog}
+      />
+    </span>
+  )
 }
 
 export default withCurrentUser(withRouter(LoginButton))

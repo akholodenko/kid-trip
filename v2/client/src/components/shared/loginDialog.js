@@ -3,8 +3,9 @@ import { withRouter } from 'react-router'
 
 import { setUserInfo } from '../../utils/userUtils'
 import Routes from '../../routes'
-import { Mutation } from 'react-apollo'
+import { Mutation } from '@apollo/client/react/components'
 import { SIGNUP_MUTATION, LOGIN_MUTATION } from '../../graphql/userMutations'
+import { CURRENT_USER_QUERY } from '../../graphql/userQueries'
 
 import TextField from '@material-ui/core/TextField'
 import Button from '@material-ui/core/Button'
@@ -151,7 +152,8 @@ class LoginDialog extends Component {
   }
 
   _update = async (cache, info) => {
-    cache.writeData({
+    cache.writeQuery({
+      query: CURRENT_USER_QUERY,
       data: {
         currentUser: {
           ...info.user,
