@@ -20,7 +20,7 @@ const trackContent = {
 const shareContent = {
   title: 'Share',
   icon: 'share',
-  text: `Share your favorite places to visit with friends and family, and hear about what others are 
+  text: `Share your favorite places to visit with friends and family; hear about what others are 
 	enjoying, for great new ideas.`
 }
 
