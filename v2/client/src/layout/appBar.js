@@ -75,7 +75,7 @@ class ButtonAppBar extends Component {
                   </MenuItem>
                   <MenuItem
                     component={RouterLink}
-                    to={Routes.dashboard}
+                    to={Routes.dashboardPath('')}
                     onClick={this.toggleMenu}
                   >
                     Dashboard
