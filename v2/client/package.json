@@ -53,6 +53,5 @@
   "prettier": {
     "semi": false,
     "singleQuote": true
-  },
-  "homepage": "."
+  }
 }
