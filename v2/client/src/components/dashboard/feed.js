@@ -64,7 +64,7 @@ const Feed = () => {
 
   const onFeedConfigurationUpdated = newFeedConfiguration => {
     if (newFeedConfiguration) {
-      setFeedConfiguration({ ...newFeedConfiguration })
+      setFeedConfiguration({ ...newFeedConfiguration, init: true })
     }
 
     updateCurrentUserFeedConfigMutation({
