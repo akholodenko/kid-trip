@@ -20,7 +20,12 @@ const SimilarVenues = ({ venue }) => {
   }, [venue, client])
 
   return (
-    <div className="sidebar-module">
+    <div
+      className="sidebar-module"
+      style={{
+        display: similarVenues && similarVenues.length ? 'block' : 'none'
+      }}
+    >
       <h3>Similar places near by</h3>
       <div className="sidebar-module-body">
         {similarVenues &&
