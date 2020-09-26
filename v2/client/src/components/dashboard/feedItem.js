@@ -35,7 +35,10 @@ const FeedItem = ({ venue }) => {
       <div className="feedItemSubtitle">
         in {venueCityState(venue)}
         <br />
-        added {sinceCreated(venue.createdAt)} by {shortName(venue.creator)}
+        added {sinceCreated(venue.createdAt)} by &nbsp;
+        <RouterLink to={Routes.userProfilePath(venue.creator.id)}>
+          {shortName(venue.creator)}
+        </RouterLink>
       </div>
     </div>
   )
