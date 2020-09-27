@@ -78,18 +78,18 @@ export default ({
       {favoriteByCurrentUser ? (
         <span>
           &#9733;&nbsp;
-          <a
-            href="#"
+          <button
             onClick={e => {
               e.preventDefault()
               onDeleteFavorite()
             }}
           >
+            {' '}
             Unlike
-          </a>
+          </button>
         </span>
       ) : (
-        <a
+        <button
           href="#"
           onClick={e => {
             e.preventDefault()
@@ -97,7 +97,7 @@ export default ({
           }}
         >
           Like
-        </a>
+        </button>
       )}
     </React.Fragment>
   )
