@@ -12,6 +12,7 @@ import VenueType from '../models/venue_type'
 import { sendWelcomeEmail } from '../utils/emailUtils'
 import UserVenueFavorite from '../models/user_venue_favorite'
 import UserFeedConfig from '../models/user_feed_config'
+import atob from 'atob'
 
 const fromDbUserTransform = user => {
   return {
@@ -78,6 +79,7 @@ async function login(parent, args) {
 
 const getUser = (userId, { fields }) => {
   let associations = []
+  let order = [['id', 'ASC']]
 
   if (fields) {
     if (!!fields.venues) {
@@ -96,6 +98,8 @@ const getUser = (userId, { fields }) => {
         attributes: VENUE_ATTRIBUTES,
         include: venueAssociations
       })
+
+      order = [Venue, 'name', 'ASC']
     }
 
     if (!!fields.feedConfig) {
@@ -107,9 +111,9 @@ const getUser = (userId, { fields }) => {
   }
 
   return User.findByPk(userId, {
-    attributes: ['id', 'first_name', 'last_name', 'email', 'zipcode'],
+    attributes: ['id', 'first_name', 'last_name', 'zipcode'],
     include: associations,
-    order: [[Venue, 'name', 'ASC']]
+    order: [order]
   }).then(user => {
     if (!!fields && !!fields.favoriteVenues) {
       return getUserFavoriteVenues(userId, fields).then(response => {
@@ -176,6 +180,14 @@ const getUserFeedConfig = userId => {
     })
 }
 
+const getUserProfile = (publicId, { fields }) => {
+  const userId = atob(publicId) / 999999999
+
+  // console.log(fields)
+
+  return { user: getUser(userId, {}) }
+}
+
 const updateUserFeedConfig = (obj, args, { user }, info) => {
   if (!user) {
     throw new Error('You are not authenticated!')
@@ -200,6 +212,7 @@ module.exports = {
   login,
   getUser,
   getUserFeedConfig,
+  getUserProfile,
   updateUserFeedConfig,
   fromDbUserTransform
 }

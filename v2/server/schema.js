@@ -4,6 +4,7 @@ export default gql`
   type Query {
     user(id: ID!): User!
     userFeedConfig: FeedConfig!
+    userProfile(publicId: String!): UserProfile!
     venue(id: ID!): Venue!
     venueBySlug(slug: String!): Venue!
     venueTypes: [VenueType]!
@@ -57,6 +58,10 @@ export default gql`
     lng: Float
   }
 
+  type UserProfile {
+    user: User!
+  }
+
   type Mutation {
     signup(
       email: String!
@@ -97,7 +102,7 @@ export default gql`
     id: ID!
     firstName: String!
     lastName: String!
-    email: String!
+    email: String
     zipcode: String
     venues: [Venue]
     favoriteVenues: [Venue]

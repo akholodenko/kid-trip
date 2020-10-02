@@ -5,6 +5,10 @@ import { decodeUserId } from '../utils/routeUtils'
 const UserProfilePage = ({ match }) => {
   const userId = decodeUserId(match.params.userId)
 
+  useEffect(() => {
+    console.log(`load public user info for ${userId}`)
+  }, [])
+
   return <div>user ({userId}) profile here</div>
 }
 
