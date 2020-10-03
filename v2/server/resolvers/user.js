@@ -183,9 +183,9 @@ const getUserFeedConfig = userId => {
 const getUserProfile = (publicId, { fields }) => {
   const userId = atob(publicId) / 999999999
 
-  // console.log(fields)
-
-  return { user: getUser(userId, {}) }
+  return Promise.all([getUser(userId, {})]).then(responses => {
+    return { user: responses[0] }
+  })
 }
 
 const updateUserFeedConfig = (obj, args, { user }, info) => {
