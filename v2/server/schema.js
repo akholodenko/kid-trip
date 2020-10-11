@@ -60,6 +60,11 @@ export default gql`
 
   type UserProfile {
     user: User!
+    config: UserProfileConfiguration!
+  }
+
+  type UserProfileConfiguration {
+    headerImageUrl: String
   }
 
   type Mutation {

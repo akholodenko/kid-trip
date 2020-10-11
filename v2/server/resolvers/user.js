@@ -183,9 +183,21 @@ const getUserFeedConfig = userId => {
 const getUserProfile = (publicId, { fields }) => {
   const userId = atob(publicId) / 999999999
 
-  return Promise.all([getUser(userId, {})]).then(responses => {
-    return { user: responses[0] }
+  return Promise.all([
+    getUser(userId, {}),
+    getUserProfileConfiguation(userId)
+  ]).then(responses => {
+    return { user: responses[0], config: responses[1] }
   })
+}
+
+const getUserProfileConfiguation = userId => {
+  console.log(`get info for user id ${userId}`)
+  const promise = new Promise((resolve, reject) => {
+    resolve({ headerImageUrl: 'profile-backgrounds/beach-surf.jpg' })
+  })
+
+  return promise
 }
 
 const updateUserFeedConfig = (obj, args, { user }, info) => {
