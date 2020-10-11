@@ -1,5 +1,6 @@
 import bcrypt from 'bcryptjs'
 import jwt from 'jsonwebtoken'
+import atob from 'atob'
 import { Op } from 'sequelize'
 import { APP_SECRET } from '../utils'
 import User from '../models/user'
@@ -12,7 +13,8 @@ import VenueType from '../models/venue_type'
 import { sendWelcomeEmail } from '../utils/emailUtils'
 import UserVenueFavorite from '../models/user_venue_favorite'
 import UserFeedConfig from '../models/user_feed_config'
-import atob from 'atob'
+import UserProfileConfig from '../models/user_profile_config'
+import Image from '../models/image'
 
 const fromDbUserTransform = user => {
   return {
@@ -193,11 +195,23 @@ const getUserProfile = (publicId, { fields }) => {
 
 const getUserProfileConfiguation = userId => {
   console.log(`get info for user id ${userId}`)
-  const promise = new Promise((resolve, reject) => {
-    resolve({ headerImageUrl: 'profile-backgrounds/beach-surf.jpg' })
-  })
 
-  return promise
+  return UserProfileConfig.findOne({
+    where: { user_id: userId },
+    attributes: ['config']
+  }).then(result => {
+    if (result && result.config) {
+      return Image.findByPk(result.config.headerImageId).then(image => {
+        return {
+          headerImageUrl: image.filename
+        }
+      })
+    } else {
+      return {
+        headerImageUrl: null
+      }
+    }
+  })
 }
 
 const updateUserFeedConfig = (obj, args, { user }, info) => {
