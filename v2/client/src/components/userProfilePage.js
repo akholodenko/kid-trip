@@ -1,15 +1,29 @@
 import React, { useEffect, useState } from 'react'
 import withPageTemplate from './shared/withPageTemplate'
-import { decodeUserId } from '../utils/routeUtils'
+import { useQuery } from '@apollo/client'
+import { GET_USER_PROFILE_BY_PUBLIC_ID } from '../graphql/userQueries'
 
 const UserProfilePage = ({ match }) => {
-  const userId = decodeUserId(match.params.userId)
+  const publicId = match.params.userId
+  const [userProfile, setUserProfile] = useState(null)
+  const { loading, error, data } = useQuery(GET_USER_PROFILE_BY_PUBLIC_ID, {
+    variables: { publicId }
+  })
 
   useEffect(() => {
-    console.log(`load public user info for ${userId}`)
-  }, [])
+    if (data) {
+      setUserProfile(data.userProfile)
+    }
+  }, [data])
 
-  return <div>user ({userId}) profile here</div>
+  if (!publicId) {
+    return <div>User profile not found.</div>
+  } else {
+    if (userProfile) {
+      console.log(userProfile.config)
+      return <div>{userProfile.user.firstName}</div>
+    } else return false
+  }
 }
 
 export default withPageTemplate(UserProfilePage)
