@@ -201,11 +201,17 @@ const getUserProfileConfiguation = userId => {
     attributes: ['config']
   }).then(result => {
     if (result && result.config) {
-      return Image.findByPk(result.config.headerImageId).then(image => {
+      if (result.config.headerImageId) {
+        return Image.findByPk(result.config.headerImageId).then(image => {
+          return {
+            headerImageUrl: image.filename
+          }
+        })
+      } else {
         return {
-          headerImageUrl: image.filename
+          headerImageUrl: null
         }
-      })
+      }
     } else {
       return {
         headerImageUrl: null
