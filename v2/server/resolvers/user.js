@@ -187,11 +187,36 @@ const getUserFeedConfig = userId => {
 const getUserProfile = (publicId, { fields }) => {
   const userId = atob(publicId) / 999999999
 
-  return Promise.all([getUser(userId, {}), getUserProfileConfig(userId)]).then(
-    responses => {
-      return { user: responses[0], config: responses[1] }
+  return Promise.all([
+    getUser(userId, {}),
+    getUserProfileConfig(userId),
+    Venue.count({ where: { user_id: userId } }),
+    UserVenueFavorite.count({ where: { user_id: userId } })
+  ]).then(responses => {
+    console.log('created', responses[2])
+    return {
+      user: responses[0],
+      config: responses[1],
+      stats: {
+        created: responses[2],
+        favorited: responses[3]
+      },
+      modules: {
+        primary: [
+          {
+            name: '',
+            query: ''
+          }
+        ],
+        secondary: [
+          {
+            name: '',
+            query: ''
+          }
+        ]
+      }
     }
-  )
+  })
 }
 
 const getUserProfileConfig = userId => {

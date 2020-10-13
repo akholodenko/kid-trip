@@ -36,6 +36,10 @@ export const GET_USER_PROFILE_BY_PUBLIC_ID = gql`
       config {
         headerImageUrl
       }
+      stats {
+        created
+        favorited
+      }
     }
   }
 `

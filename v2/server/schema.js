@@ -61,10 +61,27 @@ export default gql`
   type UserProfile {
     user: User!
     config: UserProfileConfiguration!
+    stats: UserProfileStats!
+    modules: UserProfileModules!
   }
 
   type UserProfileConfiguration {
     headerImageUrl: String
+  }
+
+  type UserProfileStats {
+    created: Int
+    favorited: Int
+  }
+
+  type UserProfileModules {
+    primary: [ContentModule]
+    secondary: [ContentModule]
+  }
+
+  type ContentModule {
+    name: String!
+    query: String
   }
 
   type Mutation {

@@ -29,9 +29,11 @@ const UserProfilePage = ({ match }) => {
       return (
         <div>
           <div style={{ ...headerStyle.container, borderRadius: '8px' }}>
-            <div variant="h2" style={headerStyle.headerText}>
+            <h2 style={headerStyle.headerText}>
               <strong>{userProfile.user.firstName}</strong>
-            </div>
+              <div>{userProfile.stats.created} created</div>
+              <div>{userProfile.stats.favorited} favorites</div>
+            </h2>
           </div>
         </div>
       )
