@@ -13,7 +13,7 @@ import { getZipCode } from './zipcode'
 import { slug, uniqueSlug } from '../utils/stringUtils'
 import { fromMiles } from '../utils/numberUtils'
 
-import { fromDbUserTransform } from './user'
+import { fromDbUserTransform } from './user/utils'
 
 export const VENUE_ATTRIBUTES = [
   'id',
