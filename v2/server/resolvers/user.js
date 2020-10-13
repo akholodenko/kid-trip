@@ -16,6 +16,8 @@ import UserFeedConfig from '../models/user_feed_config'
 import UserProfileConfig from '../models/user_profile_config'
 import Image from '../models/image'
 
+import { S3_URL } from '../utils/urlUtils'
+
 const fromDbUserTransform = user => {
   return {
     id: user.id,
@@ -185,17 +187,14 @@ const getUserFeedConfig = userId => {
 const getUserProfile = (publicId, { fields }) => {
   const userId = atob(publicId) / 999999999
 
-  return Promise.all([
-    getUser(userId, {}),
-    getUserProfileConfiguation(userId)
-  ]).then(responses => {
-    return { user: responses[0], config: responses[1] }
-  })
+  return Promise.all([getUser(userId, {}), getUserProfileConfig(userId)]).then(
+    responses => {
+      return { user: responses[0], config: responses[1] }
+    }
+  )
 }
 
-const getUserProfileConfiguation = userId => {
-  console.log(`get info for user id ${userId}`)
-
+const getUserProfileConfig = userId => {
   return UserProfileConfig.findOne({
     where: { user_id: userId },
     attributes: ['config']
@@ -204,7 +203,7 @@ const getUserProfileConfiguation = userId => {
       if (result.config.headerImageId) {
         return Image.findByPk(result.config.headerImageId).then(image => {
           return {
-            headerImageUrl: image.filename
+            headerImageUrl: `${S3_URL}assets/profile-backgrounds/${image.filename}`
           }
         })
       } else {

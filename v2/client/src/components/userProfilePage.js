@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react'
 import withPageTemplate from './shared/withPageTemplate'
 import { useQuery } from '@apollo/client'
 import { GET_USER_PROFILE_BY_PUBLIC_ID } from '../graphql/userQueries'
+import { headerStyles } from '../utils/styleUtils'
 
 const UserProfilePage = ({ match }) => {
   const publicId = match.params.userId
@@ -20,8 +21,20 @@ const UserProfilePage = ({ match }) => {
     return <div>User profile not found.</div>
   } else {
     if (userProfile) {
-      console.log(userProfile.config)
-      return <div>{userProfile.user.firstName}</div>
+      const headerStyle = headerStyles(
+        userProfile.config.headerImageUrl,
+        '300px'
+      )
+
+      return (
+        <div>
+          <div style={{ ...headerStyle.container, borderRadius: '8px' }}>
+            <div variant="h2" style={headerStyle.headerText}>
+              <strong>{userProfile.user.firstName}</strong>
+            </div>
+          </div>
+        </div>
+      )
     } else return false
   }
 }

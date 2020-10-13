@@ -17,4 +17,14 @@ const Image = sequelize.define(
   }
 )
 
+Image.findUserProfileHeaders = function() {
+  return this.findAll({ where: { type: 'user-profile-header' } })
+}
+
+Image.randomHeaderImage = function() {
+  return this.findUserProfileHeaders().then(images => {
+    return images[Math.floor(Math.random() * images.length)]
+  })
+}
+
 export default Image
