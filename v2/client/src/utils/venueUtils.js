@@ -54,15 +54,21 @@ export const venuePrimaryTypeName = venue => venue.venueTypes[0].name || 'venue'
 
 export const venueCityState = venue => `${venue.city}, ${venue.state}`
 
-export const venueAddress = (venue, separator = ', ') => {
+export const venueAddress = (venue, separator = ', ', format = '') => {
   if (venue) {
-    return (
-      <span>
-        {venue.streetAddress}
-        {separator}
-        {venueCityState(venue)} {venue.zipcode}
-      </span>
-    )
+    if (format === 'raw') {
+      return `${venue.streetAddress}${separator}${venueCityState(venue)} ${
+        venue.zipcode
+      }`
+    } else {
+      return (
+        <span>
+          {venue.streetAddress}
+          {separator}
+          {venueCityState(venue)} {venue.zipcode}
+        </span>
+      )
+    }
   }
 
   return ''
