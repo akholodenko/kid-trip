@@ -1,3 +1,17 @@
+.headerUserInfo {
+    color: #fff;
+    align-self: flex-end;
+    background-color: rgba(0, 0, 0, 0.6);
+    font-size: 21px;
+    font-weight: 300;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: -25px;
+    min-width: 50%;
+    text-align: center;
+    backdrop-filter: blur(2px);
+}
+
 .contentContainer {
     display: flex;
     margin-top: 25px;
