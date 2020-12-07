@@ -5,7 +5,10 @@ import { venueHeaderImage } from '../../utils/venueUtils'
 
 export default props => {
   const { venue } = props
-  const headerStyle = headerStyles(venueHeaderImage(venue), '300px')
+  const headerStyle = headerStyles(
+    `/images/${venueHeaderImage(venue)}`,
+    '300px'
+  )
 
   return (
     <div style={headerStyle.container}>

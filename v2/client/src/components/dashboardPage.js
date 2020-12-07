@@ -8,6 +8,7 @@ import Routes from '../routes'
 import AddVenueDialog from './dashboard/addVenueDialog'
 import VenueList from './dashboard/venueList'
 import Feed from './dashboard/feed'
+import withPageTemplate from './shared/withPageTemplate'
 
 const DASHBOARD_SECTION = {
   FEED: 'feed',
@@ -83,46 +84,44 @@ const DashboardPage = ({ match }) => {
     setExternalTriggerVenueRefresh(!externalTriggerVenueRefresh)
 
   return (
-    <div className="mainContainer">
-      <div className="mainContent">
-        <div className="sectionHeader">
-          {renderDashboardSection('Feed', DASHBOARD_SECTION.FEED)}
-          {renderDashboardSection(
-            'My destinations',
-            DASHBOARD_SECTION.MY_DESTINATIONS
-          )}
-          {renderDashboardSection(
-            'Favorite destinations',
-            DASHBOARD_SECTION.FAVORITES
-          )}
-          <Button
-            variant="outlined"
-            style={{ marginLeft: 'auto' }}
-            onClick={toggleDialog}
-          >
-            <Add />
-            Add Destination
-          </Button>
-          <AddVenueDialog
-            open={dialogOpen}
-            toggleDialog={toggleDialog}
-            onCreatedVenue={onCreatedVenue}
-          />
-        </div>
-        {currentDashboardSection === DASHBOARD_SECTION.FEED ? (
-          <Feed></Feed>
-        ) : (
-          <VenueList
-            currentDashboardSection={currentDashboardSection}
-            isFavoritesDashboardSection={
-              currentDashboardSection === DASHBOARD_SECTION.FAVORITES
-            }
-            externalTriggerVenueRefresh={externalTriggerVenueRefresh}
-          ></VenueList>
+    <React.Fragment>
+      <div className="sectionHeader">
+        {renderDashboardSection('Feed', DASHBOARD_SECTION.FEED)}
+        {renderDashboardSection(
+          'My destinations',
+          DASHBOARD_SECTION.MY_DESTINATIONS
         )}
+        {renderDashboardSection(
+          'Favorite destinations',
+          DASHBOARD_SECTION.FAVORITES
+        )}
+        <Button
+          variant="outlined"
+          style={{ marginLeft: 'auto' }}
+          onClick={toggleDialog}
+        >
+          <Add />
+          Add Destination
+        </Button>
+        <AddVenueDialog
+          open={dialogOpen}
+          toggleDialog={toggleDialog}
+          onCreatedVenue={onCreatedVenue}
+        />
       </div>
-    </div>
+      {currentDashboardSection === DASHBOARD_SECTION.FEED ? (
+        <Feed></Feed>
+      ) : (
+        <VenueList
+          currentDashboardSection={currentDashboardSection}
+          isFavoritesDashboardSection={
+            currentDashboardSection === DASHBOARD_SECTION.FAVORITES
+          }
+          externalTriggerVenueRefresh={externalTriggerVenueRefresh}
+        ></VenueList>
+      )}
+    </React.Fragment>
   )
 }
 
-export default withStyles(styles)(DashboardPage)
+export default withStyles(styles)(withPageTemplate(DashboardPage))

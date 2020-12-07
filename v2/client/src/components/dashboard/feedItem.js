@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { sinceCreated } from '../../utils/dateUtils'
 import { shortName } from '../../utils/userUtils'
@@ -18,7 +18,10 @@ const styles = {
       fontWeight: 600,
       color: '#000',
       textDecoration: 'none',
-      fontSize: '15px'
+      fontSize: '15px',
+      '&:hover': {
+        textDecoration: 'underline'
+      }
     },
     '.feedItemSubtitle': {
       fontSize: '12px'
@@ -27,6 +30,8 @@ const styles = {
 }
 
 const FeedItem = ({ venue }) => {
+  const creatorInfo = () => {}
+
   return (
     <div className="feedItem">
       <RouterLink to={Routes.venuePath(venue.slug)} className="feedItemTitle">
@@ -34,8 +39,15 @@ const FeedItem = ({ venue }) => {
       </RouterLink>
       <div className="feedItemSubtitle">
         in {venueCityState(venue)}
-        <br />
-        added {sinceCreated(venue.createdAt)} by {shortName(venue.creator)}
+        {venue.creator && (
+          <Fragment>
+            <br />
+            added {sinceCreated(venue.createdAt)} by &nbsp;
+            <RouterLink to={Routes.userProfilePath(venue.creator.id)}>
+              {shortName(venue.creator)}
+            </RouterLink>
+          </Fragment>
+        )}
       </div>
     </div>
   )

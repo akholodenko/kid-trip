@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { VenueDetails } from './venueQueries'
 
 export const CURRENT_USER_QUERY = gql`
   query {
@@ -22,4 +23,31 @@ export const CURRENT_USER_FEED_CONFIG_QUERY = gql`
       }
     }
   }
+`
+
+export const GET_USER_PROFILE_BY_PUBLIC_ID = gql`
+  query($publicId: String!) {
+    userProfile(publicId: $publicId) {
+      user {
+        id
+        firstName
+        lastName
+        zipcode
+      }
+      config {
+        headerImageUrl
+      }
+      stats {
+        created
+        favorited
+      }
+      recentFavoriteVenues {
+        ...VenueDetails
+      }
+      recentAddedVenues {
+        ...VenueDetails
+      }
+    }
+  }
+  ${VenueDetails}
 `

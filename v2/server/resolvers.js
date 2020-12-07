@@ -1,4 +1,5 @@
 import graphsqlFields from 'graphql-fields'
+import atob from 'atob'
 
 import { initModelAssociations } from './models/associations'
 import {
@@ -17,6 +18,7 @@ import {
   login,
   getUser,
   getUserFeedConfig,
+  getUserProfile,
   updateUserFeedConfig
 } from './resolvers/user'
 
@@ -62,6 +64,13 @@ export default {
       }
 
       return getUserFeedConfig(user.userId)
+    },
+    userProfile(obj, args, { user }, info) {
+      if (args && args.publicId) {
+        return getUserProfile(args.publicId, { fields: graphsqlFields(info) })
+      } else {
+        throw new Error('Invalid profile')
+      }
     },
     me(obj, args, { user }, info) {
       if (!user) {

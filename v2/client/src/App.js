@@ -12,6 +12,7 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles'
 import theme from './theme'
 import AppBar from './layout/appBarContainer'
+import UserProfilePage from './components/userProfilePage'
 
 const styles = {
   '@global': {
@@ -53,6 +54,7 @@ class App extends Component {
             <Route exact path={Routes.home} component={HomePage} />
             <Route path={Routes.dashboard} component={DashboardPage} />
             <Route path={Routes.venue} component={VenuePage} />
+            <Route path={Routes.userProfile} component={UserProfilePage} />
           </Switch>
         </div>
       </MuiThemeProvider>

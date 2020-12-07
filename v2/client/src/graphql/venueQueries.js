@@ -1,6 +1,6 @@
 import { gql } from '@apollo/client'
 
-const VenueDetails = gql`
+export const VenueDetails = gql`
   fragment VenueDetails on Venue {
     id
     name
