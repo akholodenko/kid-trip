@@ -62,7 +62,8 @@ export default gql`
     user: User!
     config: UserProfileConfiguration!
     stats: UserProfileStats!
-    modules: UserProfileModules!
+    recentFavoriteVenues: [Venue]
+    recentAddedVenues: [Venue]
   }
 
   type UserProfileConfiguration {
@@ -72,16 +73,6 @@ export default gql`
   type UserProfileStats {
     created: Int
     favorited: Int
-  }
-
-  type UserProfileModules {
-    primary: [ContentModule]
-    secondary: [ContentModule]
-  }
-
-  type ContentModule {
-    name: String!
-    query: String
   }
 
   type Mutation {

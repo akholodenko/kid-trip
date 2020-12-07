@@ -1,4 +1,5 @@
 import { gql } from '@apollo/client'
+import { VenueDetails } from './venueQueries'
 
 export const CURRENT_USER_QUERY = gql`
   query {
@@ -40,6 +41,13 @@ export const GET_USER_PROFILE_BY_PUBLIC_ID = gql`
         created
         favorited
       }
+      recentFavoriteVenues {
+        ...VenueDetails
+      }
+      recentAddedVenues {
+        ...VenueDetails
+      }
     }
   }
+  ${VenueDetails}
 `

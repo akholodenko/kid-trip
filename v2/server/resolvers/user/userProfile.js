@@ -5,6 +5,7 @@ import UserProfileConfig from '../../models/user_profile_config'
 import Image from '../../models/image'
 import { S3_URL } from '../../utils/urlUtils'
 import { getUser } from './userInfo'
+import { getVenues } from '../venue'
 
 export const getUserProfile = (publicId, { fields }) => {
   const userId = atob(publicId) / 999999999
@@ -13,7 +14,9 @@ export const getUserProfile = (publicId, { fields }) => {
     getUser(userId, {}),
     getUserProfileConfig(userId),
     Venue.count({ where: { user_id: userId } }),
-    UserVenueFavorite.count({ where: { user_id: userId } })
+    UserVenueFavorite.count({ where: { user_id: userId } }),
+    getUserRecentFavoriteVenues(userId),
+    getUserRecentAddedVenues(userId)
   ]).then(responses => {
     return {
       user: responses[0],
@@ -22,17 +25,19 @@ export const getUserProfile = (publicId, { fields }) => {
         created: responses[2],
         favorited: responses[3]
       },
+      recentFavoriteVenues: responses[4],
+      recentAddedVenues: responses[5],
       modules: {
         primary: [
           {
-            name: '',
-            query: ''
+            id: 'user_profile_public_feed',
+            query: 'GET_USER_PROFILE_FEED'
           }
         ],
         secondary: [
           {
-            name: '',
-            query: ''
+            id: 'user_profile_recent_additions',
+            query: 'GET_USER_PROFILE_RECENT_ADDITIONS'
           }
         ]
       }
@@ -61,6 +66,50 @@ const getUserProfileConfig = userId => {
       return {
         headerImageUrl: null
       }
+    }
+  })
+}
+
+const getUserRecentFavoriteVenues = userId => {
+  return UserVenueFavorite.findAll({
+    attributes: ['venue_id'],
+    where: { user_id: userId },
+    order: [['createdAt', 'DESC']],
+    limit: 5
+  }).then(response => {
+    if (response) {
+      let venueIds = response
+        .map(favorite => {
+          return favorite.venue_id
+        })
+        .join(',')
+
+      return getVenues(
+        { ids: venueIds, sort: 'DESC' },
+        { fields: { venueTypes: true, city: true, state: true } }
+      )
+    }
+  })
+}
+
+const getUserRecentAddedVenues = userId => {
+  return Venue.findAll({
+    attributes: ['id'],
+    where: { user_id: userId },
+    order: [['createdAt', 'DESC']],
+    limit: 5
+  }).then(response => {
+    if (response) {
+      let venueIds = response
+        .map(added => {
+          return added.id
+        })
+        .join(',')
+
+      return getVenues(
+        { ids: venueIds, sort: 'DESC' },
+        { fields: { venueTypes: true, city: true, state: true } }
+      )
     }
   })
 }

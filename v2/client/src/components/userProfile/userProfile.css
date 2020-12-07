@@ -1,0 +1,13 @@
+.contentContainer {
+    display: flex;
+    margin-top: 25px;
+}
+
+.contentContainerMain {
+    flex-grow: 1;
+}
+
+.contentContainerSide {
+    flex: none;
+    flex-basis: 30%;
+}

@@ -123,11 +123,11 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
 }
 
 export const getVenues = (
-  { cityIds, venueTypeIds, sort = 'desc', first = 10 },
+  { ids, cityIds, venueTypeIds, sort = 'desc', first = 10 },
   { fields }
 ) => {
   let associations = []
-
+  console.log('here')
   if (!!fields.venueTypes) {
     let venueTypeAssociation = { model: VenueType }
     if (!!venueTypeIds) {
@@ -166,12 +166,24 @@ export const getVenues = (
     associations.push(cityAssociation)
   }
 
-  return Venue.findAll({
+  const queryConfig = {
     attributes: VENUE_ATTRIBUTES.concat(['created_at', 'user_id']),
     include: associations,
     order: [['created_at', sort]],
     limit: first
-  }).then(response => response.map(venue => fromDbVenueTransform(venue)))
+  }
+
+  if (!!ids) {
+    queryConfig.where = {
+      id: {
+        [Op.in]: ids.split(',').map(item => parseInt(item))
+      }
+    }
+  }
+
+  return Venue.findAll(queryConfig).then(response =>
+    response.map(venue => fromDbVenueTransform(venue))
+  )
 }
 
 export const getSimilarVenuesInRadius = (
