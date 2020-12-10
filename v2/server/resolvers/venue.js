@@ -14,6 +14,7 @@ import { slug, uniqueSlug } from '../utils/stringUtils'
 import { fromMiles } from '../utils/numberUtils'
 
 import { fromDbUserTransform } from './user/utils'
+import { fromDbVenueTypeTransform } from './venue_type'
 
 export const VENUE_ATTRIBUTES = [
   'id',
@@ -46,7 +47,9 @@ export const fromDbVenueTransform = venue => {
         : null,
     lat: venue.lat,
     lng: venue.lng,
-    venueTypes: venue.venueTypes,
+    venueTypes: venue.venueTypes
+      ? venue.venueTypes.map(venueType => fromDbVenueTypeTransform(venueType))
+      : null,
     users: venue.users
       ? venue.users.map(user => fromDbUserTransform(user))
       : null,

@@ -47,8 +47,7 @@ export const venueIcon = (venue, cssClass) => {
   return venueIconComponent
 }
 
-export const venueHeaderImage = venue =>
-  venue.venueTypes[0].image || 'restaurant-header-cmp.jpg'
+export const venueHeaderImage = venue => venue.venueTypes[0].image
 
 export const venuePrimaryTypeName = venue => venue.venueTypes[0].name || 'venue'
 
