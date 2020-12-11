@@ -4,7 +4,7 @@ import { isUserLoggedIn, openSignUpDialog } from '../../utils/userUtils'
 import '../shared/button.css'
 import './signup.css'
 
-export default () => {
+const SignUpSection = () => {
   const renderSignUp = () => {
     return (
       <div>
@@ -20,3 +20,5 @@ export default () => {
 
   return <div>{!isUserLoggedIn() && renderSignUp()}</div>
 }
+
+export default SignUpSection

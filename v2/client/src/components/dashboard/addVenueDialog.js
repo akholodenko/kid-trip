@@ -51,7 +51,7 @@ const venueStub = {
   city: {}
 }
 
-export default ({ open, toggleDialog, onCreatedVenue }) => {
+const AddVenueDialog = ({ open, toggleDialog, onCreatedVenue }) => {
   const [addVenue] = useMutation(CREATE_VENUE_MUTATION, {
     onError(error) {
       console.log('error', error)
@@ -171,3 +171,5 @@ export default ({ open, toggleDialog, onCreatedVenue }) => {
     </Dialog>
   )
 }
+
+export default AddVenueDialog
