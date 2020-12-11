@@ -1,14 +1,14 @@
-import React from "react";
+import React from 'react'
 
-import "./valuePropSection.css";
+import './valuePropSection.css'
 
-export default props => {
-  const { title, icon, text } = props;
+const ValuePropSection = props => {
+  const { title, icon, text } = props
   const iconStyle = {
     background: `url(/images/icons/${icon}.png) 0% 0% / 60px 60px no-repeat`,
-    width: "60px",
-    height: "60px"
-  };
+    width: '60px',
+    height: '60px'
+  }
 
   return (
     <div className="value-prop-section">
@@ -16,5 +16,7 @@ export default props => {
       <div className="value-prop-icon" style={iconStyle}></div>
       <div className="value-prop-text">{text}</div>
     </div>
-  );
-};
+  )
+}
+
+export default ValuePropSection

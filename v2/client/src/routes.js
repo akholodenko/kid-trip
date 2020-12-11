@@ -1,6 +1,6 @@
 import { encodeUserId } from './utils/routeUtils'
 
-export default {
+const Routes = {
   home: '/',
   dashboard: '/dashboard/:section?',
   dashboardPath: section => `/dashboard/${section}`,
@@ -11,3 +11,5 @@ export default {
   validatePageSection: (section, options, fallback) =>
     Object.values(options).includes(section) ? section : fallback
 }
+
+export default Routes

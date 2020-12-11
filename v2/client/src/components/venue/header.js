@@ -3,7 +3,7 @@ import Typography from '@material-ui/core/Typography'
 import { headerStyles } from '../../utils/styleUtils'
 import { venueHeaderImage } from '../../utils/venueUtils'
 
-export default props => {
+const VenueHeader = props => {
   const { venue } = props
   const headerStyle = headerStyles(`${venueHeaderImage(venue)}`, '300px')
 
@@ -15,3 +15,5 @@ export default props => {
     </div>
   )
 }
+
+export default VenueHeader

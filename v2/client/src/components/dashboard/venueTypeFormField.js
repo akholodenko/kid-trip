@@ -15,7 +15,7 @@ const style = {
   }
 }
 
-export default ({ onVenueTypeSelected }) => {
+const VenueTypeFormField = ({ onVenueTypeSelected }) => {
   const [selectedOption, setSelectedOption] = useState('')
   const { loading, error, data } = useQuery(GET_VENUE_TYPES)
 
@@ -47,3 +47,5 @@ export default ({ onVenueTypeSelected }) => {
     </FormControl>
   )
 }
+
+export default VenueTypeFormField

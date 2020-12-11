@@ -24,7 +24,7 @@ const shareContent = {
 	enjoying, for great new ideas.`
 }
 
-export default () => {
+const ValueProp = () => {
   return (
     <div className="value-prop-container">
       <ValuePropSection {...discoverContent} />
@@ -33,3 +33,5 @@ export default () => {
     </div>
   )
 }
+
+export default ValueProp
