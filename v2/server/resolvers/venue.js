@@ -130,7 +130,6 @@ export const getVenues = (
   { fields }
 ) => {
   let associations = []
-  console.log('here')
   if (!!fields.venueTypes) {
     let venueTypeAssociation = { model: VenueType }
     if (!!venueTypeIds) {

@@ -3,7 +3,6 @@ import '../shared/sidebarModule.css'
 import FeedItem from '../dashboard/feedItem'
 
 const SideVenueWidget = ({ title, venues }) => {
-  console.log('here', venues)
   return (
     <div className="sidebar-module">
       <h3>{title}</h3>
