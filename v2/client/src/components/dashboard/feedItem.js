@@ -30,8 +30,6 @@ const styles = {
 }
 
 const FeedItem = ({ venue }) => {
-  const creatorInfo = () => {}
-
   return (
     <div className="feedItem">
       <RouterLink to={Routes.venuePath(venue.slug)} className="feedItemTitle">

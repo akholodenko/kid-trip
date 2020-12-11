@@ -9,7 +9,7 @@ import {
   GET_VENUES_FOR_CURRENT_USER
 } from '../../graphql/venueQueries'
 
-export default ({
+const FavoriteButton = ({
   venueId,
   venueSlug,
   favoriteByCurrentUser,
@@ -102,3 +102,5 @@ export default ({
     </React.Fragment>
   )
 }
+
+export default FavoriteButton

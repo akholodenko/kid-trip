@@ -8,8 +8,7 @@ const headerStyle = headerStyles(
   '700px'
 )
 
-export default () => {
-  console.log(S3_ASSETS_URL)
+const Header = () => {
   return (
     <div style={headerStyle.container}>
       <Typography variant="h2" style={headerStyle.headerText}>
@@ -18,3 +17,5 @@ export default () => {
     </div>
   )
 }
+
+export default Header

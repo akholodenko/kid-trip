@@ -3,7 +3,7 @@ import Header from './homepage/header'
 import ValueProp from './homepage/valueProp'
 import SignUpSection from './homepage/signup'
 
-export default () => {
+const HomePage = () => {
   return (
     <div>
       <Header />
@@ -12,3 +12,5 @@ export default () => {
     </div>
   )
 }
+
+export default HomePage
