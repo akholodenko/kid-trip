@@ -1,25 +1,9 @@
 import { gql } from 'apollo-server'
+import Queries from './schema/queries'
+import Mutations from './schema/mutations'
+import VenueInputs from './schema/venueInputs'
 
-export default gql`
-  type Query {
-    user(id: ID!): User!
-    userFeedConfig: FeedConfig!
-    userProfile(publicId: String!): UserProfile!
-    venue(id: ID!): Venue!
-    venueBySlug(slug: String!): Venue!
-    venueTypes: [VenueType]!
-    venueType(id: ID!): VenueType
-    venues(
-      venueTypeIds: String
-      cityIds: String
-      sort: String
-      first: Int
-    ): [Venue]
-    similarVenues(id: ID!, radius: Int, first: Int): [Venue]
-    cities(first: Int, query: String): [City]!
-    me: User
-  }
-
+const allSchema = gql`
   type VenueType {
     id: Int!
     name: String!
@@ -75,37 +59,6 @@ export default gql`
     favorited: Int
   }
 
-  type Mutation {
-    signup(
-      email: String!
-      password: String!
-      firstName: String!
-      lastName: String!
-      zipcode: String
-    ): AuthPayload
-    login(email: String!, password: String!): AuthPayload
-    createVenue(
-      name: String!
-      streetAddress: String!
-      zipcode: Int!
-      lat: Float
-      lng: Float
-      city: CityInput
-      venueType: VenueTypeInput
-    ): Venue
-    createUserVenueFavorite(venueId: Int!): VenueStats
-    deleteUserVenueFavorite(venueId: Int!): VenueStats
-    updateUserFeedConfig(venueTypeIds: String, cityIds: String): FeedConfig
-  }
-
-  input CityInput {
-    id: Int!
-  }
-
-  input VenueTypeInput {
-    id: Int!
-  }
-
   type AuthPayload {
     token: String
     user: User
@@ -128,3 +81,4 @@ export default gql`
     cityDetails: [City]
   }
 `
+export default [Queries, Mutations, VenueInputs, allSchema]
