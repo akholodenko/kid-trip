@@ -20,5 +20,3 @@ export default gql`
     me: User
   }
 `
-
-// export default Queries
