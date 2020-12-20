@@ -16,5 +16,8 @@ export default gql`
   type UserProfileStats {
     created: Int
     favorited: Int
+    followedByCurrentUser: Boolean
+    followers: Int
+    followees: Int
   }
 `

@@ -67,7 +67,10 @@ export default {
     },
     userProfile(obj, args, { user }, info) {
       if (args && args.publicId) {
-        return getUserProfile(args.publicId, { fields: graphsqlFields(info) })
+        return getUserProfile(args.publicId, {
+          fields: graphsqlFields(info),
+          currentUserId: user && user.userId ? user.userId : null
+        })
       } else {
         throw new Error('Invalid profile')
       }

@@ -2,6 +2,10 @@ import Sequelize from 'sequelize'
 import sequelize from '../config/sequelize'
 import Image from './image'
 import UserProfileConfig from './user_profile_config'
+import Venue from './venue'
+import UsersVenues from './user_venue'
+import UserFollower from './user_follower'
+import UsersVenuesFavorites from './user_venue_favorite'
 
 const User = sequelize.define(
   'user',
@@ -52,6 +56,32 @@ User.afterCreate(userInstance => {
       config: { headerImageId: image.id }
     })
   })
+})
+
+// User.hasMany(UserFollower, {
+//   foreignKey: 'follower_user_id',
+//   as: 'Followee'
+// })
+//
+// User.hasMany(UserFollower, {
+//   foreignKey: 'followee_user_id',
+//   as: 'Follower'
+// })
+
+// users current user is a following (so they are his followees)
+User.belongsToMany(User, {
+  through: UserFollower,
+  as: 'UserFollowees',
+  foreignKey: 'follower_user_id',
+  otherKey: 'followee_user_id'
+})
+
+// users current user is followed by (so they are his followers)
+User.belongsToMany(User, {
+  through: UserFollower,
+  as: 'UserFollowers',
+  foreignKey: 'followee_user_id',
+  otherKey: 'follower_user_id'
 })
 
 export default User

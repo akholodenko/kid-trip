@@ -6,8 +6,9 @@ import Image from '../../models/image'
 import { S3_URL } from '../../utils/urlUtils'
 import { getUser } from './userInfo'
 import { getVenues } from '../venue'
+import UserFollower from '../../models/user_follower'
 
-export const getUserProfile = (publicId, { fields }) => {
+export const getUserProfile = (publicId, { fields, currentUserId }) => {
   const userId = atob(publicId) / 999999999
 
   return Promise.all([
@@ -16,14 +17,20 @@ export const getUserProfile = (publicId, { fields }) => {
     Venue.count({ where: { user_id: userId } }),
     UserVenueFavorite.count({ where: { user_id: userId } }),
     getUserRecentFavoriteVenues(userId),
-    getUserRecentAddedVenues(userId)
+    getUserRecentAddedVenues(userId),
+    isCurrentUserFollower(userId, currentUserId),
+    UserFollower.count({ where: { follower_user_id: userId } }),
+    UserFollower.count({ where: { followee_user_id: userId } })
   ]).then(responses => {
     return {
       user: responses[0],
       config: responses[1],
       stats: {
         created: responses[2],
-        favorited: responses[3]
+        favorited: responses[3],
+        followedByCurrentUser: responses[6],
+        followers: responses[8], // count of users that follow this user
+        followees: responses[7] // count of users that this user follows
       },
       recentFavoriteVenues: responses[4],
       recentAddedVenues: responses[5],
@@ -84,10 +91,14 @@ const getUserRecentFavoriteVenues = userId => {
         })
         .join(',')
 
-      return getVenues(
-        { ids: venueIds, sort: 'DESC' },
-        { fields: { venueTypes: true, city: true, state: true } }
-      )
+      if (venueIds) {
+        return getVenues(
+          { ids: venueIds, sort: 'DESC' },
+          { fields: { venueTypes: true, city: true, state: true } }
+        )
+      } else {
+        return null
+      }
     }
   })
 }
@@ -106,10 +117,22 @@ const getUserRecentAddedVenues = userId => {
         })
         .join(',')
 
-      return getVenues(
-        { ids: venueIds, sort: 'DESC' },
-        { fields: { venueTypes: true, city: true, state: true } }
-      )
+      if (venueIds) {
+        return getVenues(
+          { ids: venueIds, sort: 'DESC' },
+          { fields: { venueTypes: true, city: true, state: true } }
+        )
+      } else {
+        return null
+      }
     }
+  })
+}
+
+const isCurrentUserFollower = (userId, currentUserId) => {
+  return UserFollower.findOne({
+    where: { follower_user_id: currentUserId, followee_user_id: userId }
+  }).then(followedByCurrentUser => {
+    return !!followedByCurrentUser
   })
 }

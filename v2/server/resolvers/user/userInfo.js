@@ -7,6 +7,8 @@ import User from '../../models/user'
 import UserVenueFavorite from '../../models/user_venue_favorite'
 import { fromDbUserTransform } from './utils'
 
+const USER_ATTRIBUTES = ['id', 'first_name', 'last_name', 'zipcode']
+
 export const getUser = (userId, { fields }) => {
   let associations = []
   let order = [['id', 'ASC']]
@@ -38,10 +40,26 @@ export const getUser = (userId, { fields }) => {
         attributes: ['config']
       })
     }
+
+    if (!!fields.followees) {
+      associations.push({
+        model: User,
+        as: 'UserFollowees',
+        attributes: USER_ATTRIBUTES
+      })
+    }
+
+    if (!!fields.followers) {
+      associations.push({
+        model: User,
+        as: 'UserFollowers',
+        attributes: USER_ATTRIBUTES
+      })
+    }
   }
 
   return User.findByPk(userId, {
-    attributes: ['id', 'first_name', 'last_name', 'zipcode'],
+    attributes: USER_ATTRIBUTES,
     include: associations,
     order: [order]
   }).then(user => {

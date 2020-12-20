@@ -16,6 +16,12 @@ export const fromDbUserTransform = user => {
     feedConfig:
       user.userFeedConfig && user.userFeedConfig.config
         ? user.userFeedConfig.config
-        : null
+        : null,
+    followees: user.UserFollowees
+      ? user.UserFollowees.map(user => fromDbUserTransform(user))
+      : null,
+    followers: user.UserFollowers
+      ? user.UserFollowers.map(user => fromDbUserTransform(user))
+      : null
   }
 }

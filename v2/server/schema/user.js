@@ -10,5 +10,7 @@ export default gql`
     venues: [Venue]
     favoriteVenues: [Venue]
     feedConfig: FeedConfig
+    followees: [User]
+    followers: [User]
   }
 `

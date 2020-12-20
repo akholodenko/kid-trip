@@ -13,8 +13,8 @@ const UserFollower = sequelize.define(
     followee_user_id: Sequelize.INTEGER
   },
   {
-    tableName: 'users_followers',
-    underscored: true
+    tableName: 'users_followers'
+    // underscored: true
   }
 )
 
