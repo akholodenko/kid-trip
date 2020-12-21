@@ -40,6 +40,9 @@ export const GET_USER_PROFILE_BY_PUBLIC_ID = gql`
       stats {
         created
         favorited
+        followedByCurrentUser
+        followers
+        followees
       }
       recentFavoriteVenues {
         ...VenueDetails

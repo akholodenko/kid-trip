@@ -42,8 +42,14 @@ const UserProfilePage = ({ match }) => {
                   )}
                 .
               </strong>
-              &nbsp;&#183;&nbsp;<span>{userProfile.stats.created} added</span>
-              &nbsp;&#183;&nbsp;<span>{userProfile.stats.favorited} liked</span>
+              &nbsp;&#183;&nbsp;
+              <span>{userProfile.stats.created} places added</span>
+              &nbsp;&#183;&nbsp;
+              <span>{userProfile.stats.favorited} places liked</span>
+              &nbsp;&#183;&nbsp;
+              <span>{userProfile.stats.followees} following</span>
+              &nbsp;&#183;&nbsp;
+              <span>{userProfile.stats.followers} followers</span>
             </div>
           </div>
           <div className="contentContainer">
