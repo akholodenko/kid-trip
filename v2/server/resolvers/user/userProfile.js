@@ -1,4 +1,3 @@
-import atob from 'atob'
 import Venue from '../../models/venue'
 import UserVenueFavorite from '../../models/user_venue_favorite'
 import UserProfileConfig from '../../models/user_profile_config'
@@ -7,9 +6,10 @@ import { S3_URL } from '../../utils/urlUtils'
 import { getUser } from './userInfo'
 import { getVenues } from '../venue'
 import UserFollower from '../../models/user_follower'
+import { userPublicIdToDbId } from './utils'
 
 export const getUserProfile = (publicId, { fields, currentUserId }) => {
-  const userId = atob(publicId) / 999999999
+  const userId = userPublicIdToDbId(publicId)
 
   return Promise.all([
     getUser(userId, {}),
@@ -36,6 +36,30 @@ export const getUserProfile = (publicId, { fields, currentUserId }) => {
       recentAddedVenues: responses[5]
     }
   })
+}
+
+export const createUserFollower = (obj, args, { user }, info) => {
+  if (!user) {
+    throw new Error('You are not authenticated!')
+  }
+
+  console.log('CREATE userId: ', user.userId, 'publicId: ', args.publicId)
+
+  const userId = userPublicIdToDbId(args.publicId)
+
+  return getUserFollowerStats(userId, user.userId)
+}
+
+export const deleteUserFollower = (obj, args, { user }, info) => {
+  if (!user) {
+    throw new Error('You are not authenticated!')
+  }
+
+  console.log('DELETE userId: ', user.userId, 'publicId: ', args.publicId)
+
+  const userId = userPublicIdToDbId(args.publicId)
+
+  return getUserFollowerStats(userId, user.userId)
 }
 
 const getUserProfileConfig = userId => {
@@ -120,5 +144,19 @@ const isCurrentUserFollower = (userId, currentUserId) => {
     where: { follower_user_id: currentUserId, followee_user_id: userId }
   }).then(followedByCurrentUser => {
     return !!followedByCurrentUser
+  })
+}
+
+const getUserFollowerStats = (userId, currentUserId) => {
+  return Promise.all([
+    isCurrentUserFollower(userId, currentUserId),
+    UserFollower.count({ where: { follower_user_id: userId } }),
+    UserFollower.count({ where: { followee_user_id: userId } })
+  ]).then(responses => {
+    return {
+      followedByCurrentUser: responses[0],
+      followers: responses[2], // count of users that follow this user
+      followees: responses[1] // count of users that this user follows
+    }
   })
 }

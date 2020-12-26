@@ -1,4 +1,5 @@
 import { fromDbVenueTransform } from '../venue'
+import atob from 'atob'
 
 export const fromDbUserTransform = user => {
   return {
@@ -25,3 +26,5 @@ export const fromDbUserTransform = user => {
       : null
   }
 }
+
+export const userPublicIdToDbId = publicId => atob(publicId) / 999999999

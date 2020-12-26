@@ -22,5 +22,7 @@ export default gql`
     createUserVenueFavorite(venueId: Int!): VenueStats
     deleteUserVenueFavorite(venueId: Int!): VenueStats
     updateUserFeedConfig(venueTypeIds: String, cityIds: String): FeedConfig
+    createUserFollower(publicId: String!): UserProfileStats
+    deleteUserFollower(publicId: String!): UserProfileStats
   }
 `

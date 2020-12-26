@@ -1,5 +1,4 @@
 import graphsqlFields from 'graphql-fields'
-import atob from 'atob'
 
 import { initModelAssociations } from './models/associations'
 import {
@@ -19,7 +18,9 @@ import {
   getUser,
   getUserFeedConfig,
   getUserProfile,
-  updateUserFeedConfig
+  updateUserFeedConfig,
+  createUserFollower,
+  deleteUserFollower
 } from './resolvers/user'
 
 initModelAssociations()
@@ -89,6 +90,8 @@ export default {
     createVenue,
     createUserVenueFavorite,
     deleteUserVenueFavorite,
+    createUserFollower,
+    deleteUserFollower,
     updateUserFeedConfig
   }
 }
