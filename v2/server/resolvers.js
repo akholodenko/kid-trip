@@ -17,11 +17,13 @@ import {
   login,
   getUser,
   getUserFeedConfig,
+  updateUserFeedConfig
+} from './resolvers/user'
+import {
   getUserProfile,
-  updateUserFeedConfig,
   createUserFollower,
   deleteUserFollower
-} from './resolvers/user'
+} from './resolvers/user/userProfile'
 
 initModelAssociations()
 
