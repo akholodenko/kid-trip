@@ -2,10 +2,7 @@ import Sequelize from 'sequelize'
 import sequelize from '../config/sequelize'
 import Image from './image'
 import UserProfileConfig from './user_profile_config'
-import Venue from './venue'
-import UsersVenues from './user_venue'
 import UserFollower from './user_follower'
-import UsersVenuesFavorites from './user_venue_favorite'
 
 const User = sequelize.define(
   'user',
