@@ -33,21 +33,7 @@ export const getUserProfile = (publicId, { fields, currentUserId }) => {
         followees: responses[7] // count of users that this user follows
       },
       recentFavoriteVenues: responses[4],
-      recentAddedVenues: responses[5],
-      modules: {
-        primary: [
-          {
-            id: 'user_profile_public_feed',
-            query: 'GET_USER_PROFILE_FEED'
-          }
-        ],
-        secondary: [
-          {
-            id: 'user_profile_recent_additions',
-            query: 'GET_USER_PROFILE_RECENT_ADDITIONS'
-          }
-        ]
-      }
+      recentAddedVenues: responses[5]
     }
   })
 }
