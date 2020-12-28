@@ -16,14 +16,20 @@ const UserProfileHeader = ({ userProfile, currentUser }) => {
     }
   ]
 
-  const [createUserFollower] = useMutation(CREATE_USER_FOLLOWER_MUTATION, {
+  const [
+    createUserFollower,
+    { loading: createUserFollowerLoading }
+  ] = useMutation(CREATE_USER_FOLLOWER_MUTATION, {
     onError(error) {
       console.log('error', error)
     },
     refetchQueries
   })
 
-  const [deleteUserFollower] = useMutation(DELETE_USER_FOLLOWER_MUTATION, {
+  const [
+    deleteUserFollower,
+    { loading: deleteUserFollowerLoading }
+  ] = useMutation(DELETE_USER_FOLLOWER_MUTATION, {
     onError(error) {
       console.log('error', error)
     },
@@ -44,12 +50,19 @@ const UserProfileHeader = ({ userProfile, currentUser }) => {
     if (currentUser.id === userProfile.user.id) {
       return 'Your Profile'
     } else if (userProfile.stats.followedByCurrentUser) {
+      if (deleteUserFollowerLoading) {
+        return <span>Loading...</span>
+      }
+
       return (
         <button onClick={() => onUnfollowClick()} className="headerUserButton">
           Un-follow
         </button>
       )
     } else {
+      if (createUserFollowerLoading) {
+        return <span>Loading...</span>
+      }
       return (
         <button onClick={() => onFollowClick()} className="headerUserButton">
           Follow
