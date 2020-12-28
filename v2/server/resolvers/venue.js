@@ -13,8 +13,7 @@ import { getZipCode } from './zipcode'
 import { slug, uniqueSlug } from '../utils/stringUtils'
 import { fromMiles } from '../utils/numberUtils'
 
-import { fromDbUserTransform } from './user/utils'
-import { fromDbVenueTypeTransform } from './venue_type'
+import { fromDbVenueTransform } from './venue/utils'
 
 export const VENUE_ATTRIBUTES = [
   'id',
@@ -27,36 +26,6 @@ export const VENUE_ATTRIBUTES = [
   'lat',
   'lng'
 ]
-
-export const fromDbVenueTransform = venue => {
-  return {
-    id: venue.id,
-    name: venue.name,
-    slug: venue.slug,
-    description:
-      venue.dataValues && venue.dataValues.description
-        ? venue.dataValues.description
-        : null,
-    streetAddress: venue.street_address,
-    city: venue.city ? venue.city.name : null,
-    state: venue.city ? venue.city.state : null,
-    zipcode: venue.zipcode,
-    createdAt:
-      venue.dataValues && venue.dataValues.created_at
-        ? venue.dataValues.created_at.toString()
-        : null,
-    lat: venue.lat,
-    lng: venue.lng,
-    venueTypes: venue.venueTypes
-      ? venue.venueTypes.map(venueType => fromDbVenueTypeTransform(venueType))
-      : null,
-    users: venue.users
-      ? venue.users.map(user => fromDbUserTransform(user))
-      : null,
-    venueStats: venue.venueStats,
-    creator: venue.creator ? fromDbUserTransform(venue.creator) : null
-  }
-}
 
 export const getVenue = (venueId, userId, { fields }) => {
   let associations = []
@@ -187,80 +156,6 @@ export const getVenues = (
     response.map(venue => fromDbVenueTransform(venue))
   )
 }
-
-export const getSimilarVenuesInRadius = (
-  venueId = null,
-  radius = 5,
-  limit = 3,
-  { fields }
-) => {
-  return getVenue(venueId, null, { fields: { venueTypes: true } }).then(
-    response => {
-      const venueTypeId = response.venueTypes[0].id
-      const lat = response.lat
-      const lng = response.lng
-
-      if (!lat || !lng) {
-        return getZipCode(response.zipcode).then(coordinates => {
-          return sqlQueryVenuesByTypeInRadius(
-            venueTypeId,
-            radius,
-            coordinates,
-            limit,
-            [venueId]
-          )
-        })
-      } else {
-        return sqlQueryVenuesByTypeInRadius(
-          venueTypeId,
-          radius,
-          { lat: lat, lng: lng },
-          limit,
-          [venueId]
-        )
-      }
-    }
-  )
-}
-
-const sqlQueryVenuesByTypeInRadius = (
-  venueTypeId,
-  radius,
-  coordinates,
-  limit,
-  excludedVenueIds = []
-) =>
-  sequelize
-    .query(
-      `
-			select * from
-				(SELECT 
-					venues.*,
-					c.name as "city_name",
-					(ST_SetSRID(geom, 4269)::geography <-> ST_Transform(ST_SetSRID(ST_MakePoint(${
-            coordinates.lat
-          },${coordinates.lng}),4326),4269)::geography) as distance
-				FROM venues
-				join venues_classifications vc on vc.venue_id = venues.id
-				join cities c on c.id = venues.city_id
-				where 
-					venues.lat is not null and 
-					vc.venue_type_id = ${venueTypeId} 
-					${
-            excludedVenueIds
-              ? ` and venues.id not in (${excludedVenueIds.join(',')})`
-              : ''
-          } 
-				ORDER BY distance LIMIT ${limit}) as list
-			where list.distance < ${fromMiles(radius)}`
-    )
-    .then(response =>
-      response[0].map(venue => {
-        venue.city = venue.city_name ? { name: venue.city_name } : null
-
-        return fromDbVenueTransform(venue)
-      })
-    )
 
 export const createVenue = (obj, args, { user }, info) => {
   if (!user) {

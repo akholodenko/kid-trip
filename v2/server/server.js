@@ -1,22 +1,16 @@
-import { ApolloServer } from 'apollo-server'
-import { makeExecutableSchema, mergeSchemas } from 'graphql-tools'
+import { ApolloServer, gql } from 'apollo-server'
+import { makeExecutableSchema } from 'graphql-tools'
 import typeDefs from './schema'
 import resolvers from './resolvers'
 import { getUserByToken } from './utils'
 
-const mainSchema = makeExecutableSchema({
-  typeDefs
-})
-
-const schema = mergeSchemas({
-  schemas: [mainSchema],
+const schema = makeExecutableSchema({
+  typeDefs,
   resolvers
 })
 
 const server = new ApolloServer({
   schema,
-  // typeDefs,
-  // resolvers,
   context: ({ req }) => {
     const token = req.headers.authorization || ''
     const user = getUserByToken(token)

@@ -1,4 +1,5 @@
-import { fromDbVenueTransform } from '../venue'
+import { fromDbVenueTransform } from '../venue/utils'
+import atob from 'atob'
 
 export const fromDbUserTransform = user => {
   return {
@@ -16,6 +17,14 @@ export const fromDbUserTransform = user => {
     feedConfig:
       user.userFeedConfig && user.userFeedConfig.config
         ? user.userFeedConfig.config
-        : null
+        : null,
+    followees: user.UserFollowees
+      ? user.UserFollowees.map(user => fromDbUserTransform(user))
+      : null,
+    followers: user.UserFollowers
+      ? user.UserFollowers.map(user => fromDbUserTransform(user))
+      : null
   }
 }
+
+export const userPublicIdToDbId = publicId => atob(publicId) / 999999999

@@ -28,6 +28,7 @@ export const CURRENT_USER_FEED_CONFIG_QUERY = gql`
 export const GET_USER_PROFILE_BY_PUBLIC_ID = gql`
   query($publicId: String!) {
     userProfile(publicId: $publicId) {
+      publicId
       user {
         id
         firstName
@@ -40,6 +41,9 @@ export const GET_USER_PROFILE_BY_PUBLIC_ID = gql`
       stats {
         created
         favorited
+        followedByCurrentUser
+        followers
+        followees
       }
       recentFavoriteVenues {
         ...VenueDetails

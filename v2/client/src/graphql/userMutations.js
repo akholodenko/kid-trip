@@ -49,3 +49,23 @@ export const UPDATE_CURRENT_USER_FEED_CONFIG_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_USER_FOLLOWER_MUTATION = gql`
+  mutation CreateUserFollower($publicId: String!) {
+    createUserFollower(publicId: $publicId) {
+      followedByCurrentUser
+      followers
+      followees
+    }
+  }
+`
+
+export const DELETE_USER_FOLLOWER_MUTATION = gql`
+  mutation DeleteUserFollower($publicId: String!) {
+    deleteUserFollower(publicId: $publicId) {
+      followedByCurrentUser
+      followers
+      followees
+    }
+  }
+`

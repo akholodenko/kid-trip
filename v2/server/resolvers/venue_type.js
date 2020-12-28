@@ -1,6 +1,6 @@
 import VenueType from '../models/venue_type'
 import Venue from '../models/venue'
-import { fromDbVenueTransform } from './venue'
+import { fromDbVenueTransform } from './venue/utils'
 import { S3_URL } from '../utils/urlUtils'
 
 export const fromDbVenueTypeTransform = venueType => {
