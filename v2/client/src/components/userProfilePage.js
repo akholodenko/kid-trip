@@ -1,11 +1,11 @@
-import React, { Fragment, useEffect, useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import withPageTemplate from './shared/withPageTemplate'
 import { useQuery } from '@apollo/client'
 import { GET_USER_PROFILE_BY_PUBLIC_ID } from '../graphql/userQueries'
-import { headerStyles } from '../utils/styleUtils'
 import SideVenueWidget from './userProfile/sideVenueWidget'
 
 import './userProfile/userProfile.css'
+import UserProfileHeader from './userProfile/userProfileHeader'
 
 const UserProfilePage = ({ match }) => {
   const publicId = match.params.userId
@@ -25,33 +25,9 @@ const UserProfilePage = ({ match }) => {
     return <div>User profile not found.</div>
   } else {
     if (userProfile) {
-      const headerStyle = headerStyles(
-        userProfile.config.headerImageUrl,
-        '300px'
-      )
-
       return (
         <div>
-          <div style={{ ...headerStyle.container, borderRadius: '8px' }}>
-            <div className="headerUserInfo">
-              <strong>
-                {userProfile.user.firstName}
-                {userProfile.user.lastName &&
-                  userProfile.user.lastName.length && (
-                    <Fragment>&nbsp;{userProfile.user.lastName[0]}</Fragment>
-                  )}
-                .
-              </strong>
-              &nbsp;&#183;&nbsp;
-              <span>{userProfile.stats.created} places added</span>
-              &nbsp;&#183;&nbsp;
-              <span>{userProfile.stats.favorited} places liked</span>
-              &nbsp;&#183;&nbsp;
-              <span>{userProfile.stats.followees} following</span>
-              &nbsp;&#183;&nbsp;
-              <span>{userProfile.stats.followers} followers</span>
-            </div>
-          </div>
+          <UserProfileHeader userProfile={userProfile}></UserProfileHeader>
           <div className="contentContainer">
             <div className="contentContainerMain">More to come...</div>
             <div className="contentContainerSide">

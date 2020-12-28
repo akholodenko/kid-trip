@@ -7,15 +7,37 @@
     border-radius: 10px;
     border: 3px solid white;
     padding: 10px;
-    margin-bottom: -25px;
+    margin-bottom: -45px;
     min-width: 75%;
     text-align: center;
     backdrop-filter: blur(2px);
 }
 
+.headerUserInfoName {
+    font-size: 45px;
+    font-weight: 500;
+    text-align: right;
+}
+
+.headerUserInfoStats {
+    display: flex;
+    justify-content: space-between;
+}
+
+.headerUserButton {
+    all: unset;
+    cursor: pointer;
+    color: #adcae6;
+    font-weight: 400;
+}
+
+.headerUserButton:hover {
+    text-decoration: underline;
+}
+
 .contentContainer {
     display: flex;
-    margin-top: 25px;
+    margin-top: 50px;
 }
 
 .contentContainerMain {
