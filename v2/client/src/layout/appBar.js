@@ -27,7 +27,7 @@ class ButtonAppBar extends Component {
   }
 
   render() {
-    const { classes, currentUser } = this.props
+    const { classes, currentUser, history } = this.props
 
     return (
       <div className={classes.root}>
@@ -90,7 +90,7 @@ class ButtonAppBar extends Component {
                   <MenuItem
                     onClick={() => {
                       logoutUser()
-                      this.props.history.push(`/`)
+                      history.push(`/`)
                     }}
                   >
                     Logout
