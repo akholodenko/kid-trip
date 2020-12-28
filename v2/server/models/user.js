@@ -46,14 +46,18 @@ const User = sequelize.define(
 )
 
 User.afterCreate(userInstance => {
-  // create profile config w/default header
-  Image.randomHeaderImage().then(image => {
-    UserProfileConfig.create({
-      user_id: userInstance.id,
+  User.createProfileConfig(userInstance.id)
+})
+
+// create profile config w/default header
+User.createProfileConfig = userId => {
+  return Image.randomHeaderImage().then(image => {
+    return UserProfileConfig.create({
+      user_id: userId,
       config: { headerImageId: image.id }
     })
   })
-})
+}
 
 // User.hasMany(UserFollower, {
 //   foreignKey: 'follower_user_id',

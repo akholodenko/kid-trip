@@ -7,6 +7,7 @@ import { getUser } from './userInfo'
 import { getVenues } from '../venue'
 import UserFollower from '../../models/user_follower'
 import { userPublicIdToDbId } from './utils'
+import User from '../../models/user'
 
 export const getUserProfile = (publicId, { fields, currentUserId }) => {
   const userId = userPublicIdToDbId(publicId)
@@ -83,20 +84,24 @@ const getUserProfileConfig = userId => {
   }).then(result => {
     if (result && result.config) {
       if (result.config.headerImageId) {
-        return Image.findByPk(result.config.headerImageId).then(image => {
-          return {
-            headerImageUrl: `${S3_URL}assets/profile-backgrounds/${image.filename}`
-          }
-        })
+        return getUserProfileHeaderImageUrl(result.config.headerImageId)
       } else {
         return {
           headerImageUrl: null
         }
       }
     } else {
-      return {
-        headerImageUrl: null
-      }
+      return User.createProfileConfig(userId).then(newResult =>
+        getUserProfileHeaderImageUrl(newResult.config.headerImageId)
+      )
+    }
+  })
+}
+
+const getUserProfileHeaderImageUrl = imageId => {
+  return Image.findByPk(imageId).then(image => {
+    return {
+      headerImageUrl: `${S3_URL}assets/profile-backgrounds/${image.filename}`
     }
   })
 }
