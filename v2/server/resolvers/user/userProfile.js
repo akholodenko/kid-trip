@@ -47,7 +47,14 @@ export const createUserFollower = (obj, args, { user }, info) => {
 
   const userId = userPublicIdToDbId(args.publicId)
 
-  return getUserFollowerStats(userId, user.userId)
+  return UserFollower.findOrCreate({
+    where: {
+      follower_user_id: user.userId,
+      followee_user_id: userId
+    }
+  }).then(follower => {
+    return getUserFollowerStats(userId, user.userId)
+  })
 }
 
 export const deleteUserFollower = (obj, args, { user }, info) => {
@@ -59,7 +66,14 @@ export const deleteUserFollower = (obj, args, { user }, info) => {
 
   const userId = userPublicIdToDbId(args.publicId)
 
-  return getUserFollowerStats(userId, user.userId)
+  return UserFollower.destroy({
+    where: {
+      follower_user_id: user.userId,
+      followee_user_id: userId
+    }
+  }).then(() => {
+    return getUserFollowerStats(userId, user.userId)
+  })
 }
 
 const getUserProfileConfig = userId => {
