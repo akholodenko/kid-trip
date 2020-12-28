@@ -2,6 +2,7 @@ import Sequelize from 'sequelize'
 import sequelize from '../config/sequelize'
 import Image from './image'
 import UserProfileConfig from './user_profile_config'
+import UserFollower from './user_follower'
 
 const User = sequelize.define(
   'user',
@@ -45,13 +46,43 @@ const User = sequelize.define(
 )
 
 User.afterCreate(userInstance => {
-  // create profile config w/default header
-  Image.randomHeaderImage().then(image => {
-    UserProfileConfig.create({
-      user_id: userInstance.id,
+  User.createProfileConfig(userInstance.id)
+})
+
+// create profile config w/default header
+User.createProfileConfig = userId => {
+  return Image.randomHeaderImage().then(image => {
+    return UserProfileConfig.create({
+      user_id: userId,
       config: { headerImageId: image.id }
     })
   })
+}
+
+// User.hasMany(UserFollower, {
+//   foreignKey: 'follower_user_id',
+//   as: 'Followee'
+// })
+//
+// User.hasMany(UserFollower, {
+//   foreignKey: 'followee_user_id',
+//   as: 'Follower'
+// })
+
+// users current user is a following (so they are his followees)
+User.belongsToMany(User, {
+  through: UserFollower,
+  as: 'UserFollowees',
+  foreignKey: 'follower_user_id',
+  otherKey: 'followee_user_id'
+})
+
+// users current user is followed by (so they are his followers)
+User.belongsToMany(User, {
+  through: UserFollower,
+  as: 'UserFollowers',
+  foreignKey: 'followee_user_id',
+  otherKey: 'follower_user_id'
 })
 
 export default User

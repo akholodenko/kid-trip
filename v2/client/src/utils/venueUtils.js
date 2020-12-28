@@ -15,7 +15,7 @@ export const venueMapLink = venue => {
   return `https://maps.google.com/?q=${encodeURIComponent(address)}`
 }
 
-export const venueIcon = (venue, cssClass) => {
+export const venueTypeIcon = (venue, cssClass) => {
   let venueIconComponent
 
   switch (venue.venueTypes[0].name) {

@@ -10,7 +10,7 @@ import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 
 import LoginButton from '../components/shared/loginButton'
-import { logoutUser, isUserLoggedIn } from '../utils/userUtils'
+import { logoutUser, isUserLoggedIn, withCurrentUser } from '../utils/userUtils'
 import { withRouter } from 'react-router'
 
 import Routes from '../routes'
@@ -27,7 +27,7 @@ class ButtonAppBar extends Component {
   }
 
   render() {
-    const { classes } = this.props
+    const { classes, currentUser, history } = this.props
 
     return (
       <div className={classes.root}>
@@ -80,11 +80,17 @@ class ButtonAppBar extends Component {
                   >
                     Dashboard
                   </MenuItem>
-                  <MenuItem onClick={this.toggleMenu}>My account</MenuItem>
+                  <MenuItem
+                    component={RouterLink}
+                    to={Routes.userProfilePath(currentUser.id)}
+                    onClick={this.toggleMenu}
+                  >
+                    My profile
+                  </MenuItem>
                   <MenuItem
                     onClick={() => {
                       logoutUser()
-                      this.props.history.push(`/`)
+                      history.push(`/`)
                     }}
                   >
                     Logout
@@ -99,4 +105,4 @@ class ButtonAppBar extends Component {
   }
 }
 
-export default withRouter(ButtonAppBar)
+export default withCurrentUser(withRouter(ButtonAppBar))

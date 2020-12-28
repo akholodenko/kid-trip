@@ -1,16 +1,18 @@
 import graphsqlFields from 'graphql-fields'
-import atob from 'atob'
 
 import { initModelAssociations } from './models/associations'
 import {
   getVenue,
   getVenueBySlug,
   getVenues,
-  getSimilarVenuesInRadius,
   createVenue,
   createUserVenueFavorite,
   deleteUserVenueFavorite
 } from './resolvers/venue'
+import {
+  getSimilarVenuesInRadius,
+  getSimilarVenuesByName
+} from './resolvers/venue/similarVenues'
 import { getVenueType, getVenueTypes } from './resolvers/venue_type'
 import { getCities } from './resolvers/city'
 import {
@@ -18,9 +20,13 @@ import {
   login,
   getUser,
   getUserFeedConfig,
-  getUserProfile,
   updateUserFeedConfig
 } from './resolvers/user'
+import {
+  getUserProfile,
+  createUserFollower,
+  deleteUserFollower
+} from './resolvers/user/userProfile'
 
 initModelAssociations()
 
@@ -52,6 +58,11 @@ export default {
         fields: graphsqlFields(info)
       })
     },
+    similarVenuesByName(obj, args, context, info) {
+      return getSimilarVenuesByName(args.name, args.cityId, args.first, {
+        fields: graphsqlFields(info)
+      })
+    },
     cities(obj, args) {
       return getCities({ limit: args.first, query: args.query })
     },
@@ -67,7 +78,10 @@ export default {
     },
     userProfile(obj, args, { user }, info) {
       if (args && args.publicId) {
-        return getUserProfile(args.publicId, { fields: graphsqlFields(info) })
+        return getUserProfile(args.publicId, {
+          fields: graphsqlFields(info),
+          currentUserId: user && user.userId ? user.userId : null
+        })
       } else {
         throw new Error('Invalid profile')
       }
@@ -86,6 +100,8 @@ export default {
     createVenue,
     createUserVenueFavorite,
     deleteUserVenueFavorite,
+    createUserFollower,
+    deleteUserFollower,
     updateUserFeedConfig
   }
 }

@@ -1,7 +1,11 @@
 import React from 'react'
 import { withStyles } from '@material-ui/core/styles'
 
-import { venueMapLink, venueIcon, venueCityState } from '../../utils/venueUtils'
+import {
+  venueMapLink,
+  venueTypeIcon,
+  venueCityState
+} from '../../utils/venueUtils'
 import { Link as RouterLink } from 'react-router-dom'
 import Routes from '../../routes'
 import { useMutation } from '@apollo/client'
@@ -141,7 +145,7 @@ const VenueListItem = props => {
       </RouterLink>
       <div className="venueItemDescription">
         <div className="venueItemTypeBadge">
-          {venueIcon(venue, 'venueIcon')}
+          {venueTypeIcon(venue, 'venueIcon')}
           <div className="venueItemTypeBadgeText">
             {venue.venueTypes && venue.venueTypes.length
               ? `${venue.venueTypes[0].name}`
