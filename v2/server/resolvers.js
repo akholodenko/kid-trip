@@ -5,11 +5,14 @@ import {
   getVenue,
   getVenueBySlug,
   getVenues,
-  getSimilarVenuesInRadius,
   createVenue,
   createUserVenueFavorite,
   deleteUserVenueFavorite
 } from './resolvers/venue'
+import {
+  getSimilarVenuesInRadius,
+  getSimilarVenuesByName
+} from './resolvers/venue/similarVenues'
 import { getVenueType, getVenueTypes } from './resolvers/venue_type'
 import { getCities } from './resolvers/city'
 import {
@@ -52,6 +55,11 @@ export default {
     },
     similarVenues(obj, args, context, info) {
       return getSimilarVenuesInRadius(args.id, args.radius, args.first, {
+        fields: graphsqlFields(info)
+      })
+    },
+    similarVenuesByName(obj, args, context, info) {
+      return getSimilarVenuesByName(args.name, args.cityId, args.first, {
         fields: graphsqlFields(info)
       })
     },

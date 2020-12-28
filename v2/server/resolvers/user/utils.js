@@ -1,4 +1,4 @@
-import { fromDbVenueTransform } from '../venue'
+import { fromDbVenueTransform } from '../venue/utils'
 import atob from 'atob'
 
 export const fromDbUserTransform = user => {
