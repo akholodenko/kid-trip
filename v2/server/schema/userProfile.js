@@ -2,6 +2,7 @@ import { gql } from 'apollo-server'
 
 export default gql`
   type UserProfile {
+    publicId: String
     user: User!
     config: UserProfileConfiguration!
     stats: UserProfileStats!

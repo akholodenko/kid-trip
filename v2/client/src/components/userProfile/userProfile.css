@@ -2,7 +2,7 @@
     color: #fff;
     align-self: flex-end;
     background-color: rgba(0, 0, 0, 0.6);
-    font-size: 21px;
+    font-size: 18px;
     font-weight: 300;
     border-radius: 10px;
     border: 3px solid white;
@@ -17,6 +17,9 @@
     font-size: 45px;
     font-weight: 500;
     text-align: right;
+    line-height: 35px;
+    margin-bottom: 20px;
+    margin-top: 5px;
 }
 
 .headerUserInfoStats {

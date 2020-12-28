@@ -10,8 +10,7 @@ import UserProfileHeader from './userProfile/userProfileHeader'
 const UserProfilePage = ({ match }) => {
   const publicId = match.params.userId
   const [userProfile, setUserProfile] = useState(null)
-  // const { loading, error, data } = useQuery(GET_USER_PROFILE_BY_PUBLIC_ID, {
-  const { data } = useQuery(GET_USER_PROFILE_BY_PUBLIC_ID, {
+  const { loading, error, data } = useQuery(GET_USER_PROFILE_BY_PUBLIC_ID, {
     variables: { publicId }
   })
 
@@ -20,6 +19,9 @@ const UserProfilePage = ({ match }) => {
       setUserProfile(data.userProfile)
     }
   }, [data])
+
+  if (loading) return null
+  if (error) return `Error! ${error}`
 
   if (!publicId) {
     return <div>User profile not found.</div>

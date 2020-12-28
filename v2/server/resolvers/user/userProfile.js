@@ -24,6 +24,7 @@ export const getUserProfile = (publicId, { fields, currentUserId }) => {
     UserFollower.count({ where: { followee_user_id: userId } })
   ]).then(responses => {
     return {
+      publicId: publicId,
       user: responses[0],
       config: responses[1],
       stats: {

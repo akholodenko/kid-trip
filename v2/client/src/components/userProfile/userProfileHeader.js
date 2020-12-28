@@ -1,16 +1,43 @@
 import React, { Fragment } from 'react'
+import { useMutation } from '@apollo/client'
 import { headerStyles } from '../../utils/styleUtils'
 import { withCurrentUser } from '../../utils/userUtils'
+import {
+  CREATE_USER_FOLLOWER_MUTATION,
+  DELETE_USER_FOLLOWER_MUTATION
+} from '../../graphql/userMutations'
+import { GET_USER_PROFILE_BY_PUBLIC_ID } from '../../graphql/userQueries'
 
 const UserProfileHeader = ({ userProfile, currentUser }) => {
+  const refetchQueries = [
+    {
+      query: GET_USER_PROFILE_BY_PUBLIC_ID,
+      variables: { publicId: userProfile.publicId }
+    }
+  ]
+
+  const [createUserFollower] = useMutation(CREATE_USER_FOLLOWER_MUTATION, {
+    onError(error) {
+      console.log('error', error)
+    },
+    refetchQueries
+  })
+
+  const [deleteUserFollower] = useMutation(DELETE_USER_FOLLOWER_MUTATION, {
+    onError(error) {
+      console.log('error', error)
+    },
+    refetchQueries
+  })
+
   const headerStyle = headerStyles(userProfile.config.headerImageUrl, '300px')
 
   const onFollowClick = () => {
-    console.log('follow user!')
+    return createUserFollower({ variables: { publicId: userProfile.publicId } })
   }
 
   const onUnfollowClick = () => {
-    console.log('unfollow user')
+    return deleteUserFollower({ variables: { publicId: userProfile.publicId } })
   }
 
   const renderFollowButton = () => {
