@@ -1,4 +1,5 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
+import { useMutation } from '@apollo/client'
 
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -13,17 +14,13 @@ import IconButton from '@material-ui/core/IconButton'
 
 import CityFormField from './cityFormField'
 import VenueTypeFormField from './venueTypeFormField'
+import SimilarVenuesByName from './addVenueDialog/similarVenuesByName'
 import { CREATE_VENUE_MUTATION } from '../../graphql/venueMutations'
 import Button from '@material-ui/core/Button'
 
 import { validateVenue } from '../../utils/validationUtils'
-import { venuePrimaryTypeName, venueCityState } from '../../utils/venueUtils'
 
-import { useMutation, useLazyQuery } from '@apollo/client'
-import {
-  GET_VENUES_FOR_CURRENT_USER,
-  GET_SIMILAR_VENUES_BY_NAME
-} from '../../graphql/venueQueries'
+import { GET_VENUES_FOR_CURRENT_USER } from '../../graphql/venueQueries'
 
 const USER_ACTION_TEXT = 'Please enter information about a place you enjoyed.'
 const USER_ACTION_TEXT_ERROR = 'Please enter valid venue information'
@@ -71,34 +68,14 @@ const AddVenueDialog = ({ open, toggleDialog, onCreatedVenue }) => {
     awaitRefetchQueries: true
   })
 
-  const [getSimilarVenuesByName, similarVenuesByNameResults] = useLazyQuery(
-    GET_SIMILAR_VENUES_BY_NAME
-  )
-
-  useEffect(() => {
-    if (similarVenuesByNameResults.data) {
-      console.log(
-        'similar',
-        similarVenuesByNameResults.data.similarVenuesByName
-      )
-      setSimilarVenues(similarVenuesByNameResults.data.similarVenuesByName)
-    }
-  }, [similarVenuesByNameResults.data])
-
   const [newVenue, setNewVenue] = useState({ ...venueStub })
   const [userActionText, setUserActionText] = useState(USER_ACTION_TEXT)
-  const [similarVenues, setSimilarVenues] = useState(null)
 
   const onCitySelected = city => {
-    if (city && city.value) {
-      setNewVenue({ ...newVenue, city: { id: city.value } })
-
-      getSimilarVenuesByName({
-        variables: { name: newVenue.name, cityId: city.value, limit: 5 }
-      })
-    } else {
-      setNewVenue({ ...newVenue, city: {} })
-    }
+    setNewVenue({
+      ...newVenue,
+      city: city && city.value ? { id: city.value } : {}
+    })
   }
 
   const onVenueTypeSelected = venueTypeId => {
@@ -106,14 +83,7 @@ const AddVenueDialog = ({ open, toggleDialog, onCreatedVenue }) => {
   }
 
   const handleChange = name => event => {
-    const value = event.target.value
-    setNewVenue({ ...newVenue, [name]: value })
-
-    if (name === 'name' && value && value.length >= 3) {
-      getSimilarVenuesByName({
-        variables: { name: value, cityId: newVenue.city.id, limit: 5 }
-      })
-    }
+    setNewVenue({ ...newVenue, [name]: event.target.value })
   }
 
   const onSubmit = () => {
@@ -192,24 +162,7 @@ const AddVenueDialog = ({ open, toggleDialog, onCreatedVenue }) => {
           autoComplete="postal-code"
           format="#####"
         />
-        {similarVenues && similarVenues.length && (
-          <div>
-            <div>
-              Are you adding{' '}
-              {similarVenues.length > 1
-                ? 'one of these destinations'
-                : 'this destination'}
-              ?
-            </div>
-            {similarVenues.map(similarVenue => (
-              <div key={similarVenue.id}>
-                <strong>{similarVenue.name}</strong>, a{' '}
-                {venuePrimaryTypeName(similarVenue)} in{' '}
-                {venueCityState(similarVenue)}
-              </div>
-            ))}
-          </div>
-        )}
+        <SimilarVenuesByName venue={newVenue} />
         <div>
           <Button color="primary" onClick={onSubmit}>
             Create venue
