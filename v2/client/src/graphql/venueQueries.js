@@ -102,6 +102,7 @@ export const GET_SIMILAR_VENUES_BY_NAME = gql`
     similarVenuesByName(name: $name, cityId: $cityId, first: $limit) {
       id
       name
+      slug
       streetAddress
       zipcode
       city

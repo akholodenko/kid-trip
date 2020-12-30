@@ -1,0 +1,49 @@
+.similarVenueByName {
+    margin-top: 25px;
+    background-color: #e8f0f8;
+    border-radius: 8px;
+    padding: 20px;
+    font-weight: 300;
+}
+
+.similarVenueByNameTitle {
+    font-size: 16px;
+}
+
+.similarVenueByNameItems {
+    display: flex;
+    overflow-y: scroll;
+    max-width: 460px;
+    padding: 20px 0px;
+    margin: 0px -10px;
+}
+
+.similarVenueByNameItem {
+    display: block;
+    min-width: 145px;
+    cursor: pointer;
+    padding: 10px;
+    font-size: 13px;
+    text-decoration: none;
+    color: #000000;
+}
+
+.similarVenueByNameItemName {
+    max-width: 140px;
+    /*white-space: nowrap;*/
+    /*overflow: hidden;*/
+    /*text-overflow: ellipsis;*/
+    min-height: 44px;
+    font-weight: 500;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+.similarVenueByNameItemType {
+    text-transform: capitalize;
+}
+
+.similarVenueByNameItem:hover {
+    border-radius: 8px;
+    background-color: #ffffff;
+}
