@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { venueCityState, venuePrimaryTypeName } from '../../../utils/venueUtils'
 import { useLazyQuery } from '@apollo/client'
 import { GET_SIMILAR_VENUES_BY_NAME } from '../../../graphql/venueQueries'
@@ -8,17 +8,24 @@ const SimilarVenuesByName = ({ venue }) => {
     GET_SIMILAR_VENUES_BY_NAME
   )
 
-  useEffect(() => {
-    if (venue.name && venue.name.length >= 3) {
-      getSimilarVenuesByName({
+  const getSimilarVenuesCallback = useCallback(
+    (name, city) => {
+      return getSimilarVenuesByName({
         variables: {
-          name: venue.name,
-          cityId: venue.city && venue.city.id ? venue.city.id : null,
+          name: name,
+          cityId: city && city.id ? city.id : null,
           limit: 5
         }
       })
+    },
+    [getSimilarVenuesByName]
+  )
+
+  useEffect(() => {
+    if (venue.name && venue.name.length >= 3) {
+      getSimilarVenuesCallback(venue.name, venue.city)
     }
-  }, [venue.name, venue.city, getSimilarVenuesByName])
+  }, [venue.name, venue.city, getSimilarVenuesCallback])
 
   return (
     <div>
