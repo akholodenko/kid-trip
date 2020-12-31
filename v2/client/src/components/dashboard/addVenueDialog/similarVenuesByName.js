@@ -1,5 +1,9 @@
 import React, { useEffect, useCallback } from 'react'
-import { venueCityState, venuePrimaryTypeName } from '../../../utils/venueUtils'
+import {
+  venueAddress,
+  venueCityState,
+  venuePrimaryTypeName
+} from '../../../utils/venueUtils'
 import { useLazyQuery } from '@apollo/client'
 import { GET_SIMILAR_VENUES_BY_NAME } from '../../../graphql/venueQueries'
 
@@ -62,7 +66,7 @@ const SimilarVenuesByName = ({ venue }) => {
               <div className="similarVenueByNameItemType">
                 {venuePrimaryTypeName(similarVenue)}
               </div>
-              {venueCityState(similarVenue)}
+              {venueAddress(similarVenue, <br />)}
             </RouterLink>
           )
         )}
