@@ -1,9 +1,5 @@
 import React, { useEffect, useCallback } from 'react'
-import {
-  venueAddress,
-  venueCityState,
-  venuePrimaryTypeName
-} from '../../../utils/venueUtils'
+import { venueAddress, venuePrimaryTypeName } from '../../../utils/venueUtils'
 import { useLazyQuery } from '@apollo/client'
 import { GET_SIMILAR_VENUES_BY_NAME } from '../../../graphql/venueQueries'
 
@@ -35,6 +31,10 @@ const SimilarVenuesByName = ({ venue }) => {
     }
   }, [venue.name, venue.city, getSimilarVenuesCallback])
 
+  const onAddFavorite = () => {
+    console.log('add favorite')
+  }
+
   if (
     !similarVenuesByNameResults.data ||
     !similarVenuesByNameResults.data.similarVenuesByName ||
@@ -54,20 +54,28 @@ const SimilarVenuesByName = ({ venue }) => {
       <div className="similarVenueByNameItems">
         {similarVenuesByNameResults.data.similarVenuesByName.map(
           similarVenue => (
-            <RouterLink
-              to={Routes.venuePath(similarVenue.slug)}
-              target="_blank"
-              key={similarVenue.id}
-              className="similarVenueByNameItem"
-            >
-              <div className="similarVenueByNameItemName">
+            <div key={similarVenue.id} className="similarVenueByNameItem">
+              <RouterLink
+                to={Routes.venuePath(similarVenue.slug)}
+                target="_blank"
+                key={similarVenue.id}
+                className="similarVenueByNameItemName"
+              >
                 {similarVenue.name}
-              </div>
+              </RouterLink>
               <div className="similarVenueByNameItemType">
                 {venuePrimaryTypeName(similarVenue)}
               </div>
               {venueAddress(similarVenue, <br />)}
-            </RouterLink>
+              <div className="similarAddToFavoriteButtonContainer">
+                <button
+                  className="similarAddToFavoriteButton"
+                  onClick={() => onAddFavorite()}
+                >
+                  Add to Favorites
+                </button>
+              </div>
+            </div>
           )
         )}
       </div>

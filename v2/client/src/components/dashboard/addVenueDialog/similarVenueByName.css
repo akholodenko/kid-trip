@@ -21,22 +21,23 @@
 .similarVenueByNameItem {
     display: block;
     min-width: 145px;
-    cursor: pointer;
-    padding: 10px;
+    cursor: default;
+    padding: 10px 10px 40px 10px;
     font-size: 12px;
     text-decoration: none;
     color: #000000;
+    position: relative;
+    min-height: 160px;
 }
 
 .similarVenueByNameItemName {
     max-width: 140px;
-    /*white-space: nowrap;*/
-    /*overflow: hidden;*/
-    /*text-overflow: ellipsis;*/
-    /*min-height: 44px;*/
     font-weight: 500;
     font-size: 15px;
-    /*margin-bottom: 10px;*/
+}
+
+a.similarVenueByNameItemName {
+    color: #000000;
 }
 
 .similarVenueByNameItemType {
@@ -50,4 +51,27 @@
 .similarVenueByNameItem:hover {
     border-radius: 8px;
     background-color: #ffffff;
+}
+
+.similarAddToFavoriteButtonContainer {
+    position: absolute;
+    bottom: 10px;
+}
+
+.similarAddToFavoriteButton {
+    all: unset;
+    cursor: pointer;
+    /*color: #adcae6;*/
+    text-transform: uppercase;
+    font-weight: 800;
+    border-radius: 5px;
+    padding: 7px 12px;
+    /*margin-top: 10px;*/
+    font-size: 11px;
+    background-color: #0277bd;
+    color: white;
+}
+
+.similarAddToFavoriteButton:hover {
+    opacity: 0.7;
 }
