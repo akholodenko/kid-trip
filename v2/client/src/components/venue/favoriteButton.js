@@ -4,10 +4,9 @@ import {
   CREATE_USER_VENUE_FAVORITE_MUTATION,
   DELETE_USER_VENUE_FAVORITE_MUTATION
 } from '../../graphql/venueMutations'
-import {
-  GET_VENUE_BY_SLUG,
-  GET_VENUES_FOR_CURRENT_USER
-} from '../../graphql/venueQueries'
+import { GET_VENUES_FOR_CURRENT_USER } from '../../graphql/venueQueries'
+
+import { updateVenueStatsCache } from '../../graphql/venueCache'
 
 const FavoriteButton = ({
   venueId,
@@ -21,30 +20,13 @@ const FavoriteButton = ({
     }
   ]
 
-  const updateFavoriteStats = (store, venueStats) => {
-    let data = store.readQuery({
-      query: GET_VENUE_BY_SLUG,
-      variables: { venueSlug }
-    })
-
-    onUpdateFavoritesStats(venueStats)
-
-    store.writeQuery({
-      query: GET_VENUE_BY_SLUG,
-      variables: { venueSlug },
-      data: {
-        ...data,
-        venueBySlug: { ...data.venueBySlug, venueStats: { ...venueStats } }
-      }
-    })
-  }
-
   const [addFavorite] = useMutation(CREATE_USER_VENUE_FAVORITE_MUTATION, {
     onError(error) {
       console.log('error', error)
     },
     update: (store, { data: { createUserVenueFavorite } }) => {
-      updateFavoriteStats(store, createUserVenueFavorite)
+      updateVenueStatsCache(store, venueSlug, createUserVenueFavorite)
+      onUpdateFavoritesStats(createUserVenueFavorite)
     },
     refetchQueries
   })
@@ -54,7 +36,8 @@ const FavoriteButton = ({
       console.log('error', error)
     },
     update: (store, { data: { deleteUserVenueFavorite } }) => {
-      updateFavoriteStats(store, deleteUserVenueFavorite)
+      updateVenueStatsCache(store, venueSlug, deleteUserVenueFavorite)
+      onUpdateFavoritesStats(deleteUserVenueFavorite)
     },
     refetchQueries
   })

@@ -20,14 +20,15 @@
 
 .similarVenueByNameItem {
     display: block;
-    min-width: 145px;
+    width: 145px;
     cursor: default;
     padding: 10px 10px 40px 10px;
     font-size: 12px;
     text-decoration: none;
     color: #000000;
     position: relative;
-    min-height: 160px;
+    min-height: 175px;
+    min-width: 145px;
 }
 
 .similarVenueByNameItemName {

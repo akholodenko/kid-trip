@@ -1,16 +1,45 @@
-import React, { useEffect, useCallback } from 'react'
+import React, { useEffect, useCallback, useState } from 'react'
+import { useHistory } from 'react-router-dom'
 import { venueAddress, venuePrimaryTypeName } from '../../../utils/venueUtils'
-import { useLazyQuery } from '@apollo/client'
-import { GET_SIMILAR_VENUES_BY_NAME } from '../../../graphql/venueQueries'
+import { useLazyQuery, useMutation } from '@apollo/client'
+import {
+  GET_SIMILAR_VENUES_BY_NAME,
+  GET_VENUES_FOR_CURRENT_USER
+} from '../../../graphql/venueQueries'
 
 import './similarVenueByName.css'
 import Routes from '../../../routes'
 import { Link as RouterLink } from 'react-router-dom'
+import { CREATE_USER_VENUE_FAVORITE_MUTATION } from '../../../graphql/venueMutations'
+import { updateVenueStatsCache } from '../../../graphql/venueCache'
 
 const SimilarVenuesByName = ({ venue }) => {
+  const history = useHistory()
+  const [selectedSimilarVenue, setSelectedSimilarVenue] = useState(null)
   const [getSimilarVenuesByName, similarVenuesByNameResults] = useLazyQuery(
     GET_SIMILAR_VENUES_BY_NAME
   )
+
+  const refetchQueries = [
+    {
+      query: GET_VENUES_FOR_CURRENT_USER
+    }
+  ]
+
+  const [addFavoriteVenue] = useMutation(CREATE_USER_VENUE_FAVORITE_MUTATION, {
+    onError(error) {
+      console.log('error', error)
+    },
+    update: (store, { data: { createUserVenueFavorite } }) => {
+      updateVenueStatsCache(
+        store,
+        selectedSimilarVenue.slug,
+        createUserVenueFavorite
+      )
+      history.push(Routes.venuePath(selectedSimilarVenue.slug))
+    },
+    refetchQueries
+  })
 
   const getSimilarVenuesCallback = useCallback(
     (name, city) => {
@@ -31,9 +60,22 @@ const SimilarVenuesByName = ({ venue }) => {
     }
   }, [venue.name, venue.city, getSimilarVenuesCallback])
 
-  const onAddFavorite = () => {
-    console.log('add favorite')
-  }
+  const addFavoriteCallback = useCallback(
+    venue => {
+      return addFavoriteVenue({
+        variables: {
+          venueId: venue.id
+        }
+      })
+    },
+    [addFavoriteVenue]
+  )
+
+  useEffect(() => {
+    if (selectedSimilarVenue) {
+      addFavoriteCallback(selectedSimilarVenue)
+    }
+  }, [selectedSimilarVenue, addFavoriteCallback])
 
   if (
     !similarVenuesByNameResults.data ||
@@ -70,7 +112,7 @@ const SimilarVenuesByName = ({ venue }) => {
               <div className="similarAddToFavoriteButtonContainer">
                 <button
                   className="similarAddToFavoriteButton"
-                  onClick={() => onAddFavorite()}
+                  onClick={() => setSelectedSimilarVenue(similarVenue)}
                 >
                   Add to Favorites
                 </button>
