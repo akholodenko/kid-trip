@@ -97,6 +97,24 @@ export const GET_SIMILAR_VENUES_IN_RADIUS = gql`
   }
 `
 
+export const GET_SIMILAR_VENUES_BY_NAME = gql`
+  query($name: String!, $cityId: Int, $limit: Int) {
+    similarVenuesByName(name: $name, cityId: $cityId, first: $limit) {
+      id
+      name
+      slug
+      streetAddress
+      zipcode
+      city
+      state
+      venueTypes {
+        id
+        name
+      }
+    }
+  }
+`
+
 export const GET_FEED_VENUES = gql`
   query($cityIds: String, $venueTypeIds: String, $sort: String, $first: Int) {
     venues(

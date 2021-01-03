@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import { useMutation } from '@apollo/client'
 
 import Dialog from '@material-ui/core/Dialog'
 import DialogContent from '@material-ui/core/DialogContent'
@@ -13,15 +14,15 @@ import IconButton from '@material-ui/core/IconButton'
 
 import CityFormField from './cityFormField'
 import VenueTypeFormField from './venueTypeFormField'
+import SimilarVenuesByName from './addVenueDialog/similarVenuesByName'
 import { CREATE_VENUE_MUTATION } from '../../graphql/venueMutations'
 import Button from '@material-ui/core/Button'
 
 import { validateVenue } from '../../utils/validationUtils'
 
-import { useMutation } from '@apollo/client'
 import { GET_VENUES_FOR_CURRENT_USER } from '../../graphql/venueQueries'
 
-const USER_ACTION_TEXT = 'Please enter information about a venue'
+const USER_ACTION_TEXT = 'Please enter information about a place you enjoyed.'
 const USER_ACTION_TEXT_ERROR = 'Please enter valid venue information'
 
 const style = {
@@ -71,11 +72,10 @@ const AddVenueDialog = ({ open, toggleDialog, onCreatedVenue }) => {
   const [userActionText, setUserActionText] = useState(USER_ACTION_TEXT)
 
   const onCitySelected = city => {
-    if (city && city.value) {
-      setNewVenue({ ...newVenue, city: { id: city.value } })
-    } else {
-      setNewVenue({ ...newVenue, city: {} })
-    }
+    setNewVenue({
+      ...newVenue,
+      city: city && city.value ? { id: city.value } : {}
+    })
   }
 
   const onVenueTypeSelected = venueTypeId => {
@@ -162,6 +162,7 @@ const AddVenueDialog = ({ open, toggleDialog, onCreatedVenue }) => {
           autoComplete="postal-code"
           format="#####"
         />
+        <SimilarVenuesByName venue={newVenue} />
         <div>
           <Button color="primary" onClick={onSubmit}>
             Create venue
