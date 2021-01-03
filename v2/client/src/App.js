@@ -12,7 +12,9 @@ import CssBaseline from '@material-ui/core/CssBaseline'
 import { MuiThemeProvider, withStyles } from '@material-ui/core/styles'
 import theme from './theme'
 import AppBar from './layout/appBarContainer'
+import SessionNotifications from './layout/sessionNotifications'
 import UserProfilePage from './components/userProfilePage'
+import { SessionNotificationProvider } from './providers/sessionNotificationProvider'
 
 const styles = {
   '@global': {
@@ -43,21 +45,24 @@ class App extends Component {
     const { classes, location } = this.props
 
     return (
-      <MuiThemeProvider theme={theme}>
-        <div>
-          <CssBaseline />
-          <AppBar />
-          {!isHomepage(location) && (
-            <div className={classes.appBarSpacer}></div>
-          )}
-          <Switch>
-            <Route exact path={Routes.home} component={HomePage} />
-            <Route path={Routes.dashboard} component={DashboardPage} />
-            <Route path={Routes.venue} component={VenuePage} />
-            <Route path={Routes.userProfile} component={UserProfilePage} />
-          </Switch>
-        </div>
-      </MuiThemeProvider>
+      <SessionNotificationProvider>
+        <MuiThemeProvider theme={theme}>
+          <div>
+            <CssBaseline />
+            <AppBar />
+            {!isHomepage(location) && (
+              <div className={classes.appBarSpacer}></div>
+            )}
+            <Switch>
+              <Route exact path={Routes.home} component={HomePage} />
+              <Route path={Routes.dashboard} component={DashboardPage} />
+              <Route path={Routes.venue} component={VenuePage} />
+              <Route path={Routes.userProfile} component={UserProfilePage} />
+            </Switch>
+            <SessionNotifications></SessionNotifications>
+          </div>
+        </MuiThemeProvider>
+      </SessionNotificationProvider>
     )
   }
 }

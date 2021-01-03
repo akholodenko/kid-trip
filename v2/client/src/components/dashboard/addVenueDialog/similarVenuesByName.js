@@ -2,6 +2,9 @@ import React, { useEffect, useCallback, useState } from 'react'
 import { useHistory } from 'react-router-dom'
 import { venueAddress, venuePrimaryTypeName } from '../../../utils/venueUtils'
 import { useLazyQuery, useMutation } from '@apollo/client'
+import useSessionNotification, {
+  SessionNotificationType
+} from '../../../hooks/useSessionNotification'
 import {
   GET_SIMILAR_VENUES_BY_NAME,
   GET_VENUES_FOR_CURRENT_USER
@@ -15,6 +18,7 @@ import { updateVenueStatsCache } from '../../../graphql/venueCache'
 
 const SimilarVenuesByName = ({ venue }) => {
   const history = useHistory()
+  const { addNotification } = useSessionNotification()
   const [selectedSimilarVenue, setSelectedSimilarVenue] = useState(null)
   const [getSimilarVenuesByName, similarVenuesByNameResults] = useLazyQuery(
     GET_SIMILAR_VENUES_BY_NAME
@@ -35,6 +39,11 @@ const SimilarVenuesByName = ({ venue }) => {
         store,
         selectedSimilarVenue.slug,
         createUserVenueFavorite
+      )
+
+      addNotification(
+        `${selectedSimilarVenue.name} has been added to your favorites`,
+        SessionNotificationType.MESSAGE
       )
       history.push(Routes.venuePath(selectedSimilarVenue.slug))
     },
