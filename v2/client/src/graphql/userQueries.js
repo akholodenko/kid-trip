@@ -59,6 +59,7 @@ export const GET_USER_PROFILE_BY_PUBLIC_ID = gql`
 export const GET_FOLLOWERS_FOR_CURRENT_USER = gql`
   query {
     me {
+      id
       stats {
         followers
         followees
