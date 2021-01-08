@@ -18,10 +18,10 @@ import { getCities } from './resolvers/city'
 import {
   signup,
   login,
-  getUser,
   getUserFeedConfig,
   updateUserFeedConfig
 } from './resolvers/user'
+import { getUser } from './resolvers/user/userInfo'
 import {
   getUserProfile,
   createUserFollower,

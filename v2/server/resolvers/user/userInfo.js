@@ -11,6 +11,24 @@ import UserFollower from '../../models/user_follower'
 const USER_ATTRIBUTES = ['id', 'first_name', 'last_name', 'zipcode']
 
 export const getUser = (userId, { fields }) => {
+  return Promise.all([
+    getUserDetails(userId, fields),
+    getUserFavoriteVenues(userId, fields),
+    getUserFolloweeCount(userId, fields.stats),
+    getUserFollowerCount(userId, fields.stats)
+  ]).then(responses => {
+    let user = responses[0]
+    user.favoriteVenues = responses[1]
+    user.stats = {
+      followees: responses[2],
+      followers: responses[3]
+    }
+
+    return fromDbUserTransform(user)
+  })
+}
+
+const getUserDetails = (userId, fields) => {
   let associations = []
   let order = [['id', 'ASC']]
 
@@ -63,42 +81,52 @@ export const getUser = (userId, { fields }) => {
     attributes: USER_ATTRIBUTES,
     include: associations,
     order: [order]
-  }).then(user => {
-    if (!!fields && !!fields.favoriteVenues) {
-      // UserFollower.count({ where: { follower_user_id: userId } }),
-      //   UserFollower.count({ where: { followee_user_id: userId } })
-
-      return getUserFavoriteVenues(userId, fields).then(response => {
-        user.favoriteVenues = response
-        return fromDbUserTransform(user)
-      })
-    } else {
-      return fromDbUserTransform(user)
-    }
   })
 }
 
+// count of users that follow this user
+const getUserFollowerCount = (userId, statsFields) => {
+  if (!!statsFields && !!statsFields.followers) {
+    return UserFollower.count({ where: { followee_user_id: userId } })
+  }
+
+  return null
+}
+
+// count of users that this user follows
+const getUserFolloweeCount = (userId, statsFields) => {
+  if (!!statsFields && !!statsFields.followees) {
+    return UserFollower.count({ where: { follower_user_id: userId } })
+  }
+
+  return null
+}
+
 const getUserFavoriteVenues = (userId, fields) => {
-  let associations = []
+  if (!!fields && !!fields.favoriteVenues) {
+    let associations = []
 
-  if (!!fields.favoriteVenues.venueTypes) {
-    associations.push({ model: VenueType })
-  }
-
-  if (!!fields.favoriteVenues.city || !!fields.favoriteVenues.state) {
-    associations.push({ model: City })
-  }
-
-  associations.push({
-    model: UserVenueFavorite,
-    where: {
-      user_id: userId
+    if (!!fields.favoriteVenues.venueTypes) {
+      associations.push({ model: VenueType })
     }
-  })
 
-  return Venue.findAll({
-    attributes: VENUE_ATTRIBUTES,
-    include: associations,
-    order: [['name', 'ASC']]
-  })
+    if (!!fields.favoriteVenues.city || !!fields.favoriteVenues.state) {
+      associations.push({ model: City })
+    }
+
+    associations.push({
+      model: UserVenueFavorite,
+      where: {
+        user_id: userId
+      }
+    })
+
+    return Venue.findAll({
+      attributes: VENUE_ATTRIBUTES,
+      include: associations,
+      order: [['name', 'ASC']]
+    })
+  }
+
+  return null
 }
