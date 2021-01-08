@@ -55,3 +55,26 @@ export const GET_USER_PROFILE_BY_PUBLIC_ID = gql`
   }
   ${VenueDetails}
 `
+
+export const GET_FOLLOWERS_FOR_CURRENT_USER = gql`
+  query {
+    me {
+      stats {
+        followers
+        followees
+      }
+      followees {
+        id
+        publicId
+        firstName
+        lastName
+      }
+      followers {
+        id
+        publicId
+        firstName
+        lastName
+      }
+    }
+  }
+`

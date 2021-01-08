@@ -6,6 +6,7 @@ import UserFeedConfig from '../../models/user_feed_config'
 import User from '../../models/user'
 import UserVenueFavorite from '../../models/user_venue_favorite'
 import { fromDbUserTransform } from './utils'
+import UserFollower from '../../models/user_follower'
 
 const USER_ATTRIBUTES = ['id', 'first_name', 'last_name', 'zipcode']
 
@@ -64,6 +65,9 @@ export const getUser = (userId, { fields }) => {
     order: [order]
   }).then(user => {
     if (!!fields && !!fields.favoriteVenues) {
+      // UserFollower.count({ where: { follower_user_id: userId } }),
+      //   UserFollower.count({ where: { followee_user_id: userId } })
+
       return getUserFavoriteVenues(userId, fields).then(response => {
         user.favoriteVenues = response
         return fromDbUserTransform(user)
