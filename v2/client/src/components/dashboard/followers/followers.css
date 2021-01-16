@@ -1,0 +1,7 @@
+.followers-container {
+    display: flex;
+}
+
+.followers-list-container {
+    flex-grow: 1;
+}
