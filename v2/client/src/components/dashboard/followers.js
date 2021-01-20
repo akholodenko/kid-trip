@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from 'react'
+import { Link as RouterLink } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { GET_FOLLOWERS_FOR_CURRENT_USER } from '../../graphql/userQueries'
 import { shortName } from '../../utils/userUtils'
 
 import './followers/followers.css'
+import Routes from '../../routes'
 
 const Followers = () => {
   const [followData, setFollowData] = useState(null)
@@ -32,13 +34,21 @@ const Followers = () => {
         <div className="followers-list-container">
           <div>Followees</div>
           {followData.followees.map(followee => (
-            <div key={followee.id}>{shortName(followee)}</div>
+            <div key={followee.id}>
+              <RouterLink to={Routes.userProfilePath(followee.id)}>
+                {shortName(followee)}
+              </RouterLink>
+            </div>
           ))}
         </div>
         <div className="followers-list-container">
           <div>Followers</div>
           {followData.followers.map(follower => (
-            <div key={follower.id}>{shortName(follower)}</div>
+            <div key={follower.id}>
+              <RouterLink to={Routes.userProfilePath(follower.id)}>
+                {shortName(follower)}
+              </RouterLink>
+            </div>
           ))}
         </div>
       </div>

@@ -14,8 +14,8 @@ export const getUser = (userId, { fields }) => {
   return Promise.all([
     getUserDetails(userId, fields),
     getUserFavoriteVenues(userId, fields),
-    getUserFolloweeCount(userId, fields.stats),
-    getUserFollowerCount(userId, fields.stats)
+    getUserFolloweeCount(userId, fields),
+    getUserFollowerCount(userId, fields)
   ]).then(responses => {
     let user = responses[0]
     user.favoriteVenues = responses[1]
@@ -85,8 +85,8 @@ const getUserDetails = (userId, fields) => {
 }
 
 // count of users that follow this user
-const getUserFollowerCount = (userId, statsFields) => {
-  if (!!statsFields && !!statsFields.followers) {
+const getUserFollowerCount = (userId, fields) => {
+  if (!!fields && !!fields.stats && !!fields.stats.followers) {
     return UserFollower.count({ where: { followee_user_id: userId } })
   }
 
@@ -94,8 +94,8 @@ const getUserFollowerCount = (userId, statsFields) => {
 }
 
 // count of users that this user follows
-const getUserFolloweeCount = (userId, statsFields) => {
-  if (!!statsFields && !!statsFields.followees) {
+const getUserFolloweeCount = (userId, fields) => {
+  if (!!fields && !!fields.stats && !!fields.stats.followees) {
     return UserFollower.count({ where: { follower_user_id: userId } })
   }
 
