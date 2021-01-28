@@ -10,7 +10,9 @@ import Routes from '../../routes'
 const Followers = () => {
   const [followData, setFollowData] = useState(null)
 
-  const { loading, error, data } = useQuery(GET_FOLLOWERS_FOR_CURRENT_USER)
+  const { loading, error, data } = useQuery(GET_FOLLOWERS_FOR_CURRENT_USER, {
+    fetchPolicy: 'no-cache'
+  })
 
   useEffect(() => {
     if (data) {
@@ -25,14 +27,11 @@ const Followers = () => {
 
   return (
     <div>
-      <div>
-        <strong>Stats:</strong>
-        &nbsp;Followers: {followData.stats.followers}&nbsp;| Followees:&nbsp;
-        {followData.stats.followees}
-      </div>
       <div className="followers-container">
         <div className="followers-list-container">
-          <div>Followees</div>
+          <div className="follower-list-header">
+            Followees ({followData.stats.followees})
+          </div>
           {followData.followees.map(followee => (
             <div key={followee.id}>
               <RouterLink to={Routes.userProfilePath(followee.id)}>
@@ -42,7 +41,9 @@ const Followers = () => {
           ))}
         </div>
         <div className="followers-list-container">
-          <div>Followers</div>
+          <div className="follower-list-header">
+            Followers ({followData.stats.followers})
+          </div>
           {followData.followers.map(follower => (
             <div key={follower.id}>
               <RouterLink to={Routes.userProfilePath(follower.id)}>

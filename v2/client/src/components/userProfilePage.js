@@ -11,8 +11,8 @@ const UserProfilePage = ({ match }) => {
   const publicId = match.params.userId
   const [userProfile, setUserProfile] = useState(null)
   const { loading, error, data } = useQuery(GET_USER_PROFILE_BY_PUBLIC_ID, {
-    variables: { publicId },
-    fetchPolicy: 'no-cache'
+    variables: { publicId }
+    // fetchPolicy: 'no-cache'
   })
 
   useEffect(() => {
