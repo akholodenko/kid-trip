@@ -12,8 +12,13 @@
     border-right: 1px #eee solid;
 }
 
-.follower-list-header {
+.followers-list-header {
     font-size: 18px;
     font-weight: 500;
     margin-bottom: 10px;
+}
+
+.followers-list-item {
+    margin-bottom: 8px;
+    text-transform: capitalize;
 }

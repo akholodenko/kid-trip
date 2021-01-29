@@ -17,7 +17,6 @@ const Followers = () => {
   useEffect(() => {
     if (data) {
       setFollowData(data.me)
-      console.log('data.me', data.me)
     }
   }, [data])
 
@@ -29,11 +28,11 @@ const Followers = () => {
     <div>
       <div className="followers-container">
         <div className="followers-list-container">
-          <div className="follower-list-header">
+          <div className="followers-list-header">
             Followees ({followData.stats.followees})
           </div>
           {followData.followees.map(followee => (
-            <div key={followee.id}>
+            <div key={followee.id} className="followers-list-item">
               <RouterLink to={Routes.userProfilePath(followee.id)}>
                 {shortName(followee)}
               </RouterLink>
@@ -41,11 +40,11 @@ const Followers = () => {
           ))}
         </div>
         <div className="followers-list-container">
-          <div className="follower-list-header">
+          <div className="followers-list-header">
             Followers ({followData.stats.followers})
           </div>
           {followData.followers.map(follower => (
-            <div key={follower.id}>
+            <div key={follower.id} className="followers-list-item">
               <RouterLink to={Routes.userProfilePath(follower.id)}>
                 {shortName(follower)}
               </RouterLink>
