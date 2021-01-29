@@ -50,6 +50,9 @@ const client = new ApolloClient({
         fields: {
           followees: {
             merge: false
+          },
+          favoriteVenues: {
+            merge: false
           }
         }
       }
