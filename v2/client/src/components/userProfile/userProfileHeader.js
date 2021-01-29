@@ -6,13 +6,19 @@ import {
   CREATE_USER_FOLLOWER_MUTATION,
   DELETE_USER_FOLLOWER_MUTATION
 } from '../../graphql/userMutations'
-import { GET_USER_PROFILE_BY_PUBLIC_ID } from '../../graphql/userQueries'
+import {
+  GET_FOLLOWERS_FOR_CURRENT_USER,
+  GET_USER_PROFILE_BY_PUBLIC_ID
+} from '../../graphql/userQueries'
 
 const UserProfileHeader = ({ userProfile, currentUser }) => {
   const refetchQueries = [
     {
       query: GET_USER_PROFILE_BY_PUBLIC_ID,
       variables: { publicId: userProfile.publicId }
+    },
+    {
+      query: GET_FOLLOWERS_FOR_CURRENT_USER
     }
   ]
 

@@ -22,3 +22,7 @@
     margin-bottom: 8px;
     text-transform: capitalize;
 }
+
+.followers-list-item > .inlineButton {
+    float: right;
+}

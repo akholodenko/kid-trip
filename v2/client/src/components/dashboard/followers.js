@@ -1,24 +1,40 @@
 import React, { useEffect, useState } from 'react'
 import { Link as RouterLink } from 'react-router-dom'
-import { useQuery } from '@apollo/client'
+import { useMutation, useQuery } from '@apollo/client'
 import { GET_FOLLOWERS_FOR_CURRENT_USER } from '../../graphql/userQueries'
 import { shortName } from '../../utils/userUtils'
 
 import './followers/followers.css'
 import Routes from '../../routes'
+import { DELETE_USER_FOLLOWER_MUTATION } from '../../graphql/userMutations'
 
 const Followers = () => {
   const [followData, setFollowData] = useState(null)
 
-  const { loading, error, data } = useQuery(GET_FOLLOWERS_FOR_CURRENT_USER, {
-    fetchPolicy: 'no-cache'
-  })
+  const { loading, error, data } = useQuery(GET_FOLLOWERS_FOR_CURRENT_USER)
 
   useEffect(() => {
     if (data) {
       setFollowData(data.me)
     }
   }, [data])
+
+  const refetchQueries = [
+    {
+      query: GET_FOLLOWERS_FOR_CURRENT_USER
+    }
+  ]
+
+  const [deleteUserFollower] = useMutation(DELETE_USER_FOLLOWER_MUTATION, {
+    onError(error) {
+      console.log('error', error)
+    },
+    refetchQueries
+  })
+
+  const onUnfollowClick = publicId => {
+    return deleteUserFollower({ variables: { publicId } })
+  }
 
   if (!followData || !followData.stats) return null
   if (loading) return null
@@ -36,6 +52,12 @@ const Followers = () => {
               <RouterLink to={Routes.userProfilePath(followee.id)}>
                 {shortName(followee)}
               </RouterLink>
+              <button
+                onClick={() => onUnfollowClick(followee.publicId)}
+                className="inlineButton"
+              >
+                Un-follow
+              </button>
             </div>
           ))}
         </div>
