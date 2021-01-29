@@ -23,6 +23,9 @@ const token = localStorage.getItem(AUTH_TOKEN)
 const httpLink = new HttpLink({
   uri: SERVER_HOST, // || 'http://localhost:4000',
   credentials: 'same-origin',
+  fetchOptions: {
+    mode: 'no-cors'
+  },
   headers: {
     authorization: token ? `Bearer ${token}` : ''
   }
