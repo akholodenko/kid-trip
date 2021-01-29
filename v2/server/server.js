@@ -11,7 +11,7 @@ const schema = makeExecutableSchema({
 
 const server = new ApolloServer({
   cors: {
-    origin: '*',
+    origin: '*.mykidtrip.com',
     credentials: true
   },
   schema,
