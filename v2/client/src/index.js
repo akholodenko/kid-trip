@@ -22,13 +22,12 @@ const SERVER_HOST = process.env.REACT_APP_SERVER_HOST
 const token = localStorage.getItem(AUTH_TOKEN)
 const httpLink = new HttpLink({
   uri: SERVER_HOST, // || 'http://localhost:4000',
-  credentials: 'include',
-  fetchOptions: {
-    mode: 'cors'
-  },
+  // credentials: 'same-origin',
+  // fetchOptions: {
+  //   mode: 'cors'
+  // },
   headers: {
-    authorization: token ? `Bearer ${token}` : '',
-    'Access-Control-Allow-Origin': '*'
+    authorization: token ? `Bearer ${token}` : ''
   }
 })
 
