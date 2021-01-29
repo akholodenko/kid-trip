@@ -41,7 +41,17 @@ const client = new ApolloClient({
     }),
     httpLink
   ]),
-  cache: new InMemoryCache(),
+  cache: new InMemoryCache({
+    typePolicies: {
+      User: {
+        fields: {
+          followees: {
+            merge: false
+          }
+        }
+      }
+    }
+  }),
   resolvers: {}
 })
 

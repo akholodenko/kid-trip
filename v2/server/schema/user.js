@@ -3,6 +3,7 @@ import { gql } from 'apollo-server'
 export default gql`
   type User {
     id: ID!
+    publicId: String
     firstName: String!
     lastName: String!
     email: String
@@ -12,5 +13,6 @@ export default gql`
     feedConfig: FeedConfig
     followees: [User]
     followers: [User]
+    stats: UserProfileStats
   }
 `

@@ -5,7 +5,6 @@ import User from '../models/user'
 
 import { sendWelcomeEmail } from '../utils/emailUtils'
 import { fromDbUserTransform } from './user/utils'
-import { getUser } from './user/userInfo'
 import { getUserFeedConfig, updateUserFeedConfig } from './user/useFeedConfig'
 
 async function signup(parent, args) {
@@ -54,7 +53,6 @@ async function login(parent, args) {
 module.exports = {
   signup,
   login,
-  getUser,
   getUserFeedConfig,
   updateUserFeedConfig,
   fromDbUserTransform

@@ -9,12 +9,13 @@ import AddVenueDialog from './dashboard/addVenueDialog'
 import VenueList from './dashboard/venueList'
 import Feed from './dashboard/feed'
 import withPageTemplate from './shared/withPageTemplate'
+import Followers from './dashboard/followers'
 
 const DASHBOARD_SECTION = {
   FEED: 'feed',
-  FOLLOWED_DESTINATIONS: 'followed-destinations',
   MY_DESTINATIONS: 'my-destinations',
-  FAVORITES: 'favorites'
+  FAVORITES: 'favorites',
+  FOLLOWERS: 'followers'
 }
 
 const styles = {
@@ -24,8 +25,8 @@ const styles = {
       display: 'flex'
     },
     '.sectionHeaderTitle': {
-      flexGrow: 2,
-      maxWidth: '250px',
+      flexGrow: 1,
+      maxWidth: '200px',
       cursor: 'pointer',
       textDecoration: 'none',
       color: '#666',
@@ -80,6 +81,33 @@ const DashboardPage = ({ match }) => {
     )
   }
 
+  const renderDashboardSectionContent = () => {
+    switch (currentDashboardSection) {
+      case DASHBOARD_SECTION.FEED:
+        return <Feed></Feed>
+      case DASHBOARD_SECTION.MY_DESTINATIONS:
+        return (
+          <VenueList
+            currentDashboardSection={currentDashboardSection}
+            isFavoritesDashboardSection={false}
+            externalTriggerVenueRefresh={externalTriggerVenueRefresh}
+          ></VenueList>
+        )
+      case DASHBOARD_SECTION.FAVORITES:
+        return (
+          <VenueList
+            currentDashboardSection={currentDashboardSection}
+            isFavoritesDashboardSection={true}
+            externalTriggerVenueRefresh={externalTriggerVenueRefresh}
+          ></VenueList>
+        )
+      case DASHBOARD_SECTION.FOLLOWERS:
+        return <Followers></Followers>
+      default:
+        return <Feed></Feed>
+    }
+  }
+
   const onCreatedVenue = () =>
     setExternalTriggerVenueRefresh(!externalTriggerVenueRefresh)
 
@@ -91,10 +119,8 @@ const DashboardPage = ({ match }) => {
           'My destinations',
           DASHBOARD_SECTION.MY_DESTINATIONS
         )}
-        {renderDashboardSection(
-          'Favorite destinations',
-          DASHBOARD_SECTION.FAVORITES
-        )}
+        {renderDashboardSection('Favorites', DASHBOARD_SECTION.FAVORITES)}
+        {renderDashboardSection('Followers', DASHBOARD_SECTION.FOLLOWERS)}
         <Button
           variant="outlined"
           style={{ marginLeft: 'auto' }}
@@ -109,17 +135,8 @@ const DashboardPage = ({ match }) => {
           onCreatedVenue={onCreatedVenue}
         />
       </div>
-      {currentDashboardSection === DASHBOARD_SECTION.FEED ? (
-        <Feed></Feed>
-      ) : (
-        <VenueList
-          currentDashboardSection={currentDashboardSection}
-          isFavoritesDashboardSection={
-            currentDashboardSection === DASHBOARD_SECTION.FAVORITES
-          }
-          externalTriggerVenueRefresh={externalTriggerVenueRefresh}
-        ></VenueList>
-      )}
+
+      {renderDashboardSectionContent()}
     </React.Fragment>
   )
 }

@@ -1,0 +1,28 @@
+.followers-container {
+    display: flex;
+}
+
+.followers-list-container {
+    flex-grow: 1;
+    padding-left: 10px;
+    font-weight: 300;
+}
+
+.followers-list-container:first-child {
+    border-right: 1px #eee solid;
+}
+
+.followers-list-header {
+    font-size: 18px;
+    font-weight: 500;
+    margin-bottom: 10px;
+}
+
+.followers-list-item {
+    margin-bottom: 8px;
+    text-transform: capitalize;
+}
+
+.followers-list-item > .inlineButton {
+    float: right;
+}

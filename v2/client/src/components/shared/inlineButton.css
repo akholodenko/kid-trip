@@ -1,0 +1,13 @@
+.inlineButton {
+    all: unset;
+    cursor: pointer;
+    color: #555;
+    font-weight: 400;
+    padding: 2px 8px;
+}
+
+.inlineButton:hover {
+    border: 1px solid #999999;
+    border-radius: 5px;
+    padding: 1px 7px;
+}

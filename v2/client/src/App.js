@@ -16,6 +16,8 @@ import SessionNotifications from './layout/sessionNotifications'
 import UserProfilePage from './components/userProfilePage'
 import { SessionNotificationProvider } from './providers/sessionNotificationProvider'
 
+import './components/shared/inlineButton.css'
+
 const styles = {
   '@global': {
     body: {

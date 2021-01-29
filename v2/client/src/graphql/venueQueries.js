@@ -63,6 +63,7 @@ export const GET_VENUE_BY_SLUG = gql`
 export const GET_VENUES_FOR_CURRENT_USER = gql`
   query {
     me {
+      id
       venues {
         ...VenueDetails
       }
