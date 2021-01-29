@@ -10,10 +10,10 @@ const schema = makeExecutableSchema({
 })
 
 const server = new ApolloServer({
-  // cors: {
-  //   origin: 'localhost',
-  //   credentials: true
-  // },
+  cors: {
+    origin: 'localhost'
+    // credentials: true
+  },
   schema,
   context: ({ req }) => {
     const token = req.headers.authorization || ''
