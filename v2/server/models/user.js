@@ -3,6 +3,7 @@ import sequelize from '../config/sequelize'
 import Image from './image'
 import UserProfileConfig from './user_profile_config'
 import UserFollower from './user_follower'
+import Message from './message'
 
 const User = sequelize.define(
   'user',
@@ -83,6 +84,22 @@ User.belongsToMany(User, {
   as: 'UserFollowers',
   foreignKey: 'followee_user_id',
   otherKey: 'follower_user_id'
+})
+
+User.hasMany(Message, {
+  as: 'MessagesSent',
+  foreignKey: 'sender_user_id'
+})
+
+User.hasMany(Message, {
+  as: 'MessagesReceived',
+  foreignKey: 'recipient_user_id'
+})
+
+Message.belongsTo(User, {
+  foreignKey: 'sender_user_id',
+  sourceKey: 'sender_user_id',
+  as: 'MessageSender'
 })
 
 export default User
