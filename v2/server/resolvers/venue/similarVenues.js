@@ -94,7 +94,7 @@ const sqlQueryVenuesByTypeInRadius = (
               : ''
           } 
 				ORDER BY distance LIMIT ${limit}) as list
-			where list.distance < ${fromMiles(radius)}`
+			where list.distance <= ${fromMiles(radius)}`
     )
     .then(response =>
       response[0].map(venue => {

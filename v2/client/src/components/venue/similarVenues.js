@@ -12,7 +12,7 @@ const SimilarVenues = ({ venue }) => {
     client
       .query({
         query: GET_SIMILAR_VENUES_IN_RADIUS,
-        variables: { venueId: venue.id, limit: 5, radius: 10 }
+        variables: { venueId: venue.id, limit: 5, radius: 15 }
       })
       .then(({ data }) => {
         setSimilarVenues(data.similarVenues)
