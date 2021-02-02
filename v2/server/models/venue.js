@@ -1,8 +1,9 @@
-import Sequelize from "sequelize";
-import sequelize from "../config/sequelize";
+import Sequelize from 'sequelize'
+import sequelize from '../config/sequelize'
+import UsersVenuesFavorites from './user_venue_favorite'
 
 const Venue = sequelize.define(
-  "venue",
+  'venue',
   {
     id: {
       type: Sequelize.INTEGER,
@@ -19,9 +20,14 @@ const Venue = sequelize.define(
     user_id: Sequelize.INTEGER
   },
   {
-    tableName: "venues",
+    tableName: 'venues',
     underscored: true
   }
-);
+)
 
-export default Venue;
+UsersVenuesFavorites.hasMany(Venue, {
+  foreignKey: 'id',
+  sourceKey: 'venue_id'
+})
+
+export default Venue

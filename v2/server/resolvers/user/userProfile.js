@@ -11,9 +11,8 @@ import User from '../../models/user'
 
 export const getUserProfile = (publicId, { fields, currentUserId }) => {
   const userId = userPublicIdToDbId(publicId)
-
   return Promise.all([
-    getUser(userId, {}),
+    getUser(userId, { fields: fields.user }),
     getUserProfileConfig(userId),
     Venue.count({ where: { user_id: userId } }),
     UserVenueFavorite.count({ where: { user_id: userId } }),
