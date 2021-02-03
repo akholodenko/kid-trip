@@ -27,6 +27,8 @@ import {
   deleteUserFollower
 } from './resolvers/user/userProfile'
 
+import { getMessageCount } from './resolvers/message'
+
 export default {
   Query: {
     venue(obj, args, { user }, info) {
@@ -82,6 +84,13 @@ export default {
       } else {
         throw new Error('Invalid profile')
       }
+    },
+    messageCount(obj, args, { user }, info) {
+      if (!user) {
+        throw new Error('You are not authenticated!')
+      }
+
+      return getMessageCount(user.userId, args.status)
     },
     me(obj, args, { user }, info) {
       if (!user) {

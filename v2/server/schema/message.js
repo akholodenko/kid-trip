@@ -10,4 +10,11 @@ export default gql`
     status: String!
     createdAt: String!
   }
+
+  type MessageCount {
+    unread: Int
+    read: Int
+    archived: Int
+    deleted: Int
+  }
 `

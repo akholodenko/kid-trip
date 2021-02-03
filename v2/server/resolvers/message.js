@@ -57,3 +57,13 @@ export const getAllMessages = (userId, fields) => {
 
   return null
 }
+
+export const getMessageCount = (userId, status) => {
+  console.log(userId, status)
+  return {
+    unread: 0,
+    read: 0,
+    archived: 0,
+    deleted: 0
+  }
+}
