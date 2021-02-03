@@ -1,6 +1,11 @@
 import Sequelize from 'sequelize'
 import sequelize from '../config/sequelize'
 import UsersVenuesFavorites from './user_venue_favorite'
+import City from './city'
+import VenueType from './venue_type'
+import VenueClassification from './venue_classification'
+import User from './user'
+import UsersVenues from './user_venue'
 
 const Venue = sequelize.define(
   'venue',
@@ -41,6 +46,47 @@ Venue.generateGeom = venueId => {
 UsersVenuesFavorites.hasMany(Venue, {
   foreignKey: 'id',
   sourceKey: 'venue_id'
+})
+
+Venue.belongsTo(City, {
+  foreignKey: 'city_id'
+})
+
+Venue.hasMany(VenueClassification, {
+  foreignKey: 'venue_id'
+})
+
+Venue.hasMany(UsersVenuesFavorites, {
+  foreignKey: 'venue_id'
+})
+
+Venue.belongsToMany(User, {
+  through: UsersVenues,
+  foreignKey: 'venue_id',
+  otherKey: 'user_id'
+})
+
+Venue.belongsTo(User, {
+  as: 'creator',
+  foreignKey: 'user_id'
+})
+
+User.belongsToMany(Venue, {
+  through: UsersVenues,
+  foreignKey: 'user_id',
+  otherKey: 'venue_id'
+})
+
+Venue.belongsToMany(VenueType, {
+  through: VenueClassification,
+  foreignKey: 'venue_id',
+  otherKey: 'venue_type_id'
+})
+
+VenueType.belongsToMany(Venue, {
+  through: VenueClassification,
+  foreignKey: 'venue_type_id',
+  otherKey: 'venue_id'
 })
 
 export default Venue

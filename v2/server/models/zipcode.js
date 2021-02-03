@@ -42,4 +42,9 @@ City.belongsToMany(Zipcode, {
   targetKey: 'zip'
 })
 
+Venue.belongsTo(Zipcode, {
+  foreignKey: 'zipcode',
+  targetKey: 'zip'
+})
+
 export default Zipcode

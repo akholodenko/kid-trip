@@ -1,6 +1,5 @@
 import graphsqlFields from 'graphql-fields'
 
-import { initModelAssociations } from './models/associations'
 import {
   getVenue,
   getVenueBySlug,
@@ -27,8 +26,6 @@ import {
   createUserFollower,
   deleteUserFollower
 } from './resolvers/user/userProfile'
-
-initModelAssociations()
 
 export default {
   Query: {
