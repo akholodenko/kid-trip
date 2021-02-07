@@ -13,7 +13,8 @@ const Message = sequelize.define(
     recipient_user_id: Sequelize.INTEGER,
     message_type: Sequelize.ENUM('auto', 'direct'),
     body: Sequelize.TEXT,
-    status: Sequelize.ENUM('unread', 'read', 'archived', 'deleted')
+    status: Sequelize.ENUM('unread', 'read', 'archived', 'deleted'),
+    count: Sequelize.INTEGER
   },
   {
     tableName: 'messages',

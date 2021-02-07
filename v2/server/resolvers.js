@@ -90,7 +90,7 @@ export default {
         throw new Error('You are not authenticated!')
       }
 
-      return getMessageCount(user.userId, args.status)
+      return getMessageCount(user.userId)
     },
     me(obj, args, { user }, info) {
       if (!user) {

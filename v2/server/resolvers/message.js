@@ -2,6 +2,7 @@ import { Op } from 'sequelize'
 import Message from '../models/message'
 import User from '../models/user'
 import { USER_ATTRIBUTES } from './user/userInfo'
+import sequelize from '../config/sequelize'
 
 export const getInboxMessages = (userId, fields) => {
   if (!!fields.messages) {
@@ -58,12 +59,26 @@ export const getAllMessages = (userId, fields) => {
   return null
 }
 
-export const getMessageCount = (userId, status) => {
-  console.log(userId, status)
-  return {
-    unread: 0,
-    read: 0,
-    archived: 0,
-    deleted: 0
+export const getMessageCount = userId => {
+  if (userId) {
+    return Message.findAll({
+      attributes: ['status', [sequelize.fn('COUNT', 'id'), 'count']],
+      where: {
+        recipient_user_id: userId
+      },
+      group: ['status']
+    }).then(results => {
+      let response = {
+        unread: 0,
+        read: 0,
+        archived: 0,
+        deleted: 0
+      }
+
+      results.map(result => (response[result.status] = result.count))
+      return response
+    })
   }
+
+  return null
 }
