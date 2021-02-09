@@ -14,20 +14,11 @@ import { logoutUser, isUserLoggedIn, withCurrentUser } from '../utils/userUtils'
 import { withRouter } from 'react-router'
 
 import Routes from '../routes'
+import AppBarMenu from './appBar/appBarMenu'
 
 class ButtonAppBar extends Component {
-  state = {
-    anchorEl: null
-  }
-
-  toggleMenu = event => {
-    this.state.anchorEl
-      ? this.setState({ anchorEl: null })
-      : this.setState({ anchorEl: event.currentTarget })
-  }
-
   render() {
-    const { classes, currentUser, history } = this.props
+    const { classes } = this.props
 
     return (
       <div className={classes.root}>
@@ -50,54 +41,7 @@ class ButtonAppBar extends Component {
             ></Typography>
             <LoginButton className={classes.loginButton} />
 
-            {isUserLoggedIn() && (
-              <span className={classes.menuWrapper}>
-                <IconButton
-                  onClick={this.toggleMenu}
-                  className={classes.menuButton}
-                  color="inherit"
-                  aria-label="Menu"
-                >
-                  <MenuIcon />
-                </IconButton>
-                <Menu
-                  id="simple-menu"
-                  anchorEl={this.state.anchorEl}
-                  open={Boolean(this.state.anchorEl)}
-                  onClose={this.toggleMenu}
-                >
-                  <MenuItem
-                    component={RouterLink}
-                    to={Routes.home}
-                    onClick={this.toggleMenu}
-                  >
-                    Home
-                  </MenuItem>
-                  <MenuItem
-                    component={RouterLink}
-                    to={Routes.dashboardPath('')}
-                    onClick={this.toggleMenu}
-                  >
-                    Dashboard
-                  </MenuItem>
-                  <MenuItem
-                    component={RouterLink}
-                    to={Routes.userProfilePath(currentUser.id)}
-                    onClick={this.toggleMenu}
-                  >
-                    My profile
-                  </MenuItem>
-                  <MenuItem
-                    onClick={() => {
-                      logoutUser()
-                      history.push(`/`)
-                    }}
-                  >
-                    Logout
-                  </MenuItem>
-                </Menu>
-              </span>
-            )}
+            {isUserLoggedIn() && <AppBarMenu classes={classes} />}
           </Toolbar>
         </AppBar>
       </div>
