@@ -1,20 +1,15 @@
 import React, { Component } from 'react'
-import { Link as RouterLink } from 'react-router-dom'
 
 import AppBar from '@material-ui/core/AppBar'
 import Toolbar from '@material-ui/core/Toolbar'
 import Typography from '@material-ui/core/Typography'
-import IconButton from '@material-ui/core/IconButton'
-import MenuIcon from '@material-ui/icons/Menu'
-import Menu from '@material-ui/core/Menu'
-import MenuItem from '@material-ui/core/MenuItem'
 
 import LoginButton from '../components/shared/loginButton'
-import { logoutUser, isUserLoggedIn, withCurrentUser } from '../utils/userUtils'
+import { isUserLoggedIn, withCurrentUser } from '../utils/userUtils'
 import { withRouter } from 'react-router'
 
-import Routes from '../routes'
 import AppBarMenu from './appBar/appBarMenu'
+import AppBarMessages from './appBar/appBarMessages'
 
 class ButtonAppBar extends Component {
   render() {
@@ -39,9 +34,15 @@ class ButtonAppBar extends Component {
               color="inherit"
               className={classes.grow}
             ></Typography>
+
             <LoginButton className={classes.loginButton} />
 
-            {isUserLoggedIn() && <AppBarMenu classes={classes} />}
+            {isUserLoggedIn() && (
+              <React.Fragment>
+                <AppBarMessages classes={classes} />
+                <AppBarMenu classes={classes} />
+              </React.Fragment>
+            )}
           </Toolbar>
         </AppBar>
       </div>
