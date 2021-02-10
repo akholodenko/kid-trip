@@ -102,6 +102,12 @@ Message.belongsTo(User, {
   as: 'MessageSender'
 })
 
+Message.belongsTo(User, {
+  foreignKey: 'recipient_user_id',
+  sourceKey: 'recipient_user_id',
+  as: 'MessageRecipient'
+})
+
 UsersVenuesFavorites.hasMany(User, {
   foreignKey: 'id',
   sourceKey: 'user_id'

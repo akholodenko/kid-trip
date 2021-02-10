@@ -5,6 +5,16 @@ import { USER_ATTRIBUTES } from './user/userInfo'
 import sequelize from '../config/sequelize'
 import { fromDbMessageTransform } from './message/utils'
 
+const MESSAGE_ATTRIBUTES = [
+  'id',
+  'sender_user_id',
+  'recipient_user_id',
+  'message_type',
+  'status',
+  'body',
+  'created_at'
+]
+
 export const getInboxMessages = (userId, fields) => {
   if (!!fields.messages) {
     let associations = []
@@ -18,15 +28,7 @@ export const getInboxMessages = (userId, fields) => {
     }
 
     return Message.findAll({
-      attributes: [
-        'id',
-        'sender_user_id',
-        'recipient_user_id',
-        'message_type',
-        'status',
-        'body',
-        'created_at'
-      ],
+      attributes: MESSAGE_ATTRIBUTES,
       include: associations,
       where: {
         recipient_user_id: userId
@@ -41,15 +43,7 @@ export const getInboxMessages = (userId, fields) => {
 export const getAllMessages = (userId, fields) => {
   if (!!fields.messages) {
     return Message.findAll({
-      attributes: [
-        'id',
-        'sender_user_id',
-        'recipient_user_id',
-        'message_type',
-        'status',
-        'body',
-        'created_at'
-      ],
+      attributes: MESSAGE_ATTRIBUTES,
       where: {
         [Op.or]: [{ recipient_user_id: userId }, { sender_user_id: userId }]
       },
@@ -62,6 +56,7 @@ export const getAllMessages = (userId, fields) => {
 
 export const getMessages = (userId, status, fields) => {
   console.log('here', userId, status)
+  console.log('need SENT support')
   let associations = []
 
   if (!!fields.sender) {
@@ -73,15 +68,7 @@ export const getMessages = (userId, status, fields) => {
   }
 
   return Message.findAll({
-    attributes: [
-      'id',
-      'sender_user_id',
-      'recipient_user_id',
-      'message_type',
-      'status',
-      'body',
-      'created_at'
-    ],
+    attributes: MESSAGE_ATTRIBUTES,
     include: associations,
     where: {
       recipient_user_id: userId,
