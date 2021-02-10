@@ -40,24 +40,9 @@ export const getInboxMessages = (userId, fields) => {
   return null
 }
 
-export const getAllMessages = (userId, fields) => {
-  if (!!fields.messages) {
-    return Message.findAll({
-      attributes: MESSAGE_ATTRIBUTES,
-      where: {
-        [Op.or]: [{ recipient_user_id: userId }, { sender_user_id: userId }]
-      },
-      order: [['created_at', 'DESC']]
-    })
-  }
-
-  return null
-}
-
 export const getMessages = (userId, status, fields) => {
-  console.log('here', userId, status)
-  console.log('need SENT support')
   let associations = []
+  let where
 
   if (!!fields.sender) {
     associations.push({
@@ -67,17 +52,31 @@ export const getMessages = (userId, status, fields) => {
     })
   }
 
+  if (!!fields.recipient) {
+    associations.push({
+      model: User,
+      as: 'MessageRecipient',
+      attributes: USER_ATTRIBUTES
+    })
+  }
+
+  if (status === 'sent') {
+    where = {
+      sender_user_id: userId
+    }
+  } else {
+    where = {
+      recipient_user_id: userId,
+      status: status
+    }
+  }
+
   return Message.findAll({
     attributes: MESSAGE_ATTRIBUTES,
     include: associations,
-    where: {
-      recipient_user_id: userId,
-      status: status
-    },
+    where,
     order: [['created_at', 'DESC']]
   }).then(messages => messages.map(message => fromDbMessageTransform(message)))
-
-  return null
 }
 
 export const getMessageCount = userId => {

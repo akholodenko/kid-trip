@@ -8,10 +8,12 @@ export const fromDbMessageTransform = message => {
     messageType: message.message_type,
     sender: message.MessageSender
       ? fromDbUserTransform(message.MessageSender)
-      : null,
-    recipient: {
-      id: message.recipient_user_id
-    },
+      : { id: message.sender_user_id },
+    recipient: message.MessageRecipient
+      ? fromDbUserTransform(message.MessageRecipient)
+      : {
+          id: message.recipient_user_id
+        },
     createdAt:
       message.dataValues && message.dataValues.created_at
         ? message.dataValues.created_at.toString()
