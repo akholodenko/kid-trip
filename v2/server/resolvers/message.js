@@ -84,7 +84,8 @@ export const getMessages = (userId, status, fields) => {
     ],
     include: associations,
     where: {
-      recipient_user_id: userId
+      recipient_user_id: userId,
+      status: status
     },
     order: [['created_at', 'DESC']]
   }).then(messages => messages.map(message => fromDbMessageTransform(message)))
