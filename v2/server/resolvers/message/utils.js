@@ -2,10 +2,13 @@ import { fromDbUserTransform } from '../user/utils'
 
 export const fromDbMessageTransform = message => {
   return {
+    id: message.id,
     body: message.body,
     status: message.status,
     messageType: message.message_type,
-    sender: fromDbUserTransform(message.MessageSender),
+    sender: message.MessageSender
+      ? fromDbUserTransform(message.MessageSender)
+      : null,
     recipient: {
       id: message.recipient_user_id
     },

@@ -19,6 +19,7 @@ export default gql`
     similarVenuesByName(name: String!, cityId: Int, first: Int): [Venue]
     cities(first: Int, query: String): [City]!
     messageCount(status: String): MessageCount!
+    messages(status: String): [Message]
     me: User
   }
 `
