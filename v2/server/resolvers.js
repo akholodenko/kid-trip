@@ -27,7 +27,11 @@ import {
   deleteUserFollower
 } from './resolvers/user/userProfile'
 
-import { getMessages, getMessageCount } from './resolvers/message'
+import {
+  getMessages,
+  getMessageCount,
+  getConversationalists
+} from './resolvers/message'
 
 export default {
   Query: {
@@ -98,6 +102,13 @@ export default {
       }
 
       return getMessages(user.userId, args.status, graphsqlFields(info))
+    },
+    conversationalists(obj, args, { user }, info) {
+      if (!user) {
+        throw new Error('You are not authenticated!')
+      }
+
+      return getConversationalists(user.userId)
     },
     me(obj, args, { user }, info) {
       if (!user) {

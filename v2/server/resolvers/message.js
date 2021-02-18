@@ -1,4 +1,3 @@
-import { Op } from 'sequelize'
 import Message from '../models/message'
 import User from '../models/user'
 import { USER_ATTRIBUTES } from './user/userInfo'
@@ -38,6 +37,56 @@ export const getInboxMessages = (userId, fields) => {
   }
 
   return null
+}
+
+// export const getConversations = (userId, fields) => {
+//   return Message.findAll({
+//     attributes: MESSAGE_ATTRIBUTES,
+//     where: {
+//       [Op.or]: [{ recipient_user_id: userId }, { sender_user_id: userId }]
+//     },
+//     order: [['created_at', 'DESC']]
+//   }).then(messages => {
+//     console.log(
+//       'need to process messages into conversations',
+//       'use date and text of latest message'
+//     )
+//     return null
+//   })
+// }
+
+export const getConversationalists = userId => {
+  return sequelize
+    .query(
+      `
+			select
+       sorted_corresponders.created_at,
+       users.id, users.first_name, users.last_name
+        from (select DISTINCT ON (corresponders.user_id) corresponders.user_id,
+                                                         corresponders.created_at
+              from (select case
+                               when messages.sender_user_id = ${userId} THEN messages.recipient_user_id
+                               when messages.recipient_user_id = ${userId} THEN messages.sender_user_id
+                               end as "user_id",
+                           messages.created_at
+                    from messages
+                    where messages.sender_user_id = ${userId}
+                       or messages.recipient_user_id = ${userId}
+                    order by messages.created_at desc
+                   ) as corresponders) as sorted_corresponders
+                 join users on users.id = sorted_corresponders.user_id
+        order by sorted_corresponders.created_at desc;`
+    )
+    .then(conversationalists =>
+      conversationalists[0].map(conversationalist => {
+        return {
+          id: conversationalist.id,
+          firstName: conversationalist.first_name,
+          lastName: conversationalist.last_name,
+          createdAt: conversationalist.created_at
+        }
+      })
+    )
 }
 
 export const getMessages = (userId, status, fields) => {

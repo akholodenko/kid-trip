@@ -20,6 +20,7 @@ export default gql`
     cities(first: Int, query: String): [City]!
     messageCount(status: String): MessageCount!
     messages(status: String): [Message]
+    conversationalists: [Conversationalist]
     me: User
   }
 `

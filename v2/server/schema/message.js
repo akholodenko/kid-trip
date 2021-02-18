@@ -17,4 +17,11 @@ export default gql`
     archived: Int
     deleted: Int
   }
+
+  type Conversationalist {
+    id: ID!
+    firstName: String!
+    lastName: String
+    createdAt: String!
+  }
 `
