@@ -20,6 +20,7 @@ export default gql`
 
   type Conversationalist {
     id: ID!
+    publicId: String!
     firstName: String!
     lastName: String
     createdAt: String!

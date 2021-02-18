@@ -1,52 +1,60 @@
 import React, { useEffect, useState } from 'react'
 import withPageTemplate from './shared/withPageTemplate'
-import { isValueInObject } from '../utils/validationUtils'
 import { useQuery } from '@apollo/client'
-import { GET_MESSAGES } from '../graphql/messagesQueries'
+import { GET_CONVERSATIONALISTS } from '../graphql/messagesQueries'
 import { shortName } from '../utils/userUtils'
+import { decodeUserId } from '../utils/routeUtils'
 import { sinceCreated } from '../utils/dateUtils'
 
-const MESSAGE_STATUS = {
-  UNREAD: 'unread',
-  READ: 'read',
-  SENT: 'sent',
-  ARCHIVED: 'archived'
-}
+import './messages/messages.css'
+import Routes from '../routes'
+import { Link as RouterLink } from 'react-router-dom'
 
 const MessagesPage = ({ match }) => {
-  const [status, setStatus] = useState(
-    isValueInObject(MESSAGE_STATUS, match.params.status)
-      ? match.params.status
-      : MESSAGE_STATUS.UNREAD
-  )
+  const [conversationalistUserId, setConversationalistUserId] = useState(null)
+  const [conversationalists, setConversationalists] = useState([])
 
-  const [messages, setMessages] = useState([])
-
-  const { loading, error, data } = useQuery(GET_MESSAGES, {
-    variables: { status },
+  const { loading, error, data } = useQuery(GET_CONVERSATIONALISTS, {
     fetchPolicy: 'no-cache'
   })
 
   useEffect(() => {
     if (data) {
-      setMessages(data.messages)
+      setConversationalists(data.conversationalists)
     }
   }, [data])
+
+  useEffect(() => {
+    setConversationalistUserId(
+      match.params.publicId ? decodeUserId(match.params.publicId) : null
+    )
+  }, [match.params.publicId])
+
+  useEffect(() => {
+    if (conversationalistUserId) {
+      console.log('get convos with user ', conversationalistUserId)
+    } else {
+      console.log('load convo for 1st user')
+    }
+  }, [conversationalistUserId])
 
   if (loading) return null
   if (error) return `Error! ${error}`
 
   return (
-    <div>
-      <div>{status} messages</div>
-      {messages.map(message => (
-        <div key={message.id}>
-          <div>{sinceCreated(message.createdAt, 'at')}</div>
-          <div>from {shortName(message.sender)}</div>
-          <div>{message.body}</div>
-          <hr />
-        </div>
-      ))}
+    <div className="conversations">
+      <div className="conversationalists">
+        {conversationalists.map(conversationalist => (
+          <RouterLink
+            to={Routes.messagesPath(conversationalist.id)}
+            key={conversationalist.id}
+            className="conversationalist"
+          >
+            {shortName(conversationalist)}
+          </RouterLink>
+        ))}
+      </div>
+      <div className="messages">conversation here</div>
     </div>
   )
 }

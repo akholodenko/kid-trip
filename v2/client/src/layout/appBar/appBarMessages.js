@@ -16,7 +16,7 @@ const AppBarMessages = ({ classes }) => {
           color="inherit"
           aria-label="Messages"
           component={RouterLink}
-          to={Routes.messagesPath('unread')}
+          to={Routes.messagesPath('')}
         >
           <EmailOutlinedIcon />
         </IconButton>

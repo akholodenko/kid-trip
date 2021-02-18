@@ -3,6 +3,7 @@ import User from '../models/user'
 import { USER_ATTRIBUTES } from './user/userInfo'
 import sequelize from '../config/sequelize'
 import { fromDbMessageTransform } from './message/utils'
+import { userDbIdToPublicId } from './user/utils'
 
 const MESSAGE_ATTRIBUTES = [
   'id',
@@ -39,21 +40,21 @@ export const getInboxMessages = (userId, fields) => {
   return null
 }
 
-// export const getConversations = (userId, fields) => {
-//   return Message.findAll({
-//     attributes: MESSAGE_ATTRIBUTES,
-//     where: {
-//       [Op.or]: [{ recipient_user_id: userId }, { sender_user_id: userId }]
-//     },
-//     order: [['created_at', 'DESC']]
-//   }).then(messages => {
-//     console.log(
-//       'need to process messages into conversations',
-//       'use date and text of latest message'
-//     )
-//     return null
-//   })
-// }
+export const getConversations = (userId, fields) => {
+  return Message.findAll({
+    attributes: MESSAGE_ATTRIBUTES,
+    where: {
+      [Op.or]: [{ recipient_user_id: userId }, { sender_user_id: userId }]
+    },
+    order: [['created_at', 'DESC']]
+  }).then(messages => {
+    console.log(
+      'need to process messages into conversations',
+      'use date and text of latest message'
+    )
+    return null
+  })
+}
 
 export const getConversationalists = userId => {
   return sequelize
@@ -81,6 +82,7 @@ export const getConversationalists = userId => {
       conversationalists[0].map(conversationalist => {
         return {
           id: conversationalist.id,
+          publicId: userDbIdToPublicId(conversationalist.id),
           firstName: conversationalist.first_name,
           lastName: conversationalist.last_name,
           createdAt: conversationalist.created_at

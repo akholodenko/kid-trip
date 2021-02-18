@@ -32,3 +32,15 @@ export const GET_MESSAGES = gql`
     }
   }
 `
+
+export const GET_CONVERSATIONALISTS = gql`
+  query {
+    conversationalists {
+      id
+      publicId
+      firstName
+      lastName
+      createdAt
+    }
+  }
+`
