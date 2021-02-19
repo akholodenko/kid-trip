@@ -5,7 +5,7 @@ import {
   GET_CONVERSATIONALISTS,
   GET_CONVERSATION
 } from '../graphql/messagesQueries'
-import { shortName } from '../utils/userUtils'
+import { shortName, withCurrentUser } from '../utils/userUtils'
 import { decodeUserId } from '../utils/routeUtils'
 import { sinceCreated } from '../utils/dateUtils'
 
@@ -13,13 +13,23 @@ import './messages/messages.css'
 import Routes from '../routes'
 import { Link as RouterLink } from 'react-router-dom'
 
-const MessagesPage = ({ match }) => {
+const isCurrentUser = (currentUserId, userId) => currentUserId === userId
+
+const MessagesPage = ({ match, currentUser }) => {
   const [conversationalistUserId, setConversationalistUserId] = useState(null)
   const [conversationalists, setConversationalists] = useState([])
 
   const { loading, error, data } = useQuery(GET_CONVERSATIONALISTS, {
     fetchPolicy: 'no-cache'
   })
+
+  const messageTimeStampFormat = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+    hour: 'numeric',
+    minute: '2-digit'
+  }
 
   const [getConversation, currentConversation] = useLazyQuery(
     GET_CONVERSATION,
@@ -58,7 +68,9 @@ const MessagesPage = ({ match }) => {
           <RouterLink
             to={Routes.messagesPath(conversationalist.id)}
             key={conversationalist.id}
-            className="conversationalist"
+            className={`conversationalist ${
+              conversationalistUserId === conversationalist.id ? 'active' : ''
+            }`}
           >
             <div>{shortName(conversationalist)}</div>
             <div>{sinceCreated(conversationalist.createdAt, 'at')}</div>
@@ -69,9 +81,23 @@ const MessagesPage = ({ match }) => {
         {currentConversation.data &&
           currentConversation.data.conversation &&
           currentConversation.data.conversation.map(message => (
-            <div key={message.id}>
-              {shortName(message.sender)}
-              {sinceCreated(message.createdAt, 'at')}: {message.body}
+            <div
+              key={message.id}
+              className={`message ${
+                isCurrentUser(currentUser.id, message.sender.id)
+                  ? 'fromCurrentUser'
+                  : ''
+              }`}
+            >
+              <div className="messageContainer">
+                <div className="messageSender">{shortName(message.sender)}</div>
+                {message.body}
+              </div>
+              <div className="messageTimestamp">
+                {sinceCreated(message.createdAt, null, messageTimeStampFormat)}{' '}
+                <br />
+                {message.status}
+              </div>
             </div>
           ))}
       </div>
@@ -79,4 +105,4 @@ const MessagesPage = ({ match }) => {
   )
 }
 
-export default withPageTemplate(MessagesPage)
+export default withCurrentUser(withPageTemplate(MessagesPage))

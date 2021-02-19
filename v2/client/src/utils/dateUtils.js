@@ -2,7 +2,7 @@ export const localDateTime = timestamp => {
   return new Date(timestamp).toLocaleString()
 }
 
-export const sinceCreated = (timestamp, prefix = 'on') => {
+export const sinceCreated = (timestamp, prefix = 'on', format = null) => {
   const then = new Date(timestamp)
   const now = new Date()
 
@@ -20,6 +20,8 @@ export const sinceCreated = (timestamp, prefix = 'on') => {
     response = Math.round(diffSeconds / 3600) + ' hour ago'
   } else if (diffSeconds <= 86400) {
     response = Math.round(diffSeconds / 3600) + ' hours ago'
+  } else if (format) {
+    response = then.toLocaleTimeString('en-US', format)
   } else if (prefix === 'at') {
     response =
       prefix +

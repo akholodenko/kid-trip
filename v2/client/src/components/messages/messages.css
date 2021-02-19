@@ -14,10 +14,63 @@
     border-bottom: 1px solid #efefef;
 }
 
+.conversationalist.active {
+    background-color: #efefef;
+}
+
 .conversationalist:hover {
     background-color: #efefef;
 }
 
 .messages {
     flex-grow: 3;
+    padding: 20px;
+}
+
+.message {
+    margin-bottom: 15px;
+}
+
+
+.message.fromCurrentUser {
+    text-align: right;
+}
+
+.message.fromCurrentUser > .messageContainer {
+    background-color: #2196f3;
+}
+
+.message > .messageTimestamp {
+    font-size: 9px;
+    margin: 0px 6px;
+}
+
+.messageContainer {
+    background-color: #888888;
+    border-radius: 8px;
+    padding: 12px 10px;
+    font-size: 13px;
+    font-weight: 300;
+    color: #ffffff;
+    max-width: 65%;
+    min-width: 100px;
+    display: inline-block;
+    position: relative;
+}
+
+.messageSender {
+    border-radius: 8px;
+    background-color: #333333;
+    color: #ffffff;
+    position: absolute;
+    top: -9px;
+    right: 10px;
+    padding: 3px 7px;
+    font-size: 9px;
+    font-weight: 600;
+    text-transform: uppercase;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100px;
 }

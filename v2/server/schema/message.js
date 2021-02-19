@@ -2,7 +2,7 @@ import { gql } from 'apollo-server'
 
 export default gql`
   type Message {
-    id: ID!
+    id: Int!
     sender: User
     recipient: User!
     messageType: String
@@ -19,7 +19,7 @@ export default gql`
   }
 
   type Conversationalist {
-    id: ID!
+    id: Int!
     publicId: String!
     firstName: String!
     lastName: String
