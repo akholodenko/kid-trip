@@ -90,13 +90,13 @@ const MessagesPage = ({ match, currentUser }) => {
               }`}
             >
               <div className="messageContainer">
-                <div className="messageSender">{shortName(message.sender)}</div>
+                <div className={`messageSender ${message.status}`}>
+                  {shortName(message.sender)}
+                </div>
                 {message.body}
               </div>
               <div className="messageTimestamp">
                 {sinceCreated(message.createdAt, null, messageTimeStampFormat)}{' '}
-                <br />
-                {message.status}
               </div>
             </div>
           ))}

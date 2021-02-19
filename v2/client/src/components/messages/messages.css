@@ -48,7 +48,7 @@
 .messageContainer {
     background-color: #888888;
     border-radius: 8px;
-    padding: 12px 10px;
+    padding: 14px 10px 8px;
     font-size: 13px;
     font-weight: 300;
     color: #ffffff;
@@ -56,21 +56,27 @@
     min-width: 100px;
     display: inline-block;
     position: relative;
+    margin-bottom: 3px;
 }
 
 .messageSender {
     border-radius: 8px;
-    background-color: #333333;
+    background-color: #555555;
     color: #ffffff;
     position: absolute;
     top: -9px;
     right: 10px;
-    padding: 3px 7px;
+    padding: 3px 8px;
     font-size: 9px;
-    font-weight: 600;
+    font-weight: 800;
     text-transform: uppercase;
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
     max-width: 100px;
+    border: 1px solid white;
+}
+
+.messageSender.unread {
+    background-color: red;
 }
