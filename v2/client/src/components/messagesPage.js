@@ -20,7 +20,13 @@ const MessagesPage = ({ match }) => {
 
   useEffect(() => {
     if (data) {
-      setConversationalists(data.conversationalists)
+      let temp = data.conversationalists.map(conversationalist => {
+        return {
+          ...conversationalist,
+          createdAt: new Date(parseInt(conversationalist.createdAt))
+        }
+      })
+      setConversationalists(temp)
     }
   }, [data])
 
@@ -50,11 +56,14 @@ const MessagesPage = ({ match }) => {
             key={conversationalist.id}
             className="conversationalist"
           >
-            {shortName(conversationalist)}
+            <div>{shortName(conversationalist)}</div>
+            <div>{sinceCreated(conversationalist.createdAt)}</div>
           </RouterLink>
         ))}
       </div>
-      <div className="messages">conversation here</div>
+      <div className="messages">
+        conversation here ({conversationalistUserId})
+      </div>
     </div>
   )
 }

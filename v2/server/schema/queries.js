@@ -21,6 +21,7 @@ export default gql`
     messageCount(status: String): MessageCount!
     messages(status: String): [Message]
     conversationalists: [Conversationalist]
+    conversation(conversationalistUserId: Int!): [Message]
     me: User
   }
 `

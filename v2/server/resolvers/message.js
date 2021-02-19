@@ -1,3 +1,5 @@
+import { Op } from 'sequelize'
+
 import Message from '../models/message'
 import User from '../models/user'
 import { USER_ATTRIBUTES } from './user/userInfo'
@@ -40,21 +42,66 @@ export const getInboxMessages = (userId, fields) => {
   return null
 }
 
-export const getConversations = (userId, fields) => {
+export const getConversation = (userId, conversationalistUserId, fields) => {
+  let associations = []
+
+  if (!!fields.sender) {
+    associations.push({
+      model: User,
+      as: 'MessageSender',
+      attributes: USER_ATTRIBUTES
+    })
+  }
+
+  if (!!fields.recipient) {
+    associations.push({
+      model: User,
+      as: 'MessageRecipient',
+      attributes: USER_ATTRIBUTES
+    })
+  }
+
   return Message.findAll({
     attributes: MESSAGE_ATTRIBUTES,
+    include: associations,
     where: {
-      [Op.or]: [{ recipient_user_id: userId }, { sender_user_id: userId }]
+      [Op.or]: [
+        {
+          [Op.and]: [
+            { recipient_user_id: userId },
+            { sender_user_id: conversationalistUserId }
+          ]
+        },
+        {
+          [Op.and]: [
+            { recipient_user_id: conversationalistUserId },
+            { sender_user_id: userId }
+          ]
+        }
+      ]
     },
     order: [['created_at', 'DESC']]
   }).then(messages => {
-    console.log(
-      'need to process messages into conversations',
-      'use date and text of latest message'
-    )
-    return null
+    // console.log(messages)
+    return messages.map(message => fromDbMessageTransform(message))
   })
 }
+
+// export const getConversations = (userId, fields) => {
+//   return Message.findAll({
+//     attributes: MESSAGE_ATTRIBUTES,
+//     where: {
+//       [Op.or]: [{ recipient_user_id: userId }, { sender_user_id: userId }]
+//     },
+//     order: [['created_at', 'DESC']]
+//   }).then(messages => {
+//     console.log(
+//       'need to process messages into conversations',
+//       'use date and text of latest message'
+//     )
+//     return null
+//   })
+// }
 
 export const getConversationalists = userId => {
   return sequelize

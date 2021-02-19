@@ -30,7 +30,8 @@ import {
 import {
   getMessages,
   getMessageCount,
-  getConversationalists
+  getConversationalists,
+  getConversation
 } from './resolvers/message'
 
 export default {
@@ -109,6 +110,21 @@ export default {
       }
 
       return getConversationalists(user.userId)
+    },
+    conversation(obj, args, { user }, info) {
+      if (!user) {
+        throw new Error('You are not authenticated!')
+      }
+
+      if (args && args.conversationalistUserId) {
+        return getConversation(
+          user.userId,
+          args.conversationalistUserId,
+          graphsqlFields(info)
+        )
+      } else {
+        throw new Error('Invalid conversation')
+      }
     },
     me(obj, args, { user }, info) {
       if (!user) {
