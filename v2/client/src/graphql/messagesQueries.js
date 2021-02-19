@@ -44,3 +44,25 @@ export const GET_CONVERSATIONALISTS = gql`
     }
   }
 `
+
+export const GET_CONVERSATION = gql`
+  query($conversationalistUserId: Int!) {
+    conversation(conversationalistUserId: $conversationalistUserId) {
+      id
+      body
+      status
+      messageType
+      recipient {
+        id
+        firstName
+        lastName
+      }
+      sender {
+        id
+        firstName
+        lastName
+      }
+      createdAt
+    }
+  }
+`

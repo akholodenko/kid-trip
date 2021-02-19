@@ -132,7 +132,7 @@ export const getConversationalists = userId => {
           publicId: userDbIdToPublicId(conversationalist.id),
           firstName: conversationalist.first_name,
           lastName: conversationalist.last_name,
-          createdAt: conversationalist.created_at
+          createdAt: conversationalist.created_at.toString()
         }
       })
     )

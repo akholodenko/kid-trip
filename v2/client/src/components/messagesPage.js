@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import withPageTemplate from './shared/withPageTemplate'
-import { useQuery } from '@apollo/client'
-import { GET_CONVERSATIONALISTS } from '../graphql/messagesQueries'
+import { useLazyQuery, useQuery } from '@apollo/client'
+import {
+  GET_CONVERSATIONALISTS,
+  GET_CONVERSATION
+} from '../graphql/messagesQueries'
 import { shortName } from '../utils/userUtils'
 import { decodeUserId } from '../utils/routeUtils'
 import { sinceCreated } from '../utils/dateUtils'
@@ -18,15 +21,16 @@ const MessagesPage = ({ match }) => {
     fetchPolicy: 'no-cache'
   })
 
+  const [getConversation, currentConversation] = useLazyQuery(
+    GET_CONVERSATION,
+    {
+      fetchPolicy: 'no-cache'
+    }
+  )
+
   useEffect(() => {
     if (data) {
-      let temp = data.conversationalists.map(conversationalist => {
-        return {
-          ...conversationalist,
-          createdAt: new Date(parseInt(conversationalist.createdAt))
-        }
-      })
-      setConversationalists(temp)
+      setConversationalists(data.conversationalists)
     }
   }, [data])
 
@@ -38,11 +42,11 @@ const MessagesPage = ({ match }) => {
 
   useEffect(() => {
     if (conversationalistUserId) {
-      console.log('get convos with user ', conversationalistUserId)
+      getConversation({ variables: { conversationalistUserId } })
     } else {
       console.log('load convo for 1st user')
     }
-  }, [conversationalistUserId])
+  }, [conversationalistUserId, getConversation])
 
   if (loading) return null
   if (error) return `Error! ${error}`
@@ -57,12 +61,19 @@ const MessagesPage = ({ match }) => {
             className="conversationalist"
           >
             <div>{shortName(conversationalist)}</div>
-            <div>{sinceCreated(conversationalist.createdAt)}</div>
+            <div>{sinceCreated(conversationalist.createdAt, 'at')}</div>
           </RouterLink>
         ))}
       </div>
       <div className="messages">
-        conversation here ({conversationalistUserId})
+        {currentConversation.data &&
+          currentConversation.data.conversation &&
+          currentConversation.data.conversation.map(message => (
+            <div key={message.id}>
+              {shortName(message.sender)}
+              {sinceCreated(message.createdAt, 'at')}: {message.body}
+            </div>
+          ))}
       </div>
     </div>
   )
