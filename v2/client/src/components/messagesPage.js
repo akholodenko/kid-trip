@@ -58,6 +58,19 @@ const MessagesPage = ({ match, currentUser }) => {
     }
   }, [conversationalistUserId, getConversation])
 
+  useEffect(() => {
+    if (
+      currentConversation.data &&
+      currentConversation.data.conversation.filter(
+        message => message.status === 'unread'
+      ).length
+    ) {
+      setTimeout(() => {
+        console.log('mark as read')
+      }, 3000)
+    }
+  }, [currentConversation])
+
   if (loading) return null
   if (error) return `Error! ${error}`
 

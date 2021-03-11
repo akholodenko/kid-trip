@@ -87,22 +87,6 @@ export const getConversation = (userId, conversationalistUserId, fields) => {
   })
 }
 
-// export const getConversations = (userId, fields) => {
-//   return Message.findAll({
-//     attributes: MESSAGE_ATTRIBUTES,
-//     where: {
-//       [Op.or]: [{ recipient_user_id: userId }, { sender_user_id: userId }]
-//     },
-//     order: [['created_at', 'DESC']]
-//   }).then(messages => {
-//     console.log(
-//       'need to process messages into conversations',
-//       'use date and text of latest message'
-//     )
-//     return null
-//   })
-// }
-
 export const getConversationalists = userId => {
   return sequelize
     .query(
