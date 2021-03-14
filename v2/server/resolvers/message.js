@@ -83,7 +83,6 @@ export const getConversation = (userId, conversationalistUserId, fields) => {
     },
     order: [['created_at', 'DESC']]
   }).then(messages => {
-    // console.log(messages)
     return messages.map(message => fromDbMessageTransform(message))
   })
 }
@@ -186,22 +185,35 @@ export const getMessageCount = userId => {
   return null
 }
 
-export const updateConversation = (obj, args, { user }, info) => {
+export const updateConversation = (obj, args, { user }) => {
   if (!user) {
     throw new Error('You are not authenticated!')
   }
 
-  console.log(
-    `user: ${user.userId}`,
-    `other user: ${args.conversationalistUserId}`
-  )
-
-  // return UserFollower.destroy({
-  //   where: {
-  //     follower_user_id: user.userId,
-  //     followee_user_id: userId
-  //   }
-  // }).then(() => {
-  //   return getUserFollowerStats(userId, user.userId)
-  // })
+  return Message.update(
+    { status: args.status },
+    {
+      where: {
+        [Op.or]: [
+          {
+            [Op.and]: [
+              { recipient_user_id: user.userId },
+              { sender_user_id: args.conversationalistUserId }
+            ]
+          },
+          {
+            [Op.and]: [
+              { recipient_user_id: args.conversationalistUserId },
+              { sender_user_id: user.userId }
+            ]
+          }
+        ]
+      }
+    }
+  ).then(() => {
+    return getConversation(user.userId, args.conversationalistUserId, {
+      sender: true,
+      recipient: true
+    })
+  })
 }

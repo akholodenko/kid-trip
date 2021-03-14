@@ -46,3 +46,11 @@ export const sinceCreated = (timestamp, prefix = 'on', format = null) => {
 
   return response
 }
+
+export const messageTimeStampFormat = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit'
+}

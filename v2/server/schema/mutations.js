@@ -24,6 +24,9 @@ export default gql`
     updateUserFeedConfig(venueTypeIds: String, cityIds: String): FeedConfig
     createUserFollower(publicId: String!): UserProfileStats
     deleteUserFollower(publicId: String!): UserProfileStats
-    updateConversation(conversationalistUserId: Int!): [Message]
+    updateConversation(
+      conversationalistUserId: Int!
+      status: String!
+    ): [Message]
   }
 `
