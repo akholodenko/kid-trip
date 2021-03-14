@@ -2,7 +2,7 @@ export const localDateTime = timestamp => {
   return new Date(timestamp).toLocaleString()
 }
 
-export const sinceCreated = timestamp => {
+export const sinceCreated = (timestamp, prefix = 'on', format = null) => {
   const then = new Date(timestamp)
   const now = new Date()
 
@@ -20,9 +20,23 @@ export const sinceCreated = timestamp => {
     response = Math.round(diffSeconds / 3600) + ' hour ago'
   } else if (diffSeconds <= 86400) {
     response = Math.round(diffSeconds / 3600) + ' hours ago'
+  } else if (format) {
+    response = then.toLocaleTimeString('en-US', format)
+  } else if (prefix === 'at') {
+    response =
+      prefix +
+      ' ' +
+      then.toLocaleTimeString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
   } else {
     response =
-      'on ' +
+      prefix +
+      ' ' +
       then.toLocaleDateString('en-US', {
         year: 'numeric',
         month: 'short',
@@ -31,4 +45,12 @@ export const sinceCreated = timestamp => {
   }
 
   return response
+}
+
+export const messageTimeStampFormat = {
+  year: 'numeric',
+  month: 'short',
+  day: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit'
 }

@@ -14,5 +14,6 @@ export default gql`
     followees: [User]
     followers: [User]
     stats: UserProfileStats
+    messages: [Message]
   }
 `

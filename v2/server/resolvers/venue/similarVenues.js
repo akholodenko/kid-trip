@@ -86,8 +86,7 @@ const sqlQueryVenuesByTypeInRadius = (
 				FROM venues
 				join venues_classifications vc on vc.venue_id = venues.id
 				join cities c on c.id = venues.city_id
-				where 
-					venues.lat is not null and 
+				where  
 					vc.venue_type_id = ${venueTypeId} 
 					${
             excludedVenueIds
@@ -95,7 +94,7 @@ const sqlQueryVenuesByTypeInRadius = (
               : ''
           } 
 				ORDER BY distance LIMIT ${limit}) as list
-			where list.distance < ${fromMiles(radius)}`
+			where list.distance <= ${fromMiles(radius)}`
     )
     .then(response =>
       response[0].map(venue => {

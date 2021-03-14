@@ -7,6 +7,7 @@ import UserProfile from './schema/userProfile'
 import City from './schema/city'
 import AuthPayload from './schema/authPayload'
 import FeedConfig from './schema/feedConfig'
+import Message from './schema/message'
 
 export default [
   Queries,
@@ -17,5 +18,6 @@ export default [
   Venue,
   City,
   AuthPayload,
-  FeedConfig
+  FeedConfig,
+  Message
 ]

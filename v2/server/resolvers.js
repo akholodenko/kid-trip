@@ -1,6 +1,5 @@
 import graphsqlFields from 'graphql-fields'
 
-import { initModelAssociations } from './models/associations'
 import {
   getVenue,
   getVenueBySlug,
@@ -28,7 +27,13 @@ import {
   deleteUserFollower
 } from './resolvers/user/userProfile'
 
-initModelAssociations()
+import {
+  getMessages,
+  getMessageCount,
+  getConversationalists,
+  getConversation,
+  updateConversation
+} from './resolvers/message'
 
 export default {
   Query: {
@@ -86,6 +91,42 @@ export default {
         throw new Error('Invalid profile')
       }
     },
+    messageCount(obj, args, { user }, info) {
+      if (!user) {
+        throw new Error('You are not authenticated!')
+      }
+
+      return getMessageCount(user.userId)
+    },
+    messages(obj, args, { user }, info) {
+      if (!user) {
+        throw new Error('You are not authenticated!')
+      }
+
+      return getMessages(user.userId, args.status, graphsqlFields(info))
+    },
+    conversationalists(obj, args, { user }, info) {
+      if (!user) {
+        throw new Error('You are not authenticated!')
+      }
+
+      return getConversationalists(user.userId)
+    },
+    conversation(obj, args, { user }, info) {
+      if (!user) {
+        throw new Error('You are not authenticated!')
+      }
+
+      if (args && args.conversationalistUserId) {
+        return getConversation(
+          user.userId,
+          args.conversationalistUserId,
+          graphsqlFields(info)
+        )
+      } else {
+        throw new Error('Invalid conversation')
+      }
+    },
     me(obj, args, { user }, info) {
       if (!user) {
         throw new Error('You are not authenticated!')
@@ -102,6 +143,7 @@ export default {
     deleteUserVenueFavorite,
     createUserFollower,
     deleteUserFollower,
-    updateUserFeedConfig
+    updateUserFeedConfig,
+    updateConversation
   }
 }

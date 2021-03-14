@@ -13,6 +13,10 @@ const styles = {
   grow: {
     flexGrow: 1
   },
+  messagesButton: {
+    marginLeft: 3,
+    marginRight: -10
+  },
   menuButton: {
     marginLeft: -12,
     marginRight: 20
@@ -35,6 +39,10 @@ const nonHomepageStyles = {
   },
   menuButton: {
     ...styles.menuButton,
+    color: blueGrey[500]
+  },
+  messagesButton: {
+    ...styles.messagesButton,
     color: blueGrey[500]
   },
   loginButton: {

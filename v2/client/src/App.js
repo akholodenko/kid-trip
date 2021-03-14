@@ -14,6 +14,7 @@ import theme from './theme'
 import AppBar from './layout/appBarContainer'
 import SessionNotifications from './layout/sessionNotifications'
 import UserProfilePage from './components/userProfilePage'
+import MessagesPage from './components/messagesPage'
 import { SessionNotificationProvider } from './providers/sessionNotificationProvider'
 
 import './components/shared/inlineButton.css'
@@ -60,6 +61,7 @@ class App extends Component {
               <Route path={Routes.dashboard} component={DashboardPage} />
               <Route path={Routes.venue} component={VenuePage} />
               <Route path={Routes.userProfile} component={UserProfilePage} />
+              <Route path={Routes.messages} component={MessagesPage} />
             </Switch>
             <SessionNotifications></SessionNotifications>
           </div>

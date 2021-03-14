@@ -56,3 +56,5 @@ export const shortName = user => {
 
   return ''
 }
+
+export const isCurrentUser = (currentUserId, userId) => currentUserId === userId

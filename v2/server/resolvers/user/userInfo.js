@@ -7,15 +7,17 @@ import User from '../../models/user'
 import UserVenueFavorite from '../../models/user_venue_favorite'
 import { fromDbUserTransform } from './utils'
 import UserFollower from '../../models/user_follower'
+import { getInboxMessages } from '../message'
 
-const USER_ATTRIBUTES = ['id', 'first_name', 'last_name', 'zipcode']
+export const USER_ATTRIBUTES = ['id', 'first_name', 'last_name', 'zipcode']
 
 export const getUser = (userId, { fields }) => {
   return Promise.all([
     getUserDetails(userId, fields),
     getUserFavoriteVenues(userId, fields),
     getUserFolloweeCount(userId, fields),
-    getUserFollowerCount(userId, fields)
+    getUserFollowerCount(userId, fields),
+    getInboxMessages(userId, fields)
   ]).then(responses => {
     let user = responses[0]
     user.favoriteVenues = responses[1]
@@ -23,6 +25,7 @@ export const getUser = (userId, { fields }) => {
       followees: responses[2],
       followers: responses[3]
     }
+    user.messages = responses[4]
 
     return fromDbUserTransform(user)
   })

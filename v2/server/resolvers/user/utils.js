@@ -1,4 +1,5 @@
 import { fromDbVenueTransform } from '../venue/utils'
+import { fromDbMessageTransform } from '../message/utils'
 import atob from 'atob'
 import btoa from 'btoa'
 
@@ -26,6 +27,9 @@ export const fromDbUserTransform = user => {
       : null,
     followers: user.UserFollowers
       ? user.UserFollowers.map(user => fromDbUserTransform(user))
+      : null,
+    messages: user.messages
+      ? user.messages.map(message => fromDbMessageTransform(message))
       : null
   }
 }

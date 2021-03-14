@@ -3,6 +3,9 @@ import sequelize from '../config/sequelize'
 import Image from './image'
 import UserProfileConfig from './user_profile_config'
 import UserFollower from './user_follower'
+import Message from './message'
+import UserFeedConfig from './user_feed_config'
+import UsersVenuesFavorites from './user_venue_favorite'
 
 const User = sequelize.define(
   'user',
@@ -59,15 +62,13 @@ User.createProfileConfig = userId => {
   })
 }
 
-// User.hasMany(UserFollower, {
-//   foreignKey: 'follower_user_id',
-//   as: 'Followee'
-// })
-//
-// User.hasMany(UserFollower, {
-//   foreignKey: 'followee_user_id',
-//   as: 'Follower'
-// })
+User.hasOne(UserFeedConfig, {
+  foreignKey: 'user_id'
+})
+
+UserFeedConfig.belongsTo(User, {
+  foreignKey: 'user_id'
+})
 
 // users current user is a following (so they are his followees)
 User.belongsToMany(User, {
@@ -83,6 +84,37 @@ User.belongsToMany(User, {
   as: 'UserFollowers',
   foreignKey: 'followee_user_id',
   otherKey: 'follower_user_id'
+})
+
+User.hasMany(Message, {
+  as: 'MessagesSent',
+  foreignKey: 'sender_user_id'
+})
+
+User.hasMany(Message, {
+  as: 'MessagesReceived',
+  foreignKey: 'recipient_user_id'
+})
+
+Message.belongsTo(User, {
+  foreignKey: 'sender_user_id',
+  sourceKey: 'sender_user_id',
+  as: 'MessageSender'
+})
+
+Message.belongsTo(User, {
+  foreignKey: 'recipient_user_id',
+  sourceKey: 'recipient_user_id',
+  as: 'MessageRecipient'
+})
+
+UsersVenuesFavorites.hasMany(User, {
+  foreignKey: 'id',
+  sourceKey: 'user_id'
+})
+
+User.hasMany(UsersVenuesFavorites, {
+  foreignKey: 'user_id'
 })
 
 export default User

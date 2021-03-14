@@ -29,3 +29,6 @@ export const validateVenue = ({ name, type, streetAddress, city, zipcode }) => {
 
   return Object.values(valid).indexOf(false) === -1
 }
+
+export const isValueInObject = (object, value) =>
+  Object.values(object).includes(value)

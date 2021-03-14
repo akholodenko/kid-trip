@@ -1,0 +1,13 @@
+.messagesButtonWrapper {
+    position: relative;
+}
+
+.unreadIndicator {
+    position: absolute;
+    top: 12px;
+    right: 1px;
+    border-radius: 50%;
+    background-color: red;
+    width: 9px;
+    height: 9px;
+}
