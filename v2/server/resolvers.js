@@ -31,7 +31,8 @@ import {
   getMessages,
   getMessageCount,
   getConversationalists,
-  getConversation
+  getConversation,
+  updateConversation
 } from './resolvers/message'
 
 export default {
@@ -142,6 +143,7 @@ export default {
     deleteUserVenueFavorite,
     createUserFollower,
     deleteUserFollower,
-    updateUserFeedConfig
+    updateUserFeedConfig,
+    updateConversation
   }
 }

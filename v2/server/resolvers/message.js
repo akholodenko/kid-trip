@@ -5,7 +5,8 @@ import User from '../models/user'
 import { USER_ATTRIBUTES } from './user/userInfo'
 import sequelize from '../config/sequelize'
 import { fromDbMessageTransform } from './message/utils'
-import { userDbIdToPublicId } from './user/utils'
+import { userDbIdToPublicId, userPublicIdToDbId } from './user/utils'
+import UserFollower from '../models/user_follower'
 
 const MESSAGE_ATTRIBUTES = [
   'id',
@@ -183,4 +184,24 @@ export const getMessageCount = userId => {
   }
 
   return null
+}
+
+export const updateConversation = (obj, args, { user }, info) => {
+  if (!user) {
+    throw new Error('You are not authenticated!')
+  }
+
+  console.log(
+    `user: ${user.userId}`,
+    `other user: ${args.conversationalistUserId}`
+  )
+
+  // return UserFollower.destroy({
+  //   where: {
+  //     follower_user_id: user.userId,
+  //     followee_user_id: userId
+  //   }
+  // }).then(() => {
+  //   return getUserFollowerStats(userId, user.userId)
+  // })
 }

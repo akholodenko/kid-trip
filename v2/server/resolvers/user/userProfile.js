@@ -63,8 +63,6 @@ export const deleteUserFollower = (obj, args, { user }, info) => {
     throw new Error('You are not authenticated!')
   }
 
-  console.log('DELETE userId: ', user.userId, 'publicId: ', args.publicId)
-
   const userId = userPublicIdToDbId(args.publicId)
 
   return UserFollower.destroy({
