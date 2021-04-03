@@ -13,9 +13,9 @@ const Message = sequelize.define(
     recipient_user_id: Sequelize.INTEGER,
     message_type: Sequelize.ENUM('auto', 'direct'),
     body: Sequelize.TEXT,
-    status: Sequelize.ENUM('unread', 'read', 'archived', 'deleted'),
-    count: Sequelize.INTEGER
+    status: Sequelize.ENUM('unread', 'read', 'archived', 'deleted')
   },
+
   {
     tableName: 'messages',
     underscored: true
