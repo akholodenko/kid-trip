@@ -77,6 +77,17 @@ const UserProfileHeader = ({ userProfile, currentUser }) => {
     }
   }
 
+  const renderMessageButton = () => {
+    if (currentUser.id === userProfile.user.id) {
+      return null
+    } else if (userProfile.stats.followsCurrentUser) {
+      console.log('you can message this user!')
+      return <span></span>
+    }
+
+    return null
+  }
+
   return (
     <div style={{ ...headerStyle.container, borderRadius: '8px' }}>
       <div className="headerUserInfo">
@@ -99,6 +110,7 @@ const UserProfileHeader = ({ userProfile, currentUser }) => {
             <span>{userProfile.stats.followers} followers</span>
             &nbsp;&#183;&nbsp;
             {renderFollowButton()}
+            {renderMessageButton()}
           </div>
         </div>
       </div>

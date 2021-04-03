@@ -18,6 +18,7 @@ export default gql`
     created: Int
     favorited: Int
     followedByCurrentUser: Boolean
+    followsCurrentUser: Boolean
     followers: Int
     followees: Int
   }
