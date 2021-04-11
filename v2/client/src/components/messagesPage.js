@@ -15,6 +15,7 @@ import { Link as RouterLink } from 'react-router-dom'
 import { UPDATE_CONVERSATION_MUTATION } from '../graphql/messagesMutations'
 
 import Message from './messages/message'
+import ComposeMessage from './messages/composeMessage'
 
 const MessagesPage = ({ match, currentUser }) => {
   const [conversationalistUserId, setConversationalistUserId] = useState(null)
@@ -104,6 +105,7 @@ const MessagesPage = ({ match, currentUser }) => {
               key={message.id}
             />
           ))}
+        <ComposeMessage conversationalistUserId={conversationalistUserId} />
       </div>
     </div>
   )

@@ -80,7 +80,7 @@ export const getConversation = (userId, conversationalistUserId, fields) => {
         }
       ]
     },
-    order: [['created_at', 'DESC']]
+    order: [['created_at', 'ASC']]
   }).then(messages => {
     return messages.map(message => fromDbMessageTransform(message))
   })

@@ -24,7 +24,9 @@
 
 .messages {
     flex-grow: 3;
-    padding: 20px;
+    padding: 20px 0px 130px 20px;
+    position: relative;
+    min-height: 500px;
 }
 
 .message {

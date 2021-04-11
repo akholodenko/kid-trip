@@ -27,3 +27,21 @@ export const UPDATE_CONVERSATION_MUTATION = gql`
     }
   }
 `
+
+export const CREATE_MESSAGE_MUTATION = gql`
+  mutation CreateMessage(
+    $conversationalistUserId: Int!
+    $messageType: String!
+    $body: String!
+  ) {
+    createMessage(
+      conversationalistUserId: $conversationalistUserId
+      messageType: $messageType
+      body: $body
+    ) {
+      id
+      status
+      messageType
+    }
+  }
+`
