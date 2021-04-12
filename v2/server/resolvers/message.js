@@ -200,13 +200,14 @@ export const updateConversation = (obj, args, { user }) => {
               { recipient_user_id: user.userId },
               { sender_user_id: args.conversationalistUserId }
             ]
-          },
-          {
-            [Op.and]: [
-              { recipient_user_id: args.conversationalistUserId },
-              { sender_user_id: user.userId }
-            ]
           }
+          // ,
+          // {
+          //   [Op.and]: [
+          //     { recipient_user_id: args.conversationalistUserId },
+          //     { sender_user_id: user.userId }
+          //   ]
+          // }
         ]
       }
     }

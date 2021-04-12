@@ -48,7 +48,11 @@ const MessagesPage = ({ match, currentUser }) => {
   const markConversationAsRead = conversation => {
     if (
       conversation &&
-      conversation.filter(message => message.status === 'unread').length
+      conversation.filter(
+        message =>
+          message.status === 'unread' &&
+          parseInt(message.sender.id) === conversationalistUserId
+      ).length
     ) {
       setTimeout(() => {
         return updateConversation({
