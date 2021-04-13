@@ -9,11 +9,11 @@ import { CREATE_MESSAGE_MUTATION } from '../../graphql/messagesMutations'
 
 const useStyles = makeStyles(theme => ({
   main: {
-    display: 'flex',
-    paddingRight: '12px'
+    display: 'flex'
   },
   button: {
     margin: theme.spacing(1),
+    marginRight: '0px',
     maxHeight: '36px'
   }
 }))
@@ -46,28 +46,26 @@ const ComposeMessage = ({ conversationalistUserId, onMessageCreated }) => {
 
   if (conversationalistUserId) {
     return (
-      <div style={{ position: 'absolute', bottom: 0, width: '100%' }}>
-        <div className={classes.main}>
-          <TextField
-            id="standard-multiline-flexible"
-            label="Type message"
-            multiline
-            rowsMax={5}
-            value={message}
-            onChange={e => setMessage(e.target.value)}
-            fullWidth
-          />
+      <div className={classes.main}>
+        <TextField
+          id="standard-multiline-flexible"
+          label="Type message"
+          multiline
+          rowsMax={5}
+          value={message}
+          onChange={e => setMessage(e.target.value)}
+          fullWidth
+        />
 
-          <Button
-            variant="contained"
-            color="primary"
-            className={classes.button}
-            endIcon={<SendIcon />}
-            onClick={() => onSendMessage()}
-          >
-            Send
-          </Button>
-        </div>
+        <Button
+          variant="contained"
+          color="primary"
+          className={classes.button}
+          endIcon={<SendIcon />}
+          onClick={() => onSendMessage()}
+        >
+          Send
+        </Button>
       </div>
     )
   }

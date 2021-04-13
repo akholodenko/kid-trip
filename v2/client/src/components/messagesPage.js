@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import withPageTemplate from './shared/withPageTemplate'
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import {
@@ -21,6 +21,8 @@ const MessagesPage = ({ match, currentUser }) => {
   const [conversationalistUserId, setConversationalistUserId] = useState(null)
   const [conversationalists, setConversationalists] = useState([])
   const [currentConversation, setCurrentConversation] = useState([])
+
+  const messagesEndRef = useRef(null)
 
   const { loading, error, data } = useQuery(GET_CONVERSATIONALISTS, {
     fetchPolicy: 'network-only'
@@ -80,6 +82,14 @@ const MessagesPage = ({ match, currentUser }) => {
     }
   }, [match.params.publicId, getConversation])
 
+  useEffect(() => {
+    scrollToBottom()
+  }, [currentConversation])
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   if (loading) return null
   if (error) return `Error! ${error}`
 
@@ -99,15 +109,18 @@ const MessagesPage = ({ match, currentUser }) => {
           </RouterLink>
         ))}
       </div>
-      <div className="messages">
-        {currentConversation &&
-          currentConversation.map(message => (
-            <Message
-              message={message}
-              currentUser={currentUser}
-              key={message.id}
-            />
-          ))}
+      <div className="conversation">
+        <div className="messages">
+          {currentConversation &&
+            currentConversation.map(message => (
+              <Message
+                message={message}
+                currentUser={currentUser}
+                key={message.id}
+              />
+            ))}
+          <div ref={messagesEndRef} />
+        </div>
         <ComposeMessage
           conversationalistUserId={conversationalistUserId}
           onMessageCreated={() => {
