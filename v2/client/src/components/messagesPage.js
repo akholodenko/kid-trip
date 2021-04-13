@@ -16,6 +16,7 @@ import { UPDATE_CONVERSATION_MUTATION } from '../graphql/messagesMutations'
 
 import Message from './messages/message'
 import ComposeMessage from './messages/composeMessage'
+import { GET_USER_PROFILE_BY_PUBLIC_ID } from '../graphql/userQueries'
 
 const MessagesPage = ({ match, currentUser }) => {
   const [conversationalistUserId, setConversationalistUserId] = useState(null)
@@ -34,12 +35,24 @@ const MessagesPage = ({ match, currentUser }) => {
       setCurrentConversation(data.conversation)
       markConversationAsRead(data.conversation)
 
-      if (
-        !conversationalists.filter(
-          conversationalist => conversationalist.id === conversationalistUserId
-        ).length
-      ) {
-        addNewConversationalist(conversationalistUserId)
+      if (isNewConversationalist()) {
+        getUserProfile({ variables: { publicId: match.params.publicId } })
+      }
+    }
+  })
+
+  const [getUserProfile] = useLazyQuery(GET_USER_PROFILE_BY_PUBLIC_ID, {
+    onCompleted: data => {
+      if (data && data.userProfile && data.userProfile.user) {
+        setConversationalists(
+          [
+            {
+              ...data.userProfile.user,
+              id: parseInt(data.userProfile.user.id),
+              createdAt: new Date()
+            }
+          ].concat(conversationalists)
+        )
       }
     }
   })
@@ -52,13 +65,6 @@ const MessagesPage = ({ match, currentUser }) => {
       setCurrentConversation(data.updateConversation)
     }
   })
-
-  const addNewConversationalist = newConversationalistUserId => {
-    console.log('addNewConversationalist', newConversationalistUserId)
-    console.log(
-      'get user profile info; add to conversationalists object (should auto select by id)'
-    )
-  }
 
   // mark messages as read after 3 seconds
   const markConversationAsRead = conversation => {
@@ -80,7 +86,7 @@ const MessagesPage = ({ match, currentUser }) => {
 
   // set list for sidebar of conversationalists
   useEffect(() => {
-    if (data) {
+    if (data && data.conversationalists) {
       setConversationalists(data.conversationalists)
     }
   }, [data])
@@ -105,6 +111,11 @@ const MessagesPage = ({ match, currentUser }) => {
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
+
+  const isNewConversationalist = () =>
+    !conversationalists.filter(
+      conversationalist => conversationalist.id === conversationalistUserId
+    ).length
 
   if (loading) return null
   if (error) return `Error! ${error}`
