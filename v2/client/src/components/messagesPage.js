@@ -33,6 +33,16 @@ const MessagesPage = ({ match, currentUser }) => {
     onCompleted: data => {
       setCurrentConversation(data.conversation)
       markConversationAsRead(data.conversation)
+
+      if (
+        conversationalists.filter(
+          conversationalist => conversationalist.id === conversationalistUserId
+        ).length
+      ) {
+        console.log('conversation found!', conversationalistUserId)
+      } else {
+        console.log('new conversationalistUserId', conversationalistUserId)
+      }
     }
   })
 
@@ -111,14 +121,19 @@ const MessagesPage = ({ match, currentUser }) => {
       </div>
       <div className="conversation">
         <div className="messages">
-          {currentConversation &&
+          {currentConversation && currentConversation.length ? (
             currentConversation.map(message => (
               <Message
                 message={message}
                 currentUser={currentUser}
                 key={message.id}
               />
-            ))}
+            ))
+          ) : (
+            <div className="noMessages">
+              <div>No messages</div>
+            </div>
+          )}
           <div ref={messagesEndRef} />
         </div>
         <ComposeMessage

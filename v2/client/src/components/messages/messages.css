@@ -87,3 +87,12 @@
 .messageSender.unread {
     background-color: red;
 }
+
+.noMessages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 290px;
+    font-weight: 300;
+    color: #aaa;
+}
