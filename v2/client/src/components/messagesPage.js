@@ -35,13 +35,11 @@ const MessagesPage = ({ match, currentUser }) => {
       markConversationAsRead(data.conversation)
 
       if (
-        conversationalists.filter(
+        !conversationalists.filter(
           conversationalist => conversationalist.id === conversationalistUserId
         ).length
       ) {
-        console.log('conversation found!', conversationalistUserId)
-      } else {
-        console.log('new conversationalistUserId', conversationalistUserId)
+        addNewConversationalist(conversationalistUserId)
       }
     }
   })
@@ -54,6 +52,13 @@ const MessagesPage = ({ match, currentUser }) => {
       setCurrentConversation(data.updateConversation)
     }
   })
+
+  const addNewConversationalist = newConversationalistUserId => {
+    console.log('addNewConversationalist', newConversationalistUserId)
+    console.log(
+      'get user profile info; add to conversationalists object (should auto select by id)'
+    )
+  }
 
   // mark messages as read after 3 seconds
   const markConversationAsRead = conversation => {
@@ -92,6 +97,7 @@ const MessagesPage = ({ match, currentUser }) => {
     }
   }, [match.params.publicId, getConversation])
 
+  // scroll long list of messages to latest message at the bottom of container
   useEffect(() => {
     scrollToBottom()
   }, [currentConversation])
