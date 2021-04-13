@@ -18,7 +18,7 @@ const useStyles = makeStyles(theme => ({
   }
 }))
 
-const ComposeMessage = ({ conversationalistUserId }) => {
+const ComposeMessage = ({ conversationalistUserId, onMessageCreated }) => {
   const [message, setMessage] = useState()
   const classes = useStyles()
 
@@ -27,7 +27,8 @@ const ComposeMessage = ({ conversationalistUserId }) => {
       console.log('error', error)
     },
     onCompleted: data => {
-      console.log('sent!!! - refresh convo!')
+      setMessage('')
+      onMessageCreated()
     }
   })
 

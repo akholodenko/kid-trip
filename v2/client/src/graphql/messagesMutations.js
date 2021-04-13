@@ -40,8 +40,15 @@ export const CREATE_MESSAGE_MUTATION = gql`
       body: $body
     ) {
       id
+      body
       status
       messageType
+      recipient {
+        id
+      }
+      sender {
+        id
+      }
     }
   }
 `

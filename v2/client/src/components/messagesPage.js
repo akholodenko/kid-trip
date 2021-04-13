@@ -40,7 +40,6 @@ const MessagesPage = ({ match, currentUser }) => {
     },
     onCompleted: data => {
       setCurrentConversation(data.updateConversation)
-      markConversationAsRead(data.updateConversation)
     }
   })
 
@@ -109,7 +108,14 @@ const MessagesPage = ({ match, currentUser }) => {
               key={message.id}
             />
           ))}
-        <ComposeMessage conversationalistUserId={conversationalistUserId} />
+        <ComposeMessage
+          conversationalistUserId={conversationalistUserId}
+          onMessageCreated={() => {
+            getConversation({
+              variables: { conversationalistUserId: conversationalistUserId }
+            })
+          }}
+        />
       </div>
     </div>
   )
