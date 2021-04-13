@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useMutation } from '@apollo/client'
 
 import TextField from '@material-ui/core/TextField'
@@ -21,6 +21,7 @@ const useStyles = makeStyles(theme => ({
 const ComposeMessage = ({ conversationalistUserId, onMessageCreated }) => {
   const [message, setMessage] = useState()
   const classes = useStyles()
+  const composeEndRef = useRef(null)
 
   const [createMessage] = useMutation(CREATE_MESSAGE_MUTATION, {
     onError(error) {
@@ -30,6 +31,10 @@ const ComposeMessage = ({ conversationalistUserId, onMessageCreated }) => {
       setMessage('')
       onMessageCreated()
     }
+  })
+
+  useEffect(() => {
+    composeEndRef.current.focus()
   })
 
   const onSendMessage = () => {
@@ -55,7 +60,7 @@ const ComposeMessage = ({ conversationalistUserId, onMessageCreated }) => {
           value={message}
           onChange={e => setMessage(e.target.value)}
           fullWidth
-          autoFocus
+          inputRef={composeEndRef}
         />
 
         <Button
