@@ -55,6 +55,7 @@ const ComposeMessage = ({ conversationalistUserId, onMessageCreated }) => {
           value={message}
           onChange={e => setMessage(e.target.value)}
           fullWidth
+          autoFocus
         />
 
         <Button

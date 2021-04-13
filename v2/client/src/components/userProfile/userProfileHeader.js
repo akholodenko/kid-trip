@@ -10,6 +10,10 @@ import {
   GET_FOLLOWERS_FOR_CURRENT_USER,
   GET_USER_PROFILE_BY_PUBLIC_ID
 } from '../../graphql/userQueries'
+import { Link as RouterLink } from 'react-router-dom'
+import Routes from '../../routes'
+import EmailOutlinedIcon from '@material-ui/icons/EmailOutlined'
+import IconButton from '@material-ui/core/IconButton'
 
 const UserProfileHeader = ({ userProfile, currentUser }) => {
   const refetchQueries = [
@@ -82,7 +86,20 @@ const UserProfileHeader = ({ userProfile, currentUser }) => {
       return null
     } else if (userProfile.stats.followsCurrentUser) {
       console.log('you can message this user!')
-      return <span></span>
+      return (
+        <span>
+          &nbsp;&#183;
+          <IconButton
+            style={{ padding: '0px 5px 0px 6px' }}
+            color="inherit"
+            aria-label="Compose message"
+            component={RouterLink}
+            to={Routes.messagesPath(userProfile.user.id)}
+          >
+            <EmailOutlinedIcon />
+          </IconButton>
+        </span>
+      )
     }
 
     return null
