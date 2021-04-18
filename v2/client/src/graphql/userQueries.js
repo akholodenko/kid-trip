@@ -42,6 +42,7 @@ export const GET_USER_PROFILE_BY_PUBLIC_ID = gql`
         created
         favorited
         followedByCurrentUser
+        followsCurrentUser
         followers
         followees
       }

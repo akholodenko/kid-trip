@@ -22,9 +22,16 @@
     background-color: #efefef;
 }
 
-.messages {
+.conversation {
     flex-grow: 3;
-    padding: 20px;
+    padding: 0px 0px 0px 20px;
+}
+
+.messages {
+    min-height: 300px;
+    max-height: 500px;
+    overflow-y: scroll;
+    padding-top: 10px;
 }
 
 .message {
@@ -79,4 +86,13 @@
 
 .messageSender.unread {
     background-color: red;
+}
+
+.noMessages {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 290px;
+    font-weight: 300;
+    color: #aaa;
 }

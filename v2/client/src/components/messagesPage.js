@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import withPageTemplate from './shared/withPageTemplate'
 import { useLazyQuery, useMutation, useQuery } from '@apollo/client'
 import {
@@ -15,11 +15,15 @@ import { Link as RouterLink } from 'react-router-dom'
 import { UPDATE_CONVERSATION_MUTATION } from '../graphql/messagesMutations'
 
 import Message from './messages/message'
+import ComposeMessage from './messages/composeMessage'
+import { GET_USER_PROFILE_BY_PUBLIC_ID } from '../graphql/userQueries'
 
 const MessagesPage = ({ match, currentUser }) => {
   const [conversationalistUserId, setConversationalistUserId] = useState(null)
   const [conversationalists, setConversationalists] = useState([])
   const [currentConversation, setCurrentConversation] = useState([])
+
+  const messagesEndRef = useRef(null)
 
   const { loading, error, data } = useQuery(GET_CONVERSATIONALISTS, {
     fetchPolicy: 'network-only'
@@ -30,6 +34,26 @@ const MessagesPage = ({ match, currentUser }) => {
     onCompleted: data => {
       setCurrentConversation(data.conversation)
       markConversationAsRead(data.conversation)
+
+      if (isNewConversationalist()) {
+        getUserProfile({ variables: { publicId: match.params.publicId } })
+      }
+    }
+  })
+
+  const [getUserProfile] = useLazyQuery(GET_USER_PROFILE_BY_PUBLIC_ID, {
+    onCompleted: data => {
+      if (data && data.userProfile && data.userProfile.user) {
+        setConversationalists(
+          [
+            {
+              ...data.userProfile.user,
+              id: parseInt(data.userProfile.user.id),
+              createdAt: new Date()
+            }
+          ].concat(conversationalists)
+        )
+      }
     }
   })
 
@@ -39,7 +63,6 @@ const MessagesPage = ({ match, currentUser }) => {
     },
     onCompleted: data => {
       setCurrentConversation(data.updateConversation)
-      markConversationAsRead(data.updateConversation)
     }
   })
 
@@ -47,7 +70,11 @@ const MessagesPage = ({ match, currentUser }) => {
   const markConversationAsRead = conversation => {
     if (
       conversation &&
-      conversation.filter(message => message.status === 'unread').length
+      conversation.filter(
+        message =>
+          message.status === 'unread' &&
+          parseInt(message.sender.id) === conversationalistUserId
+      ).length
     ) {
       setTimeout(() => {
         return updateConversation({
@@ -59,7 +86,7 @@ const MessagesPage = ({ match, currentUser }) => {
 
   // set list for sidebar of conversationalists
   useEffect(() => {
-    if (data) {
+    if (data && data.conversationalists) {
       setConversationalists(data.conversationalists)
     }
   }, [data])
@@ -75,6 +102,20 @@ const MessagesPage = ({ match, currentUser }) => {
       getConversation({ variables: { conversationalistUserId: tempUserId } })
     }
   }, [match.params.publicId, getConversation])
+
+  // scroll long list of messages to latest message at the bottom of container
+  useEffect(() => {
+    scrollToBottom()
+  }, [currentConversation])
+
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  const isNewConversationalist = () =>
+    !conversationalists.filter(
+      conversationalist => conversationalist.id === conversationalistUserId
+    ).length
 
   if (loading) return null
   if (error) return `Error! ${error}`
@@ -95,15 +136,31 @@ const MessagesPage = ({ match, currentUser }) => {
           </RouterLink>
         ))}
       </div>
-      <div className="messages">
-        {currentConversation &&
-          currentConversation.map(message => (
-            <Message
-              message={message}
-              currentUser={currentUser}
-              key={message.id}
-            />
-          ))}
+      <div className="conversation">
+        <div className="messages">
+          {currentConversation && currentConversation.length ? (
+            currentConversation.map(message => (
+              <Message
+                message={message}
+                currentUser={currentUser}
+                key={message.id}
+              />
+            ))
+          ) : (
+            <div className="noMessages">
+              <div>No messages</div>
+            </div>
+          )}
+          <div ref={messagesEndRef} />
+        </div>
+        <ComposeMessage
+          conversationalistUserId={conversationalistUserId}
+          onMessageCreated={() => {
+            getConversation({
+              variables: { conversationalistUserId: conversationalistUserId }
+            })
+          }}
+        />
       </div>
     </div>
   )

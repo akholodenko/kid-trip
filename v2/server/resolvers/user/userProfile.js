@@ -19,6 +19,7 @@ export const getUserProfile = (publicId, { fields, currentUserId }) => {
     getUserRecentFavoriteVenues(userId),
     getUserRecentAddedVenues(userId),
     isCurrentUserFollower(userId, currentUserId),
+    followsCurrentUser(userId, currentUserId),
     UserFollower.count({ where: { follower_user_id: userId } }),
     UserFollower.count({ where: { followee_user_id: userId } })
   ]).then(responses => {
@@ -30,8 +31,9 @@ export const getUserProfile = (publicId, { fields, currentUserId }) => {
         created: responses[2],
         favorited: responses[3],
         followedByCurrentUser: responses[6],
-        followers: responses[8], // count of users that follow this user
-        followees: responses[7] // count of users that this user follows
+        followsCurrentUser: responses[7],
+        followers: responses[9], // count of users that follow this user
+        followees: responses[8] // count of users that this user follows
       },
       recentFavoriteVenues: responses[4],
       recentAddedVenues: responses[5]
@@ -164,16 +166,26 @@ const isCurrentUserFollower = (userId, currentUserId) => {
   })
 }
 
+const followsCurrentUser = (userId, currentUserId) => {
+  return UserFollower.findOne({
+    where: { follower_user_id: userId, followee_user_id: currentUserId }
+  }).then(followsCurrentUser => {
+    return !!followsCurrentUser
+  })
+}
+
 const getUserFollowerStats = (userId, currentUserId) => {
   return Promise.all([
     isCurrentUserFollower(userId, currentUserId),
+    followsCurrentUser(userId, currentUserId),
     UserFollower.count({ where: { follower_user_id: userId } }),
     UserFollower.count({ where: { followee_user_id: userId } })
   ]).then(responses => {
     return {
       followedByCurrentUser: responses[0],
-      followers: responses[2], // count of users that follow this user
-      followees: responses[1] // count of users that this user follows
+      followsCurrentUser: responses[1],
+      followers: responses[3], // count of users that follow this user
+      followees: responses[2] // count of users that this user follows
     }
   })
 }

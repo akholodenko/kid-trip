@@ -5,8 +5,7 @@ import User from '../models/user'
 import { USER_ATTRIBUTES } from './user/userInfo'
 import sequelize from '../config/sequelize'
 import { fromDbMessageTransform } from './message/utils'
-import { userDbIdToPublicId, userPublicIdToDbId } from './user/utils'
-import UserFollower from '../models/user_follower'
+import { userDbIdToPublicId } from './user/utils'
 
 const MESSAGE_ATTRIBUTES = [
   'id',
@@ -81,7 +80,7 @@ export const getConversation = (userId, conversationalistUserId, fields) => {
         }
       ]
     },
-    order: [['created_at', 'DESC']]
+    order: [['created_at', 'ASC']]
   }).then(messages => {
     return messages.map(message => fromDbMessageTransform(message))
   })
@@ -163,23 +162,24 @@ export const getMessages = (userId, status, fields) => {
 
 export const getMessageCount = userId => {
   if (userId) {
-    return Message.findAll({
-      attributes: ['status', [sequelize.fn('COUNT', 'id'), 'count']],
-      where: {
-        recipient_user_id: userId
-      },
-      group: ['status']
-    }).then(results => {
-      let response = {
-        unread: 0,
-        read: 0,
-        archived: 0,
-        deleted: 0
-      }
+    return sequelize
+      .query(
+        `SELECT status, count(id) as count
+			FROM messages
+			WHERE recipient_user_id = ${userId}
+			GROUP BY status`
+      )
+      .then(results => {
+        let response = {
+          unread: 0,
+          read: 0,
+          archived: 0,
+          deleted: 0
+        }
 
-      results.map(result => (response[result.status] = result.count))
-      return response
-    })
+        results[0].map(result => (response[result.status] = result.count))
+        return response
+      })
   }
 
   return null
@@ -200,13 +200,14 @@ export const updateConversation = (obj, args, { user }) => {
               { recipient_user_id: user.userId },
               { sender_user_id: args.conversationalistUserId }
             ]
-          },
-          {
-            [Op.and]: [
-              { recipient_user_id: args.conversationalistUserId },
-              { sender_user_id: user.userId }
-            ]
           }
+          // ,
+          // {
+          //   [Op.and]: [
+          //     { recipient_user_id: args.conversationalistUserId },
+          //     { sender_user_id: user.userId }
+          //   ]
+          // }
         ]
       }
     }
@@ -216,4 +217,18 @@ export const updateConversation = (obj, args, { user }) => {
       recipient: true
     })
   })
+}
+
+export const createMessage = (obj, args, { user }) => {
+  if (!user) {
+    throw new Error('You are not authenticated!')
+  }
+
+  return Message.create({
+    status: 'unread',
+    message_type: args.messageType,
+    body: args.body,
+    sender_user_id: user.userId,
+    recipient_user_id: args.conversationalistUserId
+  }).then(response => fromDbMessageTransform(response))
 }

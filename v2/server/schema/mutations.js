@@ -28,5 +28,10 @@ export default gql`
       conversationalistUserId: Int!
       status: String!
     ): [Message]
+    createMessage(
+      conversationalistUserId: Int!
+      messageType: String!
+      body: String!
+    ): Message
   }
 `
