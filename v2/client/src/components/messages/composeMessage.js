@@ -34,7 +34,9 @@ const ComposeMessage = ({ conversationalistUserId, onMessageCreated }) => {
   })
 
   useEffect(() => {
-    composeEndRef.current.focus()
+    if (composeEndRef.current) {
+      composeEndRef.current.focus()
+    }
   })
 
   const onSendMessage = () => {
