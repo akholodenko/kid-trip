@@ -85,7 +85,6 @@ const UserProfileHeader = ({ userProfile, currentUser }) => {
     if (currentUser.id === userProfile.user.id) {
       return null
     } else if (userProfile.stats.followsCurrentUser) {
-      console.log('you can message this user!')
       return (
         <span>
           &nbsp;&#183;
