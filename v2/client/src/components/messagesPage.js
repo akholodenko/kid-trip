@@ -25,8 +25,17 @@ const MessagesPage = ({ match, currentUser }) => {
 
   const messagesEndRef = useRef(null)
 
-  const { loading, error, data } = useQuery(GET_CONVERSATIONALISTS, {
-    fetchPolicy: 'network-only'
+  const { loading, error } = useQuery(GET_CONVERSATIONALISTS, {
+    fetchPolicy: 'network-only',
+    onCompleted: data => {
+      if (data && data.conversationalists) {
+        setConversationalists(data.conversationalists)
+
+        if (isNewConversationalist(data.conversationalists)) {
+          getUserProfile({ variables: { publicId: match.params.publicId } })
+        }
+      }
+    }
   })
 
   const [getConversation] = useLazyQuery(GET_CONVERSATION, {
@@ -34,10 +43,6 @@ const MessagesPage = ({ match, currentUser }) => {
     onCompleted: data => {
       setCurrentConversation(data.conversation)
       markConversationAsRead(data.conversation)
-
-      if (isNewConversationalist()) {
-        getUserProfile({ variables: { publicId: match.params.publicId } })
-      }
     }
   })
 
@@ -84,13 +89,6 @@ const MessagesPage = ({ match, currentUser }) => {
     }
   }
 
-  // set list for sidebar of conversationalists
-  useEffect(() => {
-    if (data && data.conversationalists) {
-      setConversationalists(data.conversationalists)
-    }
-  }, [data])
-
   // update conversationalist based on routing change and load respective conversation
   useEffect(() => {
     const tempUserId = match.params.publicId
@@ -112,7 +110,7 @@ const MessagesPage = ({ match, currentUser }) => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
   }
 
-  const isNewConversationalist = () =>
+  const isNewConversationalist = conversationalists =>
     !conversationalists.filter(
       conversationalist => conversationalist.id === conversationalistUserId
     ).length
