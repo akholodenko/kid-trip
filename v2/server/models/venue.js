@@ -6,6 +6,7 @@ import VenueType from './venue_type'
 import VenueClassification from './venue_classification'
 import User from './user'
 import UsersVenues from './user_venue'
+import Review from './review'
 
 const Venue = sequelize.define(
   'venue',
@@ -87,6 +88,14 @@ VenueType.belongsToMany(Venue, {
   through: VenueClassification,
   foreignKey: 'venue_type_id',
   otherKey: 'venue_id'
+})
+
+Venue.hasMany(Review, {
+  foreignKey: 'venue_id'
+})
+
+Review.belongsTo(Venue, {
+  foreignKey: 'venue_id'
 })
 
 export default Venue

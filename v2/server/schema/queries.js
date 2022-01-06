@@ -22,6 +22,7 @@ export default gql`
     messages(status: String): [Message]
     conversationalists: [Conversationalist]
     conversation(conversationalistUserId: Int!): [Message]
+    reviewsByVenueId(venueId: Int!, first: Int): [Review]
     me: User
   }
 `

@@ -8,10 +8,8 @@ import User from '../models/user'
 import UserVenue from '../models/user_venue'
 import UserVenueFavorite from '../models/user_venue_favorite'
 import City from '../models/city'
-import { getZipCode } from './zipcode'
 
 import { slug, uniqueSlug } from '../utils/stringUtils'
-import { fromMiles } from '../utils/numberUtils'
 
 import { fromDbVenueTransform } from './venue/utils'
 

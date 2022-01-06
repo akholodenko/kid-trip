@@ -8,6 +8,7 @@ import City from './schema/city'
 import AuthPayload from './schema/authPayload'
 import FeedConfig from './schema/feedConfig'
 import Message from './schema/message'
+import Review from './schema/review'
 
 export default [
   Queries,
@@ -19,5 +20,6 @@ export default [
   City,
   AuthPayload,
   FeedConfig,
-  Message
+  Message,
+  Review
 ]

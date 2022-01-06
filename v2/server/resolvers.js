@@ -36,6 +36,8 @@ import {
   createMessage
 } from './resolvers/message'
 
+import { getReviewsByVenueId } from './resolvers/review'
+
 export default {
   Query: {
     venue(obj, args, { user }, info) {
@@ -127,6 +129,11 @@ export default {
       } else {
         throw new Error('Invalid conversation')
       }
+    },
+    reviewsByVenueId(obj, args, context, info) {
+      return getReviewsByVenueId(args.venueId, args.first, {
+        fields: graphsqlFields(info)
+      })
     },
     me(obj, args, { user }, info) {
       if (!user) {

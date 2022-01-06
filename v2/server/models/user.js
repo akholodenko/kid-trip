@@ -6,6 +6,7 @@ import UserFollower from './user_follower'
 import Message from './message'
 import UserFeedConfig from './user_feed_config'
 import UsersVenuesFavorites from './user_venue_favorite'
+import Review from './review'
 
 const User = sequelize.define(
   'user',
@@ -114,6 +115,14 @@ UsersVenuesFavorites.hasMany(User, {
 })
 
 User.hasMany(UsersVenuesFavorites, {
+  foreignKey: 'user_id'
+})
+
+User.hasMany(Review, {
+  foreignKey: 'user_id'
+})
+
+Review.belongsTo(User, {
   foreignKey: 'user_id'
 })
 
