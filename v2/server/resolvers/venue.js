@@ -255,6 +255,20 @@ const getSimilarVenueSlugs = slug => {
 }
 
 const getVenueStats = (venueId, userId = null) => {
+  return Promise.all([
+    getVenueFavoritesCount(venueId),
+    isFavoritedByCurrentUser(venueId, userId)
+  ]).then(responses => {
+    console.log(responses)
+
+    return {
+      favorites: responses[0],
+      favoriteByCurrentUser: responses[1]
+    }
+  })
+}
+
+const getVenueFavoritesCount = venueId => {
   return UserVenueFavorite.findAll({
     attributes: [
       'venue_id',
@@ -264,14 +278,11 @@ const getVenueStats = (venueId, userId = null) => {
     group: ['venue_id']
   })
     .then(results => results.map(el => el.get({ plain: true })))
-    .then(totalData => {
-      return UserVenueFavorite.findOne({
-        where: { venue_id: venueId, user_id: userId }
-      }).then(favoriteByCurrentUser => {
-        return {
-          favorites: totalData[0] ? totalData[0].count : 0,
-          favoriteByCurrentUser: !!favoriteByCurrentUser
-        }
-      })
-    })
+    .then(totalData => (totalData[0] ? totalData[0].count : 0))
+}
+
+const isFavoritedByCurrentUser = (venueId, userId) => {
+  return UserVenueFavorite.findOne({
+    where: { venue_id: venueId, user_id: userId }
+  }).then(favoriteByCurrentUser => !!favoriteByCurrentUser)
 }
