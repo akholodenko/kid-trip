@@ -27,6 +27,7 @@ const VenueStats = gql`
     venueStats {
       favorites
       favoriteByCurrentUser
+      reviews
     }
   }
 `
