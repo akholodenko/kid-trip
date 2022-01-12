@@ -258,7 +258,7 @@ const getSimilarVenueSlugs = slug => {
 const getVenueStats = (venueId, userId = null) => {
   return Promise.all([
     getVenueFavoritesCount(venueId),
-    getVenueReviewsCount(venueId),
+    getVenueReviewsStats(venueId),
     isFavoritedByCurrentUser(venueId, userId)
   ]).then(responses => {
     console.log(responses)
@@ -284,17 +284,20 @@ const getVenueFavoritesCount = venueId => {
     .then(totalData => (totalData[0] ? totalData[0].count : 0))
 }
 
-const getVenueReviewsCount = venueId => {
+const getVenueReviewsStats = venueId => {
   return Review.findAll({
     attributes: [
       'venue_id',
-      [sequelize.fn('count', sequelize.col('id')), 'count']
+      [sequelize.fn('count', sequelize.col('id')), 'count'],
+      [sequelize.fn('avg', sequelize.col('rating')), 'rating']
     ],
     where: { venue_id: venueId },
     group: ['venue_id']
   })
     .then(results => results.map(el => el.get({ plain: true })))
-    .then(totalData => (totalData[0] ? totalData[0].count : 0))
+    .then(totalData =>
+      totalData[0] ? { ...totalData[0] } : { count: 0, rating: 0 }
+    )
 }
 
 const isFavoritedByCurrentUser = (venueId, userId) => {

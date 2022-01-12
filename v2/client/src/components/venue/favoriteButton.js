@@ -60,7 +60,7 @@ const FavoriteButton = ({
     <React.Fragment>
       {favoriteByCurrentUser ? (
         <span>
-          &#9733;&nbsp;
+          &#128077;&nbsp;
           <button
             onClick={e => {
               e.preventDefault()

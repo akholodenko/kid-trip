@@ -30,6 +30,10 @@ export const CREATE_USER_VENUE_FAVORITE_MUTATION = gql`
     createUserVenueFavorite(venueId: $venueId) {
       favorites
       favoriteByCurrentUser
+      reviews {
+        count
+        rating
+      }
     }
   }
 `
@@ -39,6 +43,10 @@ export const DELETE_USER_VENUE_FAVORITE_MUTATION = gql`
     deleteUserVenueFavorite(venueId: $venueId) {
       favorites
       favoriteByCurrentUser
+      reviews {
+        count
+        rating
+      }
     }
   }
 `

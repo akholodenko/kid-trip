@@ -3,6 +3,7 @@ import Typography from '@material-ui/core/Typography'
 import NumberFormat from 'react-number-format'
 import pluralize from 'pluralize'
 import { GET_VENUE_BY_SLUG } from '../graphql/venueQueries'
+import StarRoundedIcon from '@material-ui/icons/StarRounded'
 
 import VenueHeader from './venue/header'
 import SimilarVenues from './venue/similarVenues'
@@ -88,6 +89,14 @@ const VenuePage = ({ match }) => {
                       />
                     )}
                   </div>
+                  {venue.venueStats.reviews.count && (
+                    <div>
+                      <StarRoundedIcon />
+                      {venue.venueStats.reviews.count}{' '}
+                      {pluralize('review', venue.venueStats.reviews.count)} with
+                      an average rating of {venue.venueStats.reviews.rating}
+                    </div>
+                  )}
                   <br />
                   {venue.description && <span>{venue.description}</span>}
                   This {venueTypeName} is located in {venue.city}, {venue.state}

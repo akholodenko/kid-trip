@@ -30,6 +30,11 @@ export default gql`
   type VenueStats {
     favorites: Int
     favoriteByCurrentUser: Boolean
-    reviews: Int
+    reviews: VenueReviewStats
+  }
+
+  type VenueReviewStats {
+    count: Int
+    rating: Float
   }
 `

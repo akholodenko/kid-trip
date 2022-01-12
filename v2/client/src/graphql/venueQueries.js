@@ -27,7 +27,10 @@ const VenueStats = gql`
     venueStats {
       favorites
       favoriteByCurrentUser
-      reviews
+      reviews {
+        count
+        rating
+      }
     }
   }
 `
