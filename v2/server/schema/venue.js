@@ -16,6 +16,7 @@ export default gql`
     city: String
     state: String
     venueStats: VenueStats
+    reviews: [Review]
     createdAt: String
   }
 

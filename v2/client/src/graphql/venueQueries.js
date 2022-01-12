@@ -1,5 +1,7 @@
 import { gql } from '@apollo/client'
 
+import { ReviewDetails } from './reviewQueries'
+
 export const VenueDetails = gql`
   fragment VenueDetails on Venue {
     id
@@ -54,10 +56,14 @@ export const GET_VENUE_BY_SLUG = gql`
     venueBySlug(slug: $venueSlug) {
       ...VenueDetails
       ...VenueStats
+      reviews {
+        ...ReviewDetails
+      }
     }
   }
   ${VenueDetails}
   ${VenueStats}
+  ${ReviewDetails}
 `
 
 export const GET_VENUES_FOR_CURRENT_USER = gql`

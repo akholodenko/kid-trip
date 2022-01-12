@@ -9,6 +9,8 @@ import UserVenue from '../models/user_venue'
 import UserVenueFavorite from '../models/user_venue_favorite'
 import City from '../models/city'
 
+import { getReviewsByVenueId } from './review'
+
 import { slug, uniqueSlug } from '../utils/stringUtils'
 
 import { fromDbVenueTransform } from './venue/utils'
@@ -81,14 +83,36 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
     attributes: VENUE_ATTRIBUTES,
     include: associations
   }).then(venue => {
-    if (!!fields.venueStats) {
-      return getVenueStats(venue.id, userId).then(venueStats => {
-        venue.venueStats = venueStats
-        return fromDbVenueTransform(venue)
-      })
-    } else {
-      return fromDbVenueTransform(venue)
+    let promiseCalls = []
+    let promiseLookupIndex = {
+      reviews: null,
+      venueStats: null
     }
+
+    if (!!fields.reviews) {
+      promiseLookupIndex.reviews = 0
+      promiseCalls.push(
+        getReviewsByVenueId(venue.id, 100, { fields: { reviewer: true } })
+      )
+    }
+
+    if (!!fields.venueStats) {
+      promiseLookupIndex.venueStats = !!fields.reviews ? 1 : 0
+      promiseCalls.push(getVenueStats(venue.id, userId))
+    }
+
+    return Promise.all(promiseCalls).then(responses => {
+      venue.reviews =
+        promiseLookupIndex.reviews !== null
+          ? responses[promiseLookupIndex.reviews]
+          : null
+      venue.venueStats =
+        promiseLookupIndex.venueStats !== null
+          ? responses[promiseLookupIndex.venueStats]
+          : null
+
+      return fromDbVenueTransform(venue)
+    })
   })
 }
 
