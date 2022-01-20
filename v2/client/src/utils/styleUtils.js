@@ -15,3 +15,5 @@ export const headerStyles = (imageUrl, height) => {
     }
   }
 }
+
+export const reviewStarColor = '#FF9529'
