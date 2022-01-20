@@ -27,9 +27,8 @@ const drawStars = rating => {
 
 const ReviewsSummary = ({ reviews }) => {
   return (
-    <div style={{ color: reviewStarColor, textAlign: 'center' }}>
+    <div style={{ color: '#ccc', textAlign: 'center' }}>
       {drawStars(reviews.rating)}
-      <br />
       <Typography variant="h6">
         {reviews.count} {pluralize('review', reviews.count)} | write a review
       </Typography>

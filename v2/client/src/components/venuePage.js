@@ -7,9 +7,11 @@ import { GET_VENUE_BY_SLUG } from '../graphql/venueQueries'
 import VenueHeader from './venue/header'
 import SimilarVenues from './venue/similarVenues'
 import { venuePrimaryTypeName } from '../utils/venueUtils'
-import { isUserLoggedIn } from '../utils/userUtils'
+import { isUserLoggedIn, shortName } from '../utils/userUtils'
+import { sinceCreated } from '../utils/dateUtils'
 import LocationInfo from './venue/locationInfo'
 import FavoriteButton from './venue/favoriteButton'
+import Typography from '@material-ui/core/Typography'
 
 const pageStyle = {
   sectionHeader: {
@@ -87,7 +89,16 @@ const VenuePage = ({ match }) => {
                   <br />
                   {venue.description && <span>{venue.description}</span>}
                   This {venueTypeName} is located in {venue.city}, {venue.state}
-                  .
+                  .<Typography variant="h6">Reviews</Typography>
+                  {venue.reviews.map(review => (
+                    <div>
+                      <div>
+                        {review.rating} by {shortName(review.reviewer)}{' '}
+                        {sinceCreated(review.updatedAt)}
+                      </div>
+                      <div>{review.description}</div>
+                    </div>
+                  ))}
                 </div>
                 <div style={pageStyle.sideColumm}>
                   <LocationInfo venue={venue} />
