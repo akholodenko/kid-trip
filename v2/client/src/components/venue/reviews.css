@@ -1,0 +1,20 @@
+.reviewsContainer {
+
+}
+
+.writeReviewContainer {
+    margin-top: 20px;
+    margin-right: 50px;
+    padding: 40px 10px 10px 10px;
+    background-color: #efefef;
+    border-radius: 0px 0px 8px 8px;
+}
+
+.writeReviewTextarea {
+    width: 100%;
+    border: none;
+    margin-right: 50px;
+    padding: 25px;
+    outline: none;
+    border-radius: 0px 0px 8px 8px;
+}

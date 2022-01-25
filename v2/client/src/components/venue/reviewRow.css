@@ -1,7 +1,7 @@
 .reviewRow {
-    margin: 0 50px 10px 0;
-    border-bottom: 1px solid #eeeeee;
-    padding-bottom: 20px;
+    margin: 20px 50px 0px 0;
+    border-top: 1px solid #eeeeee;
+    padding-top: 10px;
 }
 
 .reviewRowHeader {
