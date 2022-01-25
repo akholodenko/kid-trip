@@ -1,0 +1,17 @@
+.reviewRow {
+    margin: 0 50px 10px 0;
+    border-bottom: 1px solid #eeeeee;
+    padding-bottom: 20px;
+}
+
+.reviewRowHeader {
+    display: flex;
+    height: 40px;
+    align-items: center;
+    font-weight: 600;
+}
+
+.reviewRowBody {
+    font-size: 13px;
+    color: #555;
+}

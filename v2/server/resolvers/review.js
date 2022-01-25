@@ -28,7 +28,8 @@ export const getReviewsByVenueId = (venueId, first = 3, { fields }) => {
   return Review.findAll({
     where: { venue_id: venueId },
     attributes: REVIEW_ATTRIBUTES,
-    include: associations
+    include: associations,
+    order: [['updatedAt', 'desc']]
   }).then(reviews => {
     return reviews.map(review => fromDbReviewTransform(review))
   })
