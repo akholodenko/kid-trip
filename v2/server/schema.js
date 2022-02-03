@@ -21,5 +21,5 @@ export default [
   AuthPayload,
   FeedConfig,
   Message,
-  Review
+  Review,
 ]

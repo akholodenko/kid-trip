@@ -13,9 +13,9 @@ export const getSimilarVenuesByName = (name = '', cityId = null, limit = 3) => {
        ${cityId ? ` AND city_id = ${cityId}` : ''}
        LIMIT ${limit}`
     )
-    .then(response => {
+    .then((response) => {
       let venueIds = response[0]
-        .map(venue => {
+        .map((venue) => {
           return venue.id
         })
         .join(',')
@@ -38,13 +38,13 @@ export const getSimilarVenuesInRadius = (
   { fields }
 ) => {
   return getVenue(venueId, null, { fields: { venueTypes: true } }).then(
-    response => {
+    (response) => {
       const venueTypeId = response.venueTypes[0].id
       const lat = response.lat
       const lng = response.lng
 
       if (!lat || !lng) {
-        return getZipCode(response.zipcode).then(coordinates => {
+        return getZipCode(response.zipcode).then((coordinates) => {
           return sqlQueryVenuesByTypeInRadius(
             venueTypeId,
             radius,
@@ -96,8 +96,8 @@ const sqlQueryVenuesByTypeInRadius = (
 				ORDER BY distance LIMIT ${limit}) as list
 			where list.distance <= ${fromMiles(radius)}`
     )
-    .then(response =>
-      response[0].map(venue => {
+    .then((response) =>
+      response[0].map((venue) => {
         venue.city = venue.city_name ? { name: venue.city_name } : null
 
         return fromDbVenueTransform(venue)

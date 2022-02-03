@@ -14,7 +14,7 @@ const MESSAGE_ATTRIBUTES = [
   'message_type',
   'status',
   'body',
-  'created_at'
+  'created_at',
 ]
 
 export const getInboxMessages = (userId, fields) => {
@@ -25,7 +25,7 @@ export const getInboxMessages = (userId, fields) => {
       associations.push({
         model: User,
         as: 'MessageSender',
-        attributes: USER_ATTRIBUTES
+        attributes: USER_ATTRIBUTES,
       })
     }
 
@@ -33,9 +33,9 @@ export const getInboxMessages = (userId, fields) => {
       attributes: MESSAGE_ATTRIBUTES,
       include: associations,
       where: {
-        recipient_user_id: userId
+        recipient_user_id: userId,
       },
-      order: [['created_at', 'DESC']]
+      order: [['created_at', 'DESC']],
     })
   }
 
@@ -49,7 +49,7 @@ export const getConversation = (userId, conversationalistUserId, fields) => {
     associations.push({
       model: User,
       as: 'MessageSender',
-      attributes: USER_ATTRIBUTES
+      attributes: USER_ATTRIBUTES,
     })
   }
 
@@ -57,7 +57,7 @@ export const getConversation = (userId, conversationalistUserId, fields) => {
     associations.push({
       model: User,
       as: 'MessageRecipient',
-      attributes: USER_ATTRIBUTES
+      attributes: USER_ATTRIBUTES,
     })
   }
 
@@ -69,24 +69,24 @@ export const getConversation = (userId, conversationalistUserId, fields) => {
         {
           [Op.and]: [
             { recipient_user_id: userId },
-            { sender_user_id: conversationalistUserId }
-          ]
+            { sender_user_id: conversationalistUserId },
+          ],
         },
         {
           [Op.and]: [
             { recipient_user_id: conversationalistUserId },
-            { sender_user_id: userId }
-          ]
-        }
-      ]
+            { sender_user_id: userId },
+          ],
+        },
+      ],
     },
-    order: [['created_at', 'ASC']]
-  }).then(messages => {
-    return messages.map(message => fromDbMessageTransform(message))
+    order: [['created_at', 'ASC']],
+  }).then((messages) => {
+    return messages.map((message) => fromDbMessageTransform(message))
   })
 }
 
-export const getConversationalists = userId => {
+export const getConversationalists = (userId) => {
   return sequelize
     .query(
       `
@@ -108,14 +108,14 @@ export const getConversationalists = userId => {
                  join users on users.id = sorted_corresponders.user_id
         order by sorted_corresponders.created_at desc;`
     )
-    .then(conversationalists =>
-      conversationalists[0].map(conversationalist => {
+    .then((conversationalists) =>
+      conversationalists[0].map((conversationalist) => {
         return {
           id: conversationalist.id,
           publicId: userDbIdToPublicId(conversationalist.id),
           firstName: conversationalist.first_name,
           lastName: conversationalist.last_name,
-          createdAt: conversationalist.created_at.toString()
+          createdAt: conversationalist.created_at.toString(),
         }
       })
     )
@@ -129,7 +129,7 @@ export const getMessages = (userId, status, fields) => {
     associations.push({
       model: User,
       as: 'MessageSender',
-      attributes: USER_ATTRIBUTES
+      attributes: USER_ATTRIBUTES,
     })
   }
 
@@ -137,18 +137,18 @@ export const getMessages = (userId, status, fields) => {
     associations.push({
       model: User,
       as: 'MessageRecipient',
-      attributes: USER_ATTRIBUTES
+      attributes: USER_ATTRIBUTES,
     })
   }
 
   if (status === 'sent') {
     where = {
-      sender_user_id: userId
+      sender_user_id: userId,
     }
   } else {
     where = {
       recipient_user_id: userId,
-      status: status
+      status: status,
     }
   }
 
@@ -156,11 +156,13 @@ export const getMessages = (userId, status, fields) => {
     attributes: MESSAGE_ATTRIBUTES,
     include: associations,
     where,
-    order: [['created_at', 'DESC']]
-  }).then(messages => messages.map(message => fromDbMessageTransform(message)))
+    order: [['created_at', 'DESC']],
+  }).then((messages) =>
+    messages.map((message) => fromDbMessageTransform(message))
+  )
 }
 
-export const getMessageCount = userId => {
+export const getMessageCount = (userId) => {
   if (userId) {
     return sequelize
       .query(
@@ -169,15 +171,15 @@ export const getMessageCount = userId => {
 			WHERE recipient_user_id = ${userId}
 			GROUP BY status`
       )
-      .then(results => {
+      .then((results) => {
         let response = {
           unread: 0,
           read: 0,
           archived: 0,
-          deleted: 0
+          deleted: 0,
         }
 
-        results[0].map(result => (response[result.status] = result.count))
+        results[0].map((result) => (response[result.status] = result.count))
         return response
       })
   }
@@ -198,9 +200,9 @@ export const updateConversation = (obj, args, { user }) => {
           {
             [Op.and]: [
               { recipient_user_id: user.userId },
-              { sender_user_id: args.conversationalistUserId }
-            ]
-          }
+              { sender_user_id: args.conversationalistUserId },
+            ],
+          },
           // ,
           // {
           //   [Op.and]: [
@@ -208,13 +210,13 @@ export const updateConversation = (obj, args, { user }) => {
           //     { sender_user_id: user.userId }
           //   ]
           // }
-        ]
-      }
+        ],
+      },
     }
   ).then(() => {
     return getConversation(user.userId, args.conversationalistUserId, {
       sender: true,
-      recipient: true
+      recipient: true,
     })
   })
 }
@@ -229,6 +231,6 @@ export const createMessage = (obj, args, { user }) => {
     message_type: args.messageType,
     body: args.body,
     sender_user_id: user.userId,
-    recipient_user_id: args.conversationalistUserId
-  }).then(response => fromDbMessageTransform(response))
+    recipient_user_id: args.conversationalistUserId,
+  }).then((response) => fromDbMessageTransform(response))
 }

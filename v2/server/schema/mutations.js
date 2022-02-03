@@ -33,5 +33,6 @@ export default gql`
       messageType: String!
       body: String!
     ): Message
+    createReview(venueId: Int!, rating: Int!, description: String!): Review
   }
 `

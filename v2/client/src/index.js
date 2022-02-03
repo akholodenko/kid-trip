@@ -4,7 +4,7 @@ import {
   ApolloClient,
   ApolloProvider,
   ApolloLink,
-  HttpLink
+  HttpLink,
 } from '@apollo/client'
 import { InMemoryCache } from '@apollo/client/cache'
 import { onError } from '@apollo/client/link/error'
@@ -27,8 +27,8 @@ const httpLink = new HttpLink({
   //   mode: 'cors'
   // },
   headers: {
-    authorization: token ? `Bearer ${token}` : ''
-  }
+    authorization: token ? `Bearer ${token}` : '',
+  },
 })
 
 const client = new ApolloClient({
@@ -42,30 +42,30 @@ const client = new ApolloClient({
         )
       if (networkError) console.log(`[Network error]: ${networkError}`)
     }),
-    httpLink
+    httpLink,
   ]),
   cache: new InMemoryCache({
     typePolicies: {
       User: {
         fields: {
           followees: {
-            merge: false
+            merge: false,
           },
           favoriteVenues: {
-            merge: false
-          }
-        }
-      }
-    }
+            merge: false,
+          },
+        },
+      },
+    },
   }),
-  resolvers: {}
+  resolvers: {},
 })
 
 client.writeQuery({
   query: CURRENT_USER_QUERY,
   data: {
-    currentUser: { ...getUserInfoFromStorage() }
-  }
+    currentUser: { ...getUserInfoFromStorage() },
+  },
 })
 
 ReactDOM.render(

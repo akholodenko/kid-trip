@@ -23,11 +23,11 @@ const styles = {
   '@global': {
     body: {
       fontFamily: 'Roboto, Helvetica, Arial, sans-serif',
-      fontWeight: 400
+      fontWeight: 400,
     },
     '.mainContainer': {
       display: 'flex',
-      justifyContent: 'center'
+      justifyContent: 'center',
     },
     '.mainContent': {
       maxWidth: '1200px',
@@ -35,12 +35,12 @@ const styles = {
       margin: '25px',
       backgroundColor: '#ffffff',
       padding: '25px',
-      borderRadius: '8px'
-    }
+      borderRadius: '8px',
+    },
   },
   appBarSpacer: {
-    height: '49px'
-  }
+    height: '49px',
+  },
 }
 
 class App extends Component {

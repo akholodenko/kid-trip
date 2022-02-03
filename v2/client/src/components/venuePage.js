@@ -14,19 +14,19 @@ import Reviews from './venue/reviews'
 
 const pageStyle = {
   sectionHeader: {
-    marginBottom: '15px'
+    marginBottom: '15px',
   },
   columnWrapper: {
-    display: 'flex'
+    display: 'flex',
   },
   mainColumn: {
     flexGrow: 3,
-    maxWidth: '800px'
+    maxWidth: '800px',
   },
   sideColumm: {
     flexGrow: 1,
-    marginTop: '-20px'
-  }
+    marginTop: '-20px',
+  },
 }
 
 const VenuePage = ({ match }) => {
@@ -35,7 +35,7 @@ const VenuePage = ({ match }) => {
   const [venueTypeName, setVenueTypeName] = useState('')
 
   const { loading, error, data } = useQuery(GET_VENUE_BY_SLUG, {
-    variables: { venueSlug }
+    variables: { venueSlug },
   })
 
   useEffect(() => {
@@ -45,7 +45,7 @@ const VenuePage = ({ match }) => {
     }
   }, [data])
 
-  const onUpdateFavoritesStats = venueStats => {
+  const onUpdateFavoritesStats = (venueStats) => {
     setVenue({ ...venue, venueStats: { ...venueStats } })
   }
 
@@ -89,7 +89,7 @@ const VenuePage = ({ match }) => {
                   {venue.description && <span>{venue.description}</span>}
                   This {venueTypeName} is located in {venue.city}, {venue.state}
                   .
-                  <Reviews reviews={venue.reviews} />
+                  <Reviews reviews={venue.reviews} venue={venue} />
                 </div>
                 <div style={pageStyle.sideColumm}>
                   <LocationInfo venue={venue} />

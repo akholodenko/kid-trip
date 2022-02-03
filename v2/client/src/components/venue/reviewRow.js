@@ -11,7 +11,7 @@ const ReviewRow = ({ review }) => {
   return (
     <div className="reviewRow">
       <div className="reviewRowHeader">
-        <ReviewStars rating={review.rating} />
+        <ReviewStars rating={review.rating}/>
         &nbsp;by&nbsp;
         <RouterLink to={Routes.userProfilePath(review.reviewer.id)}>
           {shortName(review.reviewer)}

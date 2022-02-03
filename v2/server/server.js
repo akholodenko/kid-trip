@@ -6,7 +6,7 @@ import { getUserByToken } from './utils'
 
 const schema = makeExecutableSchema({
   typeDefs,
-  resolvers
+  resolvers,
 })
 
 const server = new ApolloServer({
@@ -16,7 +16,7 @@ const server = new ApolloServer({
     const user = getUserByToken(token)
 
     return { user }
-  }
+  },
 })
 
 server.listen().then(({ url }) => {

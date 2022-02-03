@@ -25,7 +25,7 @@ export const VENUE_ATTRIBUTES = [
   'city_id',
   'zipcode',
   'lat',
-  'lng'
+  'lng',
 ]
 
 export const getVenue = (venueId, userId, { fields }) => {
@@ -42,16 +42,16 @@ export const getVenue = (venueId, userId, { fields }) => {
   if (!!fields.city || !!fields.state) {
     associations.push({
       model: City,
-      attributes: ['id', 'name', 'state']
+      attributes: ['id', 'name', 'state'],
     })
   }
 
   return Venue.findByPk(venueId, {
     attributes: VENUE_ATTRIBUTES,
-    include: associations
-  }).then(venue => {
+    include: associations,
+  }).then((venue) => {
     if (!!fields.venueStats) {
-      return getVenueStats(venue.id, userId).then(venueStats => {
+      return getVenueStats(venue.id, userId).then((venueStats) => {
         venue.venueStats = venueStats
         return fromDbVenueTransform(venue)
       })
@@ -75,19 +75,19 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
   if (!!fields.city || !!fields.state) {
     associations.push({
       model: City,
-      attributes: ['id', 'name', 'state']
+      attributes: ['id', 'name', 'state'],
     })
   }
 
   return Venue.findOne({
     where: { slug: venueSlug },
     attributes: VENUE_ATTRIBUTES,
-    include: associations
-  }).then(venue => {
+    include: associations,
+  }).then((venue) => {
     let promiseCalls = []
     let promiseLookupIndex = {
       reviews: null,
-      venueStats: null
+      venueStats: null,
     }
 
     if (!!fields.reviews) {
@@ -102,7 +102,7 @@ export const getVenueBySlug = (venueSlug, userId, { fields }) => {
       promiseCalls.push(getVenueStats(venue.id, userId))
     }
 
-    return Promise.all(promiseCalls).then(responses => {
+    return Promise.all(promiseCalls).then((responses) => {
       venue.reviews =
         promiseLookupIndex.reviews !== null
           ? responses[promiseLookupIndex.reviews]
@@ -127,8 +127,8 @@ export const getVenues = (
     if (!!venueTypeIds) {
       venueTypeAssociation.where = {
         id: {
-          [Op.in]: venueTypeIds.split(',').map(item => parseInt(item))
-        }
+          [Op.in]: venueTypeIds.split(',').map((item) => parseInt(item)),
+        },
       }
     }
 
@@ -146,14 +146,14 @@ export const getVenues = (
   if (!!fields.city || !!fields.state) {
     let cityAssociation = {
       model: City,
-      attributes: ['id', 'name', 'state']
+      attributes: ['id', 'name', 'state'],
     }
 
     if (!!cityIds) {
       cityAssociation.where = {
         id: {
-          [Op.in]: cityIds.split(',').map(item => parseInt(item))
-        }
+          [Op.in]: cityIds.split(',').map((item) => parseInt(item)),
+        },
       }
     }
 
@@ -164,19 +164,19 @@ export const getVenues = (
     attributes: VENUE_ATTRIBUTES.concat(['created_at', 'user_id']),
     include: associations,
     order: [['created_at', sort]],
-    limit: first
+    limit: first,
   }
 
   if (!!ids) {
     queryConfig.where = {
       id: {
-        [Op.in]: ids.split(',').map(item => parseInt(item))
-      }
+        [Op.in]: ids.split(',').map((item) => parseInt(item)),
+      },
     }
   }
 
-  return Venue.findAll(queryConfig).then(response =>
-    response.map(venue => fromDbVenueTransform(venue))
+  return Venue.findAll(queryConfig).then((response) =>
+    response.map((venue) => fromDbVenueTransform(venue))
   )
 }
 
@@ -187,8 +187,8 @@ export const createVenue = (obj, args, { user }, info) => {
 
   let venueSlug = slug(args.name)
 
-  return getSimilarVenueSlugs(slug(venueSlug)).then(venues => {
-    const existingSlugs = venues.map(u => u.get('slug'))
+  return getSimilarVenueSlugs(slug(venueSlug)).then((venues) => {
+    const existingSlugs = venues.map((u) => u.get('slug'))
     venueSlug = uniqueSlug(venueSlug, existingSlugs, args.zipcode)
 
     return Venue.create({
@@ -199,16 +199,16 @@ export const createVenue = (obj, args, { user }, info) => {
       lat: args.lat,
       lng: args.lng,
       city_id: args.city.id,
-      user_id: user.userId
-    }).then(newVenue => {
+      user_id: user.userId,
+    }).then((newVenue) => {
       VenueClassification.create({
         venue_id: newVenue.id,
-        venue_type_id: args.venueType.id
+        venue_type_id: args.venueType.id,
       })
 
       UserVenue.create({
         venue_id: newVenue.id,
-        user_id: user.userId
+        user_id: user.userId,
       })
 
       return fromDbVenueTransform(newVenue)
@@ -224,9 +224,9 @@ export const createUserVenueFavorite = (obj, args, { user }, info) => {
   return UserVenueFavorite.findOrCreate({
     where: {
       venue_id: args.venueId,
-      user_id: user.userId
-    }
-  }).then(favorite => {
+      user_id: user.userId,
+    },
+  }).then((favorite) => {
     return getVenueStats(args.venueId, user.userId)
   })
 }
@@ -239,19 +239,19 @@ export const deleteUserVenueFavorite = (obj, args, { user }, info) => {
   return UserVenueFavorite.destroy({
     where: {
       venue_id: args.venueId,
-      user_id: user.userId
-    }
+      user_id: user.userId,
+    },
   }).then(() => {
     return getVenueStats(args.venueId, user.userId)
   })
 }
 
-const getSimilarVenueSlugs = slug => {
+const getSimilarVenueSlugs = (slug) => {
   return Venue.findAll({
     attributes: ['slug'],
     where: {
-      slug: { [Op.iLike]: `${slug}%` }
-    }
+      slug: { [Op.iLike]: `${slug}%` },
+    },
   })
 }
 
@@ -259,49 +259,49 @@ const getVenueStats = (venueId, userId = null) => {
   return Promise.all([
     getVenueFavoritesCount(venueId),
     getVenueReviewsStats(venueId),
-    isFavoritedByCurrentUser(venueId, userId)
-  ]).then(responses => {
+    isFavoritedByCurrentUser(venueId, userId),
+  ]).then((responses) => {
     console.log(responses)
 
     return {
       favorites: responses[0],
       reviews: responses[1],
-      favoriteByCurrentUser: responses[2]
+      favoriteByCurrentUser: responses[2],
     }
   })
 }
 
-const getVenueFavoritesCount = venueId => {
+const getVenueFavoritesCount = (venueId) => {
   return UserVenueFavorite.findAll({
     attributes: [
       'venue_id',
-      [sequelize.fn('count', sequelize.col('id')), 'count']
+      [sequelize.fn('count', sequelize.col('id')), 'count'],
     ],
     where: { venue_id: venueId },
-    group: ['venue_id']
+    group: ['venue_id'],
   })
-    .then(results => results.map(el => el.get({ plain: true })))
-    .then(totalData => (totalData[0] ? totalData[0].count : 0))
+    .then((results) => results.map((el) => el.get({ plain: true })))
+    .then((totalData) => (totalData[0] ? totalData[0].count : 0))
 }
 
-const getVenueReviewsStats = venueId => {
+const getVenueReviewsStats = (venueId) => {
   return Review.findAll({
     attributes: [
       'venue_id',
       [sequelize.fn('count', sequelize.col('id')), 'count'],
-      [sequelize.fn('avg', sequelize.col('rating')), 'rating']
+      [sequelize.fn('avg', sequelize.col('rating')), 'rating'],
     ],
     where: { venue_id: venueId },
-    group: ['venue_id']
+    group: ['venue_id'],
   })
-    .then(results => results.map(el => el.get({ plain: true })))
-    .then(totalData =>
+    .then((results) => results.map((el) => el.get({ plain: true })))
+    .then((totalData) =>
       totalData[0] ? { ...totalData[0] } : { count: 0, rating: 0 }
     )
 }
 
 const isFavoritedByCurrentUser = (venueId, userId) => {
   return UserVenueFavorite.findOne({
-    where: { venue_id: venueId, user_id: userId }
-  }).then(favoriteByCurrentUser => !!favoriteByCurrentUser)
+    where: { venue_id: venueId, user_id: userId },
+  }).then((favoriteByCurrentUser) => !!favoriteByCurrentUser)
 }

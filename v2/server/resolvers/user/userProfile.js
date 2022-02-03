@@ -21,8 +21,8 @@ export const getUserProfile = (publicId, { fields, currentUserId }) => {
     isCurrentUserFollower(userId, currentUserId),
     followsCurrentUser(userId, currentUserId),
     UserFollower.count({ where: { follower_user_id: userId } }),
-    UserFollower.count({ where: { followee_user_id: userId } })
-  ]).then(responses => {
+    UserFollower.count({ where: { followee_user_id: userId } }),
+  ]).then((responses) => {
     return {
       publicId: publicId,
       user: responses[0],
@@ -33,10 +33,10 @@ export const getUserProfile = (publicId, { fields, currentUserId }) => {
         followedByCurrentUser: responses[6],
         followsCurrentUser: responses[7],
         followers: responses[9], // count of users that follow this user
-        followees: responses[8] // count of users that this user follows
+        followees: responses[8], // count of users that this user follows
       },
       recentFavoriteVenues: responses[4],
-      recentAddedVenues: responses[5]
+      recentAddedVenues: responses[5],
     }
   })
 }
@@ -53,9 +53,9 @@ export const createUserFollower = (obj, args, { user }, info) => {
   return UserFollower.findOrCreate({
     where: {
       follower_user_id: user.userId,
-      followee_user_id: userId
-    }
-  }).then(follower => {
+      followee_user_id: userId,
+    },
+  }).then((follower) => {
     return getUserFollowerStats(userId, user.userId)
   })
 }
@@ -70,52 +70,52 @@ export const deleteUserFollower = (obj, args, { user }, info) => {
   return UserFollower.destroy({
     where: {
       follower_user_id: user.userId,
-      followee_user_id: userId
-    }
+      followee_user_id: userId,
+    },
   }).then(() => {
     return getUserFollowerStats(userId, user.userId)
   })
 }
 
-const getUserProfileConfig = userId => {
+const getUserProfileConfig = (userId) => {
   return UserProfileConfig.findOne({
     where: { user_id: userId },
-    attributes: ['config']
-  }).then(result => {
+    attributes: ['config'],
+  }).then((result) => {
     if (result && result.config) {
       if (result.config.headerImageId) {
         return getUserProfileHeaderImageUrl(result.config.headerImageId)
       } else {
         return {
-          headerImageUrl: null
+          headerImageUrl: null,
         }
       }
     } else {
-      return User.createProfileConfig(userId).then(newResult =>
+      return User.createProfileConfig(userId).then((newResult) =>
         getUserProfileHeaderImageUrl(newResult.config.headerImageId)
       )
     }
   })
 }
 
-const getUserProfileHeaderImageUrl = imageId => {
-  return Image.findByPk(imageId).then(image => {
+const getUserProfileHeaderImageUrl = (imageId) => {
+  return Image.findByPk(imageId).then((image) => {
     return {
-      headerImageUrl: `${S3_URL}assets/profile-backgrounds/${image.filename}`
+      headerImageUrl: `${S3_URL}assets/profile-backgrounds/${image.filename}`,
     }
   })
 }
 
-const getUserRecentFavoriteVenues = userId => {
+const getUserRecentFavoriteVenues = (userId) => {
   return UserVenueFavorite.findAll({
     attributes: ['venue_id'],
     where: { user_id: userId },
     order: [['createdAt', 'DESC']],
-    limit: 5
-  }).then(response => {
+    limit: 5,
+  }).then((response) => {
     if (response) {
       let venueIds = response
-        .map(favorite => {
+        .map((favorite) => {
           return favorite.venue_id
         })
         .join(',')
@@ -132,16 +132,16 @@ const getUserRecentFavoriteVenues = userId => {
   })
 }
 
-const getUserRecentAddedVenues = userId => {
+const getUserRecentAddedVenues = (userId) => {
   return Venue.findAll({
     attributes: ['id'],
     where: { user_id: userId },
     order: [['createdAt', 'DESC']],
-    limit: 5
-  }).then(response => {
+    limit: 5,
+  }).then((response) => {
     if (response) {
       let venueIds = response
-        .map(added => {
+        .map((added) => {
           return added.id
         })
         .join(',')
@@ -160,16 +160,16 @@ const getUserRecentAddedVenues = userId => {
 
 const isCurrentUserFollower = (userId, currentUserId) => {
   return UserFollower.findOne({
-    where: { follower_user_id: currentUserId, followee_user_id: userId }
-  }).then(followedByCurrentUser => {
+    where: { follower_user_id: currentUserId, followee_user_id: userId },
+  }).then((followedByCurrentUser) => {
     return !!followedByCurrentUser
   })
 }
 
 const followsCurrentUser = (userId, currentUserId) => {
   return UserFollower.findOne({
-    where: { follower_user_id: userId, followee_user_id: currentUserId }
-  }).then(followsCurrentUser => {
+    where: { follower_user_id: userId, followee_user_id: currentUserId },
+  }).then((followsCurrentUser) => {
     return !!followsCurrentUser
   })
 }
@@ -179,13 +179,13 @@ const getUserFollowerStats = (userId, currentUserId) => {
     isCurrentUserFollower(userId, currentUserId),
     followsCurrentUser(userId, currentUserId),
     UserFollower.count({ where: { follower_user_id: userId } }),
-    UserFollower.count({ where: { followee_user_id: userId } })
-  ]).then(responses => {
+    UserFollower.count({ where: { followee_user_id: userId } }),
+  ]).then((responses) => {
     return {
       followedByCurrentUser: responses[0],
       followsCurrentUser: responses[1],
       followers: responses[3], // count of users that follow this user
-      followees: responses[2] // count of users that this user follows
+      followees: responses[2], // count of users that this user follows
     }
   })
 }

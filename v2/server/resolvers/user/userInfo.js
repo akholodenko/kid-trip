@@ -17,13 +17,13 @@ export const getUser = (userId, { fields }) => {
     getUserFavoriteVenues(userId, fields),
     getUserFolloweeCount(userId, fields),
     getUserFollowerCount(userId, fields),
-    getInboxMessages(userId, fields)
-  ]).then(responses => {
+    getInboxMessages(userId, fields),
+  ]).then((responses) => {
     let user = responses[0]
     user.favoriteVenues = responses[1]
     user.stats = {
       followees: responses[2],
-      followers: responses[3]
+      followers: responses[3],
     }
     user.messages = responses[4]
 
@@ -50,7 +50,7 @@ const getUserDetails = (userId, fields) => {
       associations.push({
         model: Venue,
         attributes: VENUE_ATTRIBUTES,
-        include: venueAssociations
+        include: venueAssociations,
       })
 
       order = [Venue, 'name', 'ASC']
@@ -59,7 +59,7 @@ const getUserDetails = (userId, fields) => {
     if (!!fields.feedConfig) {
       associations.push({
         model: UserFeedConfig,
-        attributes: ['config']
+        attributes: ['config'],
       })
     }
 
@@ -67,7 +67,7 @@ const getUserDetails = (userId, fields) => {
       associations.push({
         model: User,
         as: 'UserFollowees',
-        attributes: USER_ATTRIBUTES
+        attributes: USER_ATTRIBUTES,
       })
     }
 
@@ -75,7 +75,7 @@ const getUserDetails = (userId, fields) => {
       associations.push({
         model: User,
         as: 'UserFollowers',
-        attributes: USER_ATTRIBUTES
+        attributes: USER_ATTRIBUTES,
       })
     }
   }
@@ -83,7 +83,7 @@ const getUserDetails = (userId, fields) => {
   return User.findByPk(userId, {
     attributes: USER_ATTRIBUTES,
     include: associations,
-    order: [order]
+    order: [order],
   })
 }
 
@@ -120,14 +120,14 @@ const getUserFavoriteVenues = (userId, fields) => {
     associations.push({
       model: UserVenueFavorite,
       where: {
-        user_id: userId
-      }
+        user_id: userId,
+      },
     })
 
     return Venue.findAll({
       attributes: VENUE_ATTRIBUTES,
       include: associations,
-      order: [['name', 'ASC']]
+      order: [['name', 'ASC']],
     })
   }
 

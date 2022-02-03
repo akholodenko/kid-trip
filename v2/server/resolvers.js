@@ -6,11 +6,11 @@ import {
   getVenues,
   createVenue,
   createUserVenueFavorite,
-  deleteUserVenueFavorite
+  deleteUserVenueFavorite,
 } from './resolvers/venue'
 import {
   getSimilarVenuesInRadius,
-  getSimilarVenuesByName
+  getSimilarVenuesByName,
 } from './resolvers/venue/similarVenues'
 import { getVenueType, getVenueTypes } from './resolvers/venue_type'
 import { getCities } from './resolvers/city'
@@ -18,13 +18,13 @@ import {
   signup,
   login,
   getUserFeedConfig,
-  updateUserFeedConfig
+  updateUserFeedConfig,
 } from './resolvers/user'
 import { getUser } from './resolvers/user/userInfo'
 import {
   getUserProfile,
   createUserFollower,
-  deleteUserFollower
+  deleteUserFollower,
 } from './resolvers/user/userProfile'
 
 import {
@@ -33,21 +33,21 @@ import {
   getConversationalists,
   getConversation,
   updateConversation,
-  createMessage
+  createMessage,
 } from './resolvers/message'
 
-import { getReviewsByVenueId } from './resolvers/review'
+import { getReviewsByVenueId, createReview } from './resolvers/review'
 
 export default {
   Query: {
     venue(obj, args, { user }, info) {
       return getVenue(args.id, user ? user.userId : null, {
-        fields: graphsqlFields(info)
+        fields: graphsqlFields(info),
       })
     },
     venueBySlug(obj, args, { user }, info) {
       return getVenueBySlug(args.slug, user ? user.userId : null, {
-        fields: graphsqlFields(info)
+        fields: graphsqlFields(info),
       })
     },
     venueTypes() {
@@ -58,17 +58,17 @@ export default {
     },
     venues(obj, args, context, info) {
       return getVenues(args, {
-        fields: graphsqlFields(info)
+        fields: graphsqlFields(info),
       })
     },
     similarVenues(obj, args, context, info) {
       return getSimilarVenuesInRadius(args.id, args.radius, args.first, {
-        fields: graphsqlFields(info)
+        fields: graphsqlFields(info),
       })
     },
     similarVenuesByName(obj, args, context, info) {
       return getSimilarVenuesByName(args.name, args.cityId, args.first, {
-        fields: graphsqlFields(info)
+        fields: graphsqlFields(info),
       })
     },
     cities(obj, args) {
@@ -88,7 +88,7 @@ export default {
       if (args && args.publicId) {
         return getUserProfile(args.publicId, {
           fields: graphsqlFields(info),
-          currentUserId: user && user.userId ? user.userId : null
+          currentUserId: user && user.userId ? user.userId : null,
         })
       } else {
         throw new Error('Invalid profile')
@@ -132,7 +132,7 @@ export default {
     },
     reviewsByVenueId(obj, args, context, info) {
       return getReviewsByVenueId(args.venueId, args.first, {
-        fields: graphsqlFields(info)
+        fields: graphsqlFields(info),
       })
     },
     me(obj, args, { user }, info) {
@@ -141,7 +141,7 @@ export default {
       }
 
       return getUser(user.userId, { fields: graphsqlFields(info) })
-    }
+    },
   },
   Mutation: {
     signup,
@@ -153,6 +153,7 @@ export default {
     deleteUserFollower,
     updateUserFeedConfig,
     updateConversation,
-    createMessage
-  }
+    createMessage,
+    createReview,
+  },
 }

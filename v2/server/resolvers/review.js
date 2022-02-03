@@ -3,6 +3,8 @@ import User from '../models/user'
 
 import { fromDbReviewTransform } from './review/utils'
 import Venue from '../models/venue'
+import Message from '../models/message'
+import { fromDbMessageTransform } from './message/utils'
 
 export const REVIEW_ATTRIBUTES = [
   'id',
@@ -11,7 +13,7 @@ export const REVIEW_ATTRIBUTES = [
   'rating',
   'description',
   'createdAt',
-  'updatedAt'
+  'updatedAt',
 ]
 
 export const getReviewsByVenueId = (venueId, first = 3, { fields }) => {
@@ -29,8 +31,21 @@ export const getReviewsByVenueId = (venueId, first = 3, { fields }) => {
     where: { venue_id: venueId },
     attributes: REVIEW_ATTRIBUTES,
     include: associations,
-    order: [['updatedAt', 'desc']]
-  }).then(reviews => {
-    return reviews.map(review => fromDbReviewTransform(review))
+    order: [['updatedAt', 'desc']],
+  }).then((reviews) => {
+    return reviews.map((review) => fromDbReviewTransform(review))
   })
+}
+
+export const createReview = (obj, args, { user }) => {
+  if (!user) {
+    throw new Error('You are not authenticated!')
+  }
+
+  return Review.create({
+    user_id: user.userId,
+    venue_id: args.venueId,
+    rating: args.rating,
+    description: args.description,
+  }).then((response) => fromDbReviewTransform(response))
 }
