@@ -38,7 +38,7 @@ const WriteReview = ({ venue }) => {
         },
       })
     } else {
-      console.log('too short')
+      console.log('too short, must be longer than 10')
     }
   }
 
@@ -47,8 +47,8 @@ const WriteReview = ({ venue }) => {
       <TextareaAutosize
         className="writeReviewTextarea"
         aria-label="Write your review..."
-        rowsMin={3}
-        rowsMax={10}
+        minRows={3}
+        maxRows={10}
         placeholder="Write your review..."
         value={reviewText}
         onChange={(e) => setReviewText(e.target.value)}
